@@ -13,3 +13,6 @@ How to use Decolor ?
 
 
 You can type 'make clean' to clean every trash file and compiled file
+
+Our Website
+https://topagrume.github.io/decolor_web/
