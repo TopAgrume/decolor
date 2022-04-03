@@ -83,10 +83,10 @@ gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
         char *filename;
 
         filename = gtk_file_chooser_get_filename (chooser);
-        printf(gtk_button_get_label(f));
+        printf("%s", gtk_button_get_label(f));
         if (gdk_pixbuf_save(pixbuf, filename, "jpeg", &error, NULL) == FALSE)
         {
-            fprintf(stderr, error->message);
+            fprintf(stderr,"%s" , error->message);
             g_error_free(error);
         }
         g_free (filename);
