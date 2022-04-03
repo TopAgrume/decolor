@@ -59,7 +59,7 @@ SDL_Surface* copy_image(SDL_Surface* img)
 }
 
 
-
+/*
 // Filter RGB to Gray
 void RGB2GRAY(SDL_Surface* image)
 {
@@ -152,4 +152,4 @@ int otsu_method(SDL_Surface* img)
     printf("\tThreshold Value from Otsu method = %d\n", threshold);
     return threshold;
 
-}
+}*/
