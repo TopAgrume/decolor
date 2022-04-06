@@ -20,7 +20,7 @@ void shared_queue_push(shared_queue* sq, Uint32 pixel, int x, int y)
 
 Uint32 shared_queue_pop(shared_queue* sq, int* x, int* y)
 {
-    Uint32 pixel
+    Uint32 pixel;
     sq->queue = queue_pop(sq->queue, &pixel, x, y);
     sq->size -= 1;
     return pixel;

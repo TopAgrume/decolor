@@ -5,6 +5,7 @@
 #include <err.h>
 #include "pixel_operations.h"
 #include "filter.h"
+#include "tools.h"
 
 int main(int argc , char* argv[])
 {
@@ -12,7 +13,9 @@ int main(int argc , char* argv[])
 	    errx(EXIT_FAILURE, "Il faut le chemin de l'image");
 
     char* path = argv[1];
-    SDL_Surface* image_surface;
+    
+    // TEST FILTER
+    /* SDL_Surface* image_surface;
     SDL_Surface* screen_surface;
 
     init_sdl();
@@ -27,9 +30,33 @@ int main(int argc , char* argv[])
     screen_surface = display_image(image_surface);
 
     wait_for_keypressed();
+    
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);*/
 
+    // TEST SEAL
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+
+    init_sdl();
+
+    image_surface = load_image(path);
+    screen_surface = display_image(image_surface);
+
+    wait_for_keypressed();
+    SDL_Color color;
+    color.r = 0;
+    color.g = 145;
+    color.b = 255;
+    filling_seal(image_surface, 0, 0, color);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 
+
+
+
+    return 0;
 }
 

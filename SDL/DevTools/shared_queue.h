@@ -1,8 +1,11 @@
 #ifndef SHARED_QUEUE
 #define SHARED_QUEUE
 
-#include <semaphore.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "queue.h"
+#include <SDL/SDL.h>
+#include <SDL/SDL_image.h>
 
 typedef struct shared_queue
 {

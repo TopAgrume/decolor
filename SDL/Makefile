@@ -9,13 +9,15 @@ LDLIBS= `pkg-config --libs sdl SDL_image`
 
 all: main
 
-main: pixel_operations.o filter.o main.o
+main: pixel_operations.o filter.o tools.o DevTools/shared_queue.o DevTools/queue.o main.o
 
-main.o: pixel_operations.h filter.h
+main.o: pixel_operations.h filter.h tools.h DevTools/shared_queue.h DevTools/queue.h 
 
 clean:
 	${RM} *.o
 	${RM} *.d
+	${RM} DevTools/*.o
+	${RM} DevTools/*.d
 	${RM} main
 
 # END
