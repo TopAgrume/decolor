@@ -10,51 +10,76 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color)
     color.r = 0;
     color.g = 0;
     color.b = 0;
-    printf("Initialization seal\n");
+    printf("Initialization seal. Image w = %i, h = %i\n", img->w, img->h);
 
     // Try the value of the first pixel
     Uint32 pixel = get_pixel(img, x, y);
     SDL_GetRGB(pixel, img->format, &(color.r), &(color.g), &(color.b));
     if (color.r == new_color.r && color.g == new_color.g && color.b == new_color.b)
         return img;
-    
+    pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+    put_pixel(img, x, y, pixel);
+
     // If colors are different, then apply the seal tool
     shared_queue* seal_queue = shared_queue_new();
     shared_queue_push(seal_queue, pixel, x, y);
+    SDL_Color color2;
+    color2.r = 0;
+    color2.g = 0;
+    color2.b = 0;
     
     int dequeue_x = 0;
     int dequeue_y = 0;
     int neighbour_x = 0;
     int neighbour_y = 0;
+    int move = 0;
+
     while (seal_queue->size != 0)
     {
-        pixel = shared_queue_pop(seal_queue, &dequeue_x, &dequeue_y);
-        SDL_GetRGB(pixel, img->format, &(color.r), &(color.g), &(color.b));
-        pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
-        put_pixel(img, dequeue_x, dequeue_y, pixel);
-        printf("Diffuse x = %i, y = %i;\n", dequeue_x, dequeue_y);
+        color2.r = 0;
+        color2.g = 0;
+        color2.b = 0;
 
-        for (int move = -1; move < 2; move += 2)
+        //printf("Color rgb = %i, %i, %i;  Color2 = %i, %i, %i\n", color.r, color.g, color.b, color2.r, color2.g, color2.b);
+        pixel = shared_queue_pop(seal_queue, &dequeue_x, &dequeue_y);
+        //printf("Diffuse x = %i, y = %i;\n", dequeue_x, dequeue_y);
+        //printf("Size %lu\n", seal_queue->size);
+        printf("dequeue x = %i, y = %i;  neighbour x = %i, y = %i;\n", dequeue_x, dequeue_y, neighbour_x, neighbour_y);
+        for (move = -1; move < 2; move += 2)
         {
             neighbour_x = dequeue_x + move;
             neighbour_y = dequeue_y + move;
+            //printf("Verrify x = %i, y = %i;\n", neighbour_x, neighbour_y);
             if (0 <= neighbour_x && neighbour_x < img->w)
             {
                 pixel = get_pixel(img, neighbour_x, dequeue_y);
-                SDL_GetRGB(pixel, img->format, &(color.r), &(color.g), &(color.b));
-                if (color.r != new_color.r || color.g != new_color.g || color.b != new_color.b)
+                SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
+                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                {
+                    pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+                    put_pixel(img, neighbour_x, dequeue_y, pixel);
                     shared_queue_push(seal_queue, pixel, neighbour_x, dequeue_y);
+                }
+                else
+                    printf("Rejet\n");
             }
             if (0 <= neighbour_y && neighbour_y < img->h)
             {
                 pixel = get_pixel(img, dequeue_x, neighbour_y);
-                SDL_GetRGB(pixel, img->format, &(color.r), &(color.g), &(color.b));
-                if (color.r != new_color.r || color.g != new_color.g || color.b != new_color.b)
+                SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
+                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                {
+                    pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+                    put_pixel(img, dequeue_x, neighbour_y, pixel);
                     shared_queue_push(seal_queue, pixel, dequeue_x, neighbour_y);
+                }
+                else
+                    printf("Rejet\n");
+
             }
         }
     }
-
+    shared_queue_destroy(seal_queue);
     return img;
 }
 
