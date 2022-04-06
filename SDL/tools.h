@@ -10,7 +10,7 @@
 #include "DevTools/shared_queue.h"
 #include "pixel_operations.h"
 
-SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color);
+SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, int threshold);
 SDL_Color pipette(SDL_Surface* img, int x, int y);
 
 #endif

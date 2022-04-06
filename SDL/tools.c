@@ -1,9 +1,21 @@
 #include "tools.h"
 
+// This function test if |color1 - color2| <= treshold
+// -> 'color1', 'color2', 'threshold' are integers
+int compare(int color1, int color2, int threshold)
+{
+    if (color1 > color2)
+        return (color1 - color2) <= threshold;
+    else
+        return (color2 - color1) <= threshold;
+}
+
 // This function returns the image after using the seal (Format SDL_Surface*)
 // -> 'img' the pointer on SDL_Surface (image)
 // -> 'x' and 'y' coordinates of the chosen pixel
-SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color)
+// -> 'new_color' the color the function use to fill the image
+// -> 'threshold' for color filling
+SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, int threshold)
 {
     // Initialization
     SDL_Color color;
@@ -26,7 +38,9 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color)
     color2.r = 0;
     color2.g = 0;
     color2.b = 0;
-    
+   
+
+    // BFS of a color on the image
     int dequeue_x = 0;
     int dequeue_y = 0;
     int neighbour_x = 0;
@@ -47,7 +61,8 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color)
             {
                 pixel = get_pixel(img, neighbour_x, dequeue_y);
                 SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
-                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                //if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
                 {
                     pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
                     put_pixel(img, neighbour_x, dequeue_y, pixel);
@@ -60,7 +75,8 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color)
             {
                 pixel = get_pixel(img, dequeue_x, neighbour_y);
                 SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
-                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                //if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
                 {
                     pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
                     put_pixel(img, dequeue_x, neighbour_y, pixel);
@@ -74,6 +90,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color)
     shared_queue_destroy(seal_queue);
     return img;
 }
+
 
 // This function returns the color of the pixel selected (Format SDL_Color)
 // -> 'img' the pointer on SDL_Surface (image)

@@ -7,6 +7,10 @@
 #include "filter.h"
 #include "tools.h"
 
+//#define TEST_FILTER
+#define TEST_SEAL_PIPETTE
+
+
 int main(int argc , char* argv[])
 {
     if(argc != 2)
@@ -14,8 +18,8 @@ int main(int argc , char* argv[])
 
     char* path = argv[1];
     
-    // TEST FILTER
-    /* SDL_Surface* image_surface;
+#ifdef TEST_FILTER
+    SDL_Surface* image_surface;
     SDL_Surface* screen_surface;
 
     init_sdl();
@@ -32,9 +36,10 @@ int main(int argc , char* argv[])
     wait_for_keypressed();
     
     SDL_FreeSurface(image_surface);
-    SDL_FreeSurface(screen_surface);*/
+    SDL_FreeSurface(screen_surface);
+#endif
 
-    // TEST SEAL
+#ifdef TEST_SEAL_PIPETTE
     SDL_Surface* image_surface;
     SDL_Surface* screen_surface;
 
@@ -48,15 +53,19 @@ int main(int argc , char* argv[])
     color.r = 0;
     color.g = 145;
     color.b = 255;
-    filling_seal(image_surface, 0, 0, color);
+    filling_seal(image_surface, 0, 0, color, 200);
+    screen_surface = display_image(image_surface);
+
+    wait_for_keypressed();
+
+    filling_seal(image_surface, 500, 500, color, 200);
+    color = pipette(image_surface, 500, 500);
+    printf("pipette R: %i, G: %i, B: %i\n", color.r, color.g, color.b);
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
-
-
-
-
+#endif
     return 0;
 }
 
