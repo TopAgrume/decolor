@@ -22,12 +22,14 @@ shared_queue* shared_queue_new();
 
 // Pushes a new value onto the shared queue.
 // queue = Address of the shared queue.
-// val = value to push.
+// pixel = the pixel to push (Uint32)
+// 'x' and 'y', the coordinates of the pixel
 void shared_queue_push(shared_queue* sq, Uint32 pixel, int x, int y);
 
 // Pops a value off the shared queue.
 // queue = Address of the shared queue.
-// Returns the value.
+// 'x' and 'y', the pointers coordinates of the pixel (int*)
+// Returns the pixel.
 Uint32 shared_queue_pop(shared_queue* sq, int* x, int* y);
 
 // Frees the shared queue.

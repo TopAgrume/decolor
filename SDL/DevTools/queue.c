@@ -7,7 +7,7 @@ queue* queue_push(queue* start, Uint32 pixel, int x, int y)
 {
     struct queue* element = malloc(sizeof(struct queue));
     if (element == NULL)
-        errx(EXIT_FAILURE, "Failure: malloc()");
+        errx(EXIT_FAILURE, "Failure: malloc() queue_push");
     element->pixel = pixel;
     element->x = x;
     element->y = y;
