@@ -3,7 +3,7 @@
 #include "stack.h"
 
 // Stack Functions
-stack* stack_push(stack* start, SDL_Surface img)
+stack* stack_push(stack* start, SDL_Surface* img)
 {
     struct stack* element = malloc(sizeof(struct stack));
     if (element == NULL)
@@ -21,14 +21,17 @@ stack* stack_pop_last(stack* start, SDL_Surface* img)
 {
     if (start == NULL)
         return NULL;
+    if (img->h < 0)
+        return NULL;
+
     stack* p = NULL;
     stack* before_p = NULL;
-    for (p = start, p->next != NULL)
+    for (p = start; p->next != NULL;)
     {
         before_p = p;
         p = p->next;
     }
-    *SDL_Surface = p->img;
+    img = p->img;
     before_p->next = NULL;
     free(p);
     return start;
@@ -38,9 +41,11 @@ stack* stack_pop(stack* start, SDL_Surface* img)
 {
     if (start == NULL)
         return NULL;
+    if (img->h < 0)
+        return NULL;
     struct stack* new = start;
     stack* p = new->next;
-    *SDL_Surface = new->img;
+    img = new->img;
     free(new);
     return p;
 }
