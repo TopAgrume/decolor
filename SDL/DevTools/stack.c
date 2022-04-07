@@ -21,8 +21,6 @@ stack* stack_pop_last(stack* start, SDL_Surface* img)
 {
     if (start == NULL)
         return NULL;
-
-
     stack* p = NULL;
     stack* before_p = NULL;
     for (p = start; p->next != NULL;)
@@ -39,6 +37,10 @@ stack* stack_pop_last(stack* start, SDL_Surface* img)
 stack* stack_pop(stack* start, SDL_Surface* img)
 {
     if (start == NULL)
+    {
+        //printf("stack_pop NULL\n");
+        return NULL;
+    }
         return NULL;
     struct stack* new = start;
     stack* p = new->next;

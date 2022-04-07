@@ -5,21 +5,14 @@
 
 SDL_Surface* copy_image(SDL_Surface* img)
 {
-    Uint32 pixel;
-    SDL_Surface* copy;
-    copy = SDL_CreateRGBSurface(SDL_HWSURFACE,
-        img->w,
-        img->h,
-        img->format->BitsPerPixel, 0, 0, 0, 0);
-    for (int i = 0; i < img->w; i++)
-    {
-        for (int j = 0; j < img->h; j++)
-        {
-            pixel = get_pixel(img, i, j);
-            put_pixel(copy, i, j, pixel);
-        }
-    }
-    return(copy);
+    SDL_Surface *copy;
+    copy = SDL_CreateRGBSurface(SDL_HWSURFACE, img->w, img->h, img->format->BitsPerPixel, img->format->Rmask, img->format->Gmask, img->format->Bmask, img->format->Amask);
+
+    if(copy == NULL || img == NULL)
+        return NULL;
+
+    copy = SDL_DisplayFormatAlpha(img);
+    return copy;
 }
 
 shared_stack* shared_stack_new()
@@ -46,10 +39,10 @@ SDL_Surface shared_stack_pop_last(shared_stack* ss)
     return img;
 }
 
-SDL_Surface* shared_stack_pop(shared_stack* ss)
+SDL_Surface shared_stack_pop(shared_stack* ss)
 {
-    SDL_Surface* img;
-    ss->stack = stack_pop(ss->stack, img);
+    SDL_Surface img;
+    ss->stack = stack_pop(ss->stack, &img);
     ss->size -= 1;
     return img;
 }
