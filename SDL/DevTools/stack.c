@@ -21,8 +21,7 @@ stack* stack_pop_last(stack* start, SDL_Surface* img)
 {
     if (start == NULL)
         return NULL;
-    if (img->h < 0)
-        return NULL;
+
 
     stack* p = NULL;
     stack* before_p = NULL;
@@ -31,7 +30,7 @@ stack* stack_pop_last(stack* start, SDL_Surface* img)
         before_p = p;
         p = p->next;
     }
-    img = p->img;
+    *img = *(p->img);
     before_p->next = NULL;
     free(p);
     return start;
@@ -41,11 +40,9 @@ stack* stack_pop(stack* start, SDL_Surface* img)
 {
     if (start == NULL)
         return NULL;
-    if (img->h < 0)
-        return NULL;
     struct stack* new = start;
     stack* p = new->next;
-    img = new->img;
+    *img = *(new->img);
     free(new);
     return p;
 }
