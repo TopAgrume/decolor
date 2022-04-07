@@ -46,10 +46,12 @@ SDL_Surface shared_stack_pop_last(shared_stack* ss)
     return img;
 }
 
-void shared_stack_pop(shared_stack* ss, SDL_Surface* img)
+SDL_Surface* shared_stack_pop(shared_stack* ss)
 {
+    SDL_Surface* img;
     ss->stack = stack_pop(ss->stack, img);
     ss->size -= 1;
+    return img;
 }
 
 void shared_stack_destroy(shared_stack* ss)
