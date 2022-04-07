@@ -72,7 +72,6 @@ int main(int argc , char* argv[])
     SDL_Surface* image_surface;
     SDL_Surface* screen_surface;
     init_sdl();
-    //SDL_Surface img;
     image_surface = load_image(path);
     
     // Initialize stacks
@@ -112,8 +111,9 @@ int main(int argc , char* argv[])
     color6.b = 0;
     
     // Stack images in back_stack: 1st element (start)
-    shared_stack_push(stack_back, image_surface);
     screen_surface = display_image(image_surface);
+    shared_stack_push(stack_back, image_surface);
+    stack* st = stack_back->stack;
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
@@ -125,7 +125,6 @@ int main(int argc , char* argv[])
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
-
     
     // 3rd element
     image_surface = filling_seal(image_surface, 0, 0, color2, 200);
@@ -158,7 +157,7 @@ int main(int argc , char* argv[])
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
-
+    
     // 7th element
     image_surface = filling_seal(image_surface, 500, 500, color6, 200);
     shared_stack_push(stack_back, image_surface);
@@ -166,12 +165,11 @@ int main(int argc , char* argv[])
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
-
-    shared_stack_empty(stack_back);
+    
     SDL_Surface recup;
     SDL_Surface* try = NULL;
     // Destack images in after_stack: 1st element (start)
-    while (stack_back->size > 1)
+    while (stack_back->size > 0)
     {
         recup = shared_stack_pop(stack_back);
         try = &recup;
@@ -181,15 +179,16 @@ int main(int argc , char* argv[])
         printf("Number in stack_after: %li\n", stack_after->size);
         wait_for_keypressed();
     }
-    
+    shared_stack_empty(stack_after);
+
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
+
     shared_stack_destroy(stack_back);
     shared_stack_destroy(stack_after);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
-    //SDL_FreeSurface(try);
-
+    SDL_Quit();
 
 #endif
     return 0;

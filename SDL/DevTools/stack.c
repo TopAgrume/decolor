@@ -38,10 +38,10 @@ stack* stack_pop(stack* start, SDL_Surface* img)
 {
     if (start == NULL)
         errx(EXIT_FAILURE, "Nothing to pop from the stack");
-
+    *img = *(start->img);
     struct stack* new = start;
     start = start->next;
-    *img = *(new->img);
+
     free(new);
     return start;
 }

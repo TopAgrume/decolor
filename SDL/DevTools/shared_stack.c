@@ -5,13 +5,16 @@
 
 SDL_Surface* copy_image(SDL_Surface* img)
 {
-    SDL_Surface *copy;
+    SDL_Surface *copy = NULL;
     copy = SDL_CreateRGBSurface(SDL_HWSURFACE, img->w, img->h, img->format->BitsPerPixel, img->format->Rmask, img->format->Gmask, img->format->Bmask, img->format->Amask);
 
     if(copy == NULL || img == NULL)
-        return NULL;
-
+        errx(EXIT_FAILURE, "Copy_Image() NULL (1)\n");
+    
     copy = SDL_DisplayFormatAlpha(img);
+    if (copy == NULL)
+        errx(EXIT_FAILURE, "Copy_Image() NULL (2)\n");
+
     return copy;
 }
 
