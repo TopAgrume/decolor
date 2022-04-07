@@ -167,10 +167,11 @@ int main(int argc , char* argv[])
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
 
+    shared_stack_empty(stack_back);
     SDL_Surface recup;
     SDL_Surface* try = NULL;
     // Destack images in after_stack: 1st element (start)
-    while (stack_back->size > 0)
+    while (stack_back->size > 1)
     {
         recup = shared_stack_pop(stack_back);
         try = &recup;
@@ -183,10 +184,11 @@ int main(int argc , char* argv[])
     
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
-    //shared_stack_destroy(stack_back);
-    //shared_stack_destroy(stack_after);
+    shared_stack_destroy(stack_back);
+    shared_stack_destroy(stack_after);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
+    //SDL_FreeSurface(try);
 
 
 #endif
