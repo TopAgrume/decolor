@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include "../pixel_operations.h"
 
 typedef struct stack
 {
@@ -33,7 +34,7 @@ stack* stack_pop_last(stack* start);
 // start = Starting address of the stack.
 // img = SDL_Surface image to destack
 // Returns the new starting address of the stack.
-stack* stack_pop(stack* start, SDL_Surface* img);
+stack* stack_pop(stack* start);
 
 // Removes all the elements of a stack.
 // pstart = Address that contains the starting address of the stack.

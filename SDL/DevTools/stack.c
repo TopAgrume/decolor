@@ -21,7 +21,6 @@ stack* stack_pop_last(stack* start)
 {
     if (start == NULL)
         errx(EXIT_FAILURE, "Nothing to pop from the stack");
-
     stack* p = NULL;
     stack* before_p = NULL;
     for (p = start; p->next != NULL;)
@@ -29,19 +28,28 @@ stack* stack_pop_last(stack* start)
         before_p = p;
         p = p->next;
     }
-    before_p->next = NULL;
-    free(p);
-    return start;
+    if (before_p != NULL)
+    {
+        before_p->next = NULL;
+        SDL_FreeSurface(p->img);
+        free(p);
+        return start;
+    }
+    else
+    {
+        SDL_FreeSurface(p->img);
+        free(p);
+        return NULL;
+    }
 }
 
-stack* stack_pop(stack* start, SDL_Surface* img)
+stack* stack_pop(stack* start)
 {
     if (start == NULL)
         errx(EXIT_FAILURE, "Nothing to pop from the stack");
-    *img = *(start->img);
     struct stack* new = start;
     start = start->next;
-
+    SDL_FreeSurface(new->img);
     free(new);
     return start;
 }

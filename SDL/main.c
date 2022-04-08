@@ -113,7 +113,6 @@ int main(int argc , char* argv[])
     // Stack images in back_stack: 1st element (start)
     screen_surface = display_image(image_surface);
     shared_stack_push(stack_back, image_surface);
-    stack* st = stack_back->stack;
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
@@ -125,7 +124,7 @@ int main(int argc , char* argv[])
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
-    
+
     // 3rd element
     image_surface = filling_seal(image_surface, 0, 0, color2, 200);
     shared_stack_push(stack_back, image_surface);
@@ -133,7 +132,7 @@ int main(int argc , char* argv[])
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
-    
+
     // 4th element
     image_surface = filling_seal(image_surface, 500, 500, color3, 200);
     shared_stack_push(stack_back, image_surface);
@@ -165,19 +164,18 @@ int main(int argc , char* argv[])
     printf("Number in stack_before: %li\n", stack_back->size);
     printf("Number in stack_after: %li\n", stack_after->size);
     wait_for_keypressed();
-    
-    SDL_Surface recup;
-    SDL_Surface* try = NULL;
+    SDL_FreeSurface(image_surface);
+
     // Destack images in after_stack: 1st element (start)
     while (stack_back->size > 0)
     {
-        recup = shared_stack_pop(stack_back);
-        try = &recup;
-        update_surface(screen_surface, try);
-        shared_stack_push(stack_after, try);
+        image_surface = shared_stack_pop(stack_back);
+        update_surface(screen_surface, image_surface);
+        shared_stack_push(stack_after, image_surface);
         printf("Number in stack_before: %li\n", stack_back->size);
         printf("Number in stack_after: %li\n", stack_after->size);
         wait_for_keypressed();
+        SDL_FreeSurface(image_surface);
     }
     shared_stack_empty(stack_after);
 
@@ -186,9 +184,8 @@ int main(int argc , char* argv[])
 
     shared_stack_destroy(stack_back);
     shared_stack_destroy(stack_after);
-    SDL_FreeSurface(image_surface);
+    //SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
-    SDL_Quit();
 
 #endif
     return 0;

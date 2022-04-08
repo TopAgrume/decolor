@@ -34,7 +34,7 @@ void shared_stack_pop_last(shared_stack* ss);
 // Pops a value off the end of the shared stack.
 // stack = Address of the shared stack.
 // Returns the image.
-SDL_Surface shared_stack_pop(shared_stack* ss);
+SDL_Surface* shared_stack_pop(shared_stack* ss);
 
 // Frees the shared stack.
 // stack = Address of the shared stack.

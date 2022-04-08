@@ -5,15 +5,21 @@
 
 SDL_Surface* copy_image(SDL_Surface* img)
 {
-    SDL_Surface *copy = NULL;
+    Uint32 pixel;
+    SDL_Surface *copy;
     copy = SDL_CreateRGBSurface(SDL_HWSURFACE, img->w, img->h, img->format->BitsPerPixel, img->format->Rmask, img->format->Gmask, img->format->Bmask, img->format->Amask);
 
     if(copy == NULL || img == NULL)
-        errx(EXIT_FAILURE, "Copy_Image() NULL (1)\n");
-    
-    copy = SDL_DisplayFormatAlpha(img);
-    if (copy == NULL)
-        errx(EXIT_FAILURE, "Copy_Image() NULL (2)\n");
+        errx(EXIT_FAILURE, "Copy_Image() NULL\n");
+    int x, y;
+    for (x = 0; x < img->w; x++)
+    {
+        for (y = 0; y < img->h; y++)
+        {
+            pixel = get_pixel(img, x, y);
+            put_pixel(copy, x, y, pixel);
+        }
+    }
 
     return copy;
 }
@@ -45,12 +51,12 @@ void shared_stack_pop_last(shared_stack* ss)
     ss->size -= 1;
 }
 
-SDL_Surface shared_stack_pop(shared_stack* ss)
+SDL_Surface* shared_stack_pop(shared_stack* ss)
 {
     if (ss->size == 0)
         errx(EXIT_FAILURE, "Stack already empty\n");
-    SDL_Surface img;
-    ss->stack = stack_pop(ss->stack, &img);
+    SDL_Surface* img = copy_image(ss->stack->img);
+    ss->stack = stack_pop(ss->stack);
     ss->size -= 1;
     return img;
 }
@@ -63,6 +69,5 @@ void shared_stack_destroy(shared_stack* ss)
 
 void shared_stack_empty(shared_stack* ss)
 {
-    for (; ss->size > 0; ss->size--)
-        stack_empty(&(ss->stack));
+    stack_empty(&(ss->stack));
 }
