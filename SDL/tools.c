@@ -108,3 +108,49 @@ SDL_Color pipette(SDL_Surface* img, int x, int y)
     return color;
 }
 
+void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size){
+    int i = x-size;
+    int j = y;
+    int nb = 0;
+    while(i < x){
+	    while(j < y+nb){
+		    put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+		    j++;
+	    }
+	    i++;
+	    nb++;
+	    j = y - nb;
+    }
+    while(i <= x+size){
+            while(j < y+nb){
+                    put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+                    j++;
+            }
+            i++;
+            nb --;
+            j = y - nb;
+    }
+}
+
+void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size){
+    int i = x1;
+    int a = (y2 - y1) / (x2 - x1);
+    int b = y1 - a * x1;
+    printf("%i",size);
+    while(i < x2){
+	    //point(surface, color, i, a * i + b, size);
+	    put_pixel(surface, i, a*i+b, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+	    i++;
+    }
+}
+
+//This function create a surface and put a line between each event of left click
+// -> 'color' the color of the brush
+/*void brush(SDL_Color color){
+	SDL_Surface* surface;
+	int loop = 1;
+
+	while(loop){
+
+	}
+}*/

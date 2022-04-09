@@ -12,5 +12,8 @@
 
 SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, int threshold);
 SDL_Color pipette(SDL_Surface* img, int x, int y);
+void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size);
+void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
+//void brush(SDL_Surface* surface, SDL_Color color, int x, int y);
 
 #endif

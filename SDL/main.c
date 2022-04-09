@@ -6,11 +6,12 @@
 #include "pixel_operations.h"
 #include "filter.h"
 #include "tools.h"
-#include "DevTools/shared_stack.h" 
+#include "DevTools/shared_stack.h"
 
 //#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
-#define TEST_STACK
+//#define TEST_FILTER
+#define TEST_BRUSH
 
 int main(int argc , char* argv[])
 {
@@ -27,15 +28,39 @@ int main(int argc , char* argv[])
 
     image_surface = load_image(path);
     screen_surface = display_image(image_surface);
-
     wait_for_keypressed();
 
-    grayscale(image_surface);
-
+    negative(image_surface);
     screen_surface = display_image(image_surface);
-
     wait_for_keypressed();
-    
+
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);
+#endif
+
+#ifdef TEST_BRUSH
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+    int width = 600;
+    int height = 600;
+
+    init_sdl();
+
+    printf("%s\n",path);
+    image_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 255);
+    SDL_FillRect(image_surface, NULL, SDL_MapRGB(image_surface->format, 0, 0, 0));
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+
+    SDL_Color color;
+    color.r = 255;
+    color.g = 255;
+    color.b = 255;
+
+    line(image_surface, color, 200, 200, 300, 500, 2);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 #endif
