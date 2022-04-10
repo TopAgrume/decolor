@@ -9,8 +9,12 @@ GtkWidget *window;
 GtkWidget *image;
 GtkWidget *SaveButton;
 GtkWidget *FileChooser;
+GtkWidget *image;
+GtkWidget *event_box;
 GtkBuilder *Builder;
 
+static gboolean button_press_callback (GtkWidget *event_box, GdkEventButton
+*event, gpointer data);
 gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data);
 gboolean on_SaveButton_clicked(GtkButton *f, gpointer user_data); 
 void update_preview_cb (GtkFileChooser *file_chooser, gpointer data);
@@ -34,10 +38,19 @@ int main(int argc, char *argv[])
 
     SaveButton = GTK_WIDGET(gtk_builder_get_object(Builder, "Save"));
     FileChooser = GTK_WIDGET(gtk_builder_get_object(Builder, "FileChooser"));
-    image = GTK_WIDGET(gtk_builder_get_object(Builder, "image"));
+    image = GTK_WIDGET(gtk_image_new());
     GtkWidget *preview;
     preview = gtk_image_new();
     gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(FileChooser), preview);
+    event_box = GTK_WIDGET(gtk_builder_get_object(Builder, "event_box"));
+
+    gtk_container_add (GTK_CONTAINER (event_box), image);
+
+    g_signal_connect (G_OBJECT (event_box),
+                      "button_press_event",
+                      G_CALLBACK (button_press_callback),
+                      image);
+
     g_signal_connect (FileChooser, "update-preview", G_CALLBACK (update_preview_cb), preview);
     
     g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
@@ -69,6 +82,18 @@ void update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
     g_object_unref (pixbuf);
 
   gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
+}
+
+static gboolean button_press_callback (GtkWidget *event_box, GdkEventButton *event, gpointer data)
+{
+    if (event_box != NULL && data != NULL)
+        g_print ("Event box clicked at coordinates %f,%f\n",
+                event->x, event->y);
+
+    // Returning TRUE means we handled the event, so the signal
+    // emission should be stopped (don’t call any further callbacks
+    // that may be connected). Return FALSE to continue invoking callbacks.
+    return TRUE;
 }
 
 gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
