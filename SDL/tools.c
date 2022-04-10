@@ -133,14 +133,34 @@ void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size){
 }
 
 void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size){
-    int i = x1;
-    int a = (y2 - y1) / (x2 - x1);
-    int b = y1 - a * x1;
-    printf("%i",size);
-    while(i < x2){
-	    //point(surface, color, i, a * i + b, size);
-	    put_pixel(surface, i, a*i+b, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-	    i++;
+    int a;
+    if(x2 - x1 > y2 - y1){
+	    int i = x1;
+	    if(x2 - x1 == 0)
+		    a = 0;
+	    else
+		    a = (y2 - y1) / (x2 - x1);
+	    int b = y1 - a * x1;
+	    printf("%i\n",size);
+	    while(i < x2){
+		    point(surface, color, i, a * i + b, size);
+		    //put_pixel(surface, i, a * i + b, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+		    i++;
+	    }
+    }
+    else{
+	    int i = y1;
+	    if(y2 - y1 == 0)
+                    a = 0;
+            else
+                    a = (x2 - x1) / (y2 - y1);
+            int b = x1 - a * y1;
+            printf("%i\n",size);
+            while(i < y2){
+                    point(surface, color, i, a * i + b, size);
+                    //put_pixel(surface, a * i + b, i, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+                    i++;
+            }
     }
 }
 

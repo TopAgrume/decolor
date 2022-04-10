@@ -57,7 +57,7 @@ int main(int argc , char* argv[])
     color.g = 255;
     color.b = 255;
 
-    line(image_surface, color, 200, 200, 300, 500, 2);
+    line(image_surface, color, 200, 200, 500, 500, 2);
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
