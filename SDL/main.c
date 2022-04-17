@@ -101,16 +101,41 @@ int main(int argc , char* argv[])
     color2.r = 0;
     color2.g = 145;
     color2.b = 145;
+    SDL_Color color3;
+    color3.r = 255;
+    color3.g = 0;
+    color3.b = 0;
 
-    make_square(image_surface, 0, 0, 1214, 716, color, 10);
+
+    make_empty_square(image_surface, 10, 10, 1200, 700, color, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    make_square(image_surface, 100, 20, 700, 300, color1, 10);
+    make_empty_square(image_surface, 1200, 10, 10, 700, color1, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    make_square(image_surface, 350, 250, 600, 710, color2, 20);
+    make_empty_square(image_surface, 10, 700, 1200, 10, color2, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_empty_square(image_surface, 1200, 700, 10, 10, color3, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_fill_square(image_surface, 10, 10, 1204, 706, color);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_fill_square(image_surface, 1180, 30, 30, 690, color1);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_fill_square(image_surface, 50, 650, 1150, 50, color2);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_fill_square(image_surface, 1120, 620, 70, 70, color3);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
