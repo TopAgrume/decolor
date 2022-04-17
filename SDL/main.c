@@ -7,14 +7,15 @@
 #include "filter.h"
 #include "tools.h"
 #include "DevTools/shared_stack.h"
+#include "shape.h"
 
 //#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
-//#define TEST_FILTER
+//#define TEST_STACK
 //#define TEST_BRUSH
-#define TEST_CROP
+//#define TEST_CROP
 //#define TEST_TRANSFORM
-
+#define TEST_SHAPE
 int main(int argc , char* argv[])
 {
     if(argc != 2)
@@ -76,6 +77,46 @@ int main(int argc , char* argv[])
     SDL_FreeSurface(image_surface2);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
+#endif
+
+#ifdef TEST_SHAPE
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+
+    init_sdl();
+
+    image_surface = load_image(path);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+    
+    SDL_Color color;
+    color.r = 145;
+    color.g = 145;
+    color.b = 0;
+    SDL_Color color1;
+    color1.r = 145;
+    color1.g = 0;
+    color1.b = 145;
+    SDL_Color color2;
+    color2.r = 0;
+    color2.g = 145;
+    color2.b = 145;
+
+    make_square(image_surface, 0, 0, 1214, 716, color, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_square(image_surface, 100, 20, 700, 300, color1, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_square(image_surface, 350, 250, 600, 710, color2, 20);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);
+
 #endif
 
 #ifdef TEST_BRUSH
