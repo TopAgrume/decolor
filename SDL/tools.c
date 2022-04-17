@@ -174,3 +174,22 @@ void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2,
 
 	}
 }*/
+
+SDL_Surface* crop(SDL_Surface* surface, int x, int y, int width, int height){
+    if(x + width > surface->w || y + height > surface->h)
+	    errx(EXIT_FAILURE, "Problème au rognage");
+
+    SDL_Surface* crop = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 255);
+    Uint8 r, g, b;
+    Uint32 pixel;
+    for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                    pixel = get_pixel(surface, i+x, j+y);
+                    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                    pixel = SDL_MapRGB(surface->format, r, g, b);
+                    put_pixel(crop, i, j, pixel);
+            }
+    }
+
+    return crop;
+}

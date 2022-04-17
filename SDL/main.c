@@ -11,7 +11,9 @@
 //#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_FILTER
-#define TEST_BRUSH
+//#define TEST_BRUSH
+#define TEST_CROP
+//#define TEST_TRANSFORM
 
 int main(int argc , char* argv[])
 {
@@ -34,6 +36,44 @@ int main(int argc , char* argv[])
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);
+#endif
+
+#ifdef TEST_CROP
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+
+    init_sdl();
+
+    image_surface = load_image(path);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+
+    SDL_Surface* image_surface2 = crop(image_surface, 200, 200, 400, 200);
+    screen_surface = display_image(image_surface2);
+    wait_for_keypressed();
+
+    SDL_FreeSurface(image_surface2);
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);
+#endif
+
+#ifdef TEST_TRANSFORM
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+
+    init_sdl();
+
+    image_surface = load_image(path);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+
+    SDL_Surface* image_surface2 = rotozoomSurface(image_surface, 0, 0.5, 0);
+    screen_surface = display_image(image_surface2);
+    wait_for_keypressed();
+
+    SDL_FreeSurface(image_surface2);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 #endif
