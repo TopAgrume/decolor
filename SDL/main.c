@@ -9,14 +9,14 @@
 #include "DevTools/shared_stack.h"
 #include "shape.h"
 
-//#define TEST_FILTER
+#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
 //#define TEST_CROP
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
-#define TEST_TRIANGLE
+//#define TEST_TRIANGLE
 int main(int argc , char* argv[])
 {
     if(argc != 2)
@@ -211,10 +211,10 @@ int main(int argc , char* argv[])
     color.g = 255;
     color.b = 255;
 
-    line(image_surface, color, 20, 20, 500, 500, 2);
-    line(image_surface, color, 20, 500, 500, 500, 2);
-    line(image_surface, color, 500, 20, 20, 500, 2);
-    line(image_surface, color, 500, 20, 20, 20, 2);
+    drawline(image_surface, color, 20, 20, 500, 500, 2);
+    drawline(image_surface, color, 20, 500, 500, 500, 2);
+    drawline(image_surface, color, 500, 20, 20, 500, 2);
+    drawline(image_surface, color, 500, 20, 20, 20, 2);
 
     screen_surface = display_image(image_surface);
     wait_for_keypressed();

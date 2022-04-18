@@ -132,6 +132,62 @@ void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size){
     }
 }
 
+void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2, int size)
+{
+    int x,y;
+    int Dx,Dy;
+    int xincr,yincr;
+    int erreur;
+    int i;
+
+    Dx = abs(x2-x1);
+    Dy = abs(y2-y1);
+    if(x1<x2)
+        xincr = 1;
+    else
+        xincr = -1;
+    if(y1<y2)
+        yincr = 1;
+    else
+        yincr = -1;
+
+    x = x1;
+    y = y1;
+    if(Dx>Dy)
+    {
+        erreur = Dx/2;
+        for(i=0;i<Dx;i++)
+        {
+            x += xincr;
+            erreur += Dy;
+            if(erreur>Dx)
+            {
+                erreur -= Dx;
+                y += yincr;
+            }
+            point(img, color, x, y, size);
+        }
+    }
+    else
+    {
+        erreur = Dy/2;
+        for(i=0;i<Dy;i++)
+        {
+            y += yincr;
+            erreur += Dx;
+            if(erreur>Dy)
+            {
+                erreur -= Dy;
+                x += xincr;
+            }
+            point(img, color, x, y, size);
+        }
+    }
+    point(img, color, x1, y1, size);
+    point(img, color, x2, y2, size);
+}
+
+/*
 void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size){
     int a;
     if(x2 - x1 > y2 - y1){
@@ -162,7 +218,7 @@ void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2,
                     i++;
             }
     }
-}
+}*/
 
 //This function create a surface and put a line between each event of left click
 // -> 'color' the color of the brush
