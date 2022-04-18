@@ -155,3 +155,106 @@ SDL_Surface* make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2,
     //printf("\n");
     return img;
 }
+
+void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2, int size)
+{
+    int x,y;
+    int Dx,Dy;
+    int xincr,yincr;
+    int erreur;
+    int i;
+
+    Dx = abs(x2-x1);
+    Dy = abs(y2-y1);
+    if(x1<x2)
+        xincr = 1;
+    else
+        xincr = -1;
+    if(y1<y2)
+        yincr = 1;
+    else
+        yincr = -1;
+
+    x = x1;
+    y = y1;
+    if(Dx>Dy)
+    {
+        erreur = Dx/2;
+        for(i=0;i<Dx;i++)
+        {
+            x += xincr;
+            erreur += Dy;
+            if(erreur>Dx)
+            {
+                erreur -= Dx;
+                y += yincr;
+            }
+            point(img, color, x, y, size);
+        }
+    }
+    else
+    {
+        erreur = Dy/2;
+        for(i=0;i<Dy;i++)
+        {
+            y += yincr;
+            erreur += Dx;
+            if(erreur>Dy)
+            {
+                erreur -= Dy;
+                x += xincr;
+            }
+            point(img, color, x, y, size);
+        }
+    }
+    point(img, color, x1, y1, size);
+    point(img, color, x2, y2, size);
+}
+
+SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
+{
+    if (img == NULL)
+        errx(EXIT_FAILURE, "Failure make_empty_triangle(): img == NULL");
+    if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
+         errx(EXIT_FAILURE, "Failure make_empty_triangle(): x out of bounds");
+    if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
+         errx(EXIT_FAILURE, "Failure make_empty_triangle(): y out of bounds");
+
+    //int move_x1 = 0;
+    //int move_x2 = 0;
+    //int move_y1 = 0;
+    //int move_y2 = 0;
+    
+    int x3 = 0;
+    if (x1 < x2)
+    {
+        if (y1 < y2)
+        {
+            x3 = x1 + ((x2 - x1) / 2);
+            //printf("1\n\n");
+        }
+        else
+        {
+            x3 = x1 + ((x2 - x1) / 2);
+            //printf("2\n\n");
+        }
+    }
+    else
+    {
+        if (y1 < y2)
+        {
+            x3 = x2 + ((x1 - x2) / 2);
+            //printf("3\n\n");
+        }
+        else
+        {
+            x3 = x2 + ((x1 - x2) / 2);
+            //printf("4\n\n");
+        }
+    }
+    //printf("x1:%i y1:%i x2:%i y2:%i x3:%i\n", x1, y1, x2, y2, x3);
+    drawline(img, new_color, x1, y1, x2, y1, size);
+    drawline(img, new_color, x2, y1, x3, y2, size);
+    drawline(img, new_color, x3, y2, x1, y1, size);
+    return img;
+}

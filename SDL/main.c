@@ -15,7 +15,8 @@
 //#define TEST_BRUSH
 //#define TEST_CROP
 //#define TEST_TRANSFORM
-#define TEST_SHAPE
+//#define TEST_SHAPE
+#define TEST_TRIANGLE
 int main(int argc , char* argv[])
 {
     if(argc != 2)
@@ -75,6 +76,53 @@ int main(int argc , char* argv[])
     wait_for_keypressed();
 
     SDL_FreeSurface(image_surface2);
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);
+#endif
+
+#ifdef TEST_TRIANGLE
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+
+    init_sdl();
+
+    image_surface = load_image(path);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+    
+    SDL_Color color;
+    color.r = 145;
+    color.g = 145;
+    color.b = 0;
+    SDL_Color color1;
+    color1.r = 145;
+    color1.g = 0;
+    color1.b = 145;
+    SDL_Color color2;
+    color2.r = 0;
+    color2.g = 145;
+    color2.b = 145;
+    SDL_Color color3;
+    color3.r = 255;
+    color3.g = 0;
+    color3.b = 0;
+
+    make_empty_triangle(image_surface, 30, 30, 700, 700, color, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+    
+    make_empty_triangle(image_surface, 600, 50, 50, 600, color1, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_empty_triangle(image_surface, 200, 700, 1200, 30, color2, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    make_empty_triangle(image_surface, 1100, 700, 200, 10, color3, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+    
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 #endif
@@ -163,7 +211,11 @@ int main(int argc , char* argv[])
     color.g = 255;
     color.b = 255;
 
-    line(image_surface, color, 200, 200, 500, 500, 2);
+    line(image_surface, color, 20, 20, 500, 500, 2);
+    line(image_surface, color, 20, 500, 500, 500, 2);
+    line(image_surface, color, 500, 20, 20, 500, 2);
+    line(image_surface, color, 500, 20, 20, 20, 2);
+
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
