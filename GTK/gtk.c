@@ -1,9 +1,11 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
+#include "gtk.h"
+#include <stdlib.h>
 
 GdkRGBA* color;
-GdkColorButton ColorButton;
-GtkWidget window;
+GtkColorButton* ColorButton;
+GtkWidget *window;
 GtkRadioButton* brush;
 GtkRadioButton* bucket;
 GtkRadioButton* eraser;
@@ -21,6 +23,8 @@ GtkWidget *dialog;
 GtkWidget *image;
 GtkWidget *FileChooser;
 GtkFileChooser *chooser;
+GtkScale* scale;
+unsigned char scale_nb = 0;
 
 GSList* tools = g_list_alloc();
 int tool_value = -1;
@@ -28,7 +32,7 @@ int tool_value = -1;
 
 //functions
 gboolean on_Color_set(GtkColorButton *self, gpointer user_data);
-void set_tools_group(GtkGrid toolsgrid, GtkRadioButton* brush);
+//void set_tools_group(GtkGriid* toolsgrid, GtkRadioButton* brush);
 gboolean on_brush(GtkRadioButton *self, gpointer user_data);
 gboolean on_bucket(GtkRadioButton *self, gpointer user_data);
 gboolean on_eraser(GtkRadioButton *self, gpointer user_data);
@@ -47,7 +51,7 @@ int main(int argc, char *argv[])
 {
     gtk_init (&argc, &argv);
 
-    Builder = gtk_builder_new_from_file("GUI.glade");
+    GtkBuilder* Builder = gtk_builder_new_from_file("GUI.glade");
 
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
@@ -69,6 +73,9 @@ int main(int argc, char *argv[])
     triangle = gtk_builder_get_object(Builder, "triangle");
     circle = gtk_builder_get_object(Builder, "circle");
     set_tools_group(toolsgrid, brush);
+    scale = GTK_SCALE(gtk_builder_get_object(Builder, "scale"));
+    scale_nb = gtk_range_get_value(&(scale->range));
+    printf("Scale number : %c", scale_nb);
     // Previous and Next
     previous = gtk_builder_get_object(Builder, "previous");
     next = gtk_builder_get_object(Builder, "next");
@@ -106,13 +113,13 @@ int main(int argc, char *argv[])
 gboolean on_previous(GtkButton* self, gpointer user_data)
 {
     //use this fonction to revert last modification
-    return false;
+    return FALSE;
 }
 
 gboolean on_next(GtkButton* self, gpointer user_data)
 {
     //use this fonction to re-do last modification that was reverted
-    return false;
+    return FALSE;
 }
 
 gboolean on_brush(GtkRadioButton *self, gpointer user_data)
@@ -120,61 +127,61 @@ gboolean on_brush(GtkRadioButton *self, gpointer user_data)
     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
         tool_value = 1;
 
-    return false;
+    return FALSE;
 }
 
 gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
 {
      if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
          tool_value = 2;
-     return false;
+     return FALSE;
 }
 
 gboolean on_eraser(GtkRadioButton *self, gpointer user_data)
 {
      if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
          tool_value = 3;
-     return false;
+     return FALSE;
 }
 
 gboolean on_bigeraser(GtkRadioButton *self, gpointer user_data)
 {
      if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
          tool_value = 4;
-     return false;
+     return FALSE;
 }
 
 gboolean on_segment(GtkRadioButton *self, gpointer user_data)
 {
      if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
          tool_value = 5;
-     return false;
+     return FALSE;
 }
 
 gboolean on_square(GtkRadioButton *self, gpointer user_data)
 {
      if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
          tool_value = 6;
-     return false;
+     return FALSE;
 }
 
 gboolean on_triangle(GtkRadioButton *self, gpointer user_data)
 {
      if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
          tool_value = 7;
-     return false;
+     return FALSE;
 }
 
 gboolean on_circle(GtkRadioButton *self, gpointer user_data)
 {
      if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
          tool_value = 8;
-     return false;
+     return FALSE;
 }
 
 void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
 {
-    for (int row = 0: row < 2; row++)
+    for (int row = 0; row < 2; row++)
     {
         for (int col = 1-row; col < 4; col++)
         {
@@ -190,7 +197,7 @@ gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
     GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(img));
     GError* error = NULL;
 
-    res = gtk_dialog_run (GTK_DIALOG (dialog));
+    int res = gtk_dialog_run (GTK_DIALOG (dialog));
     if (res == GTK_RESPONSE_ACCEPT)
     {
         char *filename;
@@ -235,7 +242,7 @@ gboolean on_Color_set(GtkColorButton *self, gpointer user_data)
 {
     gtk_color_button_get_rgba(self,color);
 
-    return false;
+    return FALSE;
 }
 
 

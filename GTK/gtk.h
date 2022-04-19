@@ -10,4 +10,6 @@
 #include <glib.h>
 
 void create_window(int argc, char* argv[]);
+void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush);
+
 #endif
