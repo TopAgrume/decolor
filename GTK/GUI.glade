@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
   <object class="GtkAdjustment" id="adjustment1">
     <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkListStore" id="liststore1">
     <columns>
@@ -30,45 +30,42 @@
   <object class="GtkRadioButton" id="radiobutton1">
     <property name="label" translatable="yes">radiobutton</property>
     <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="receives_default">False</property>
+    <property name="can-focus">True</property>
+    <property name="receives-default">False</property>
     <property name="active">True</property>
-    <property name="draw_indicator">True</property>
+    <property name="draw-indicator">True</property>
   </object>
   <object class="GtkRadioButton" id="radiobutton4">
     <property name="label" translatable="yes">radiobutton</property>
     <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="receives_default">False</property>
+    <property name="can-focus">True</property>
+    <property name="receives-default">False</property>
     <property name="active">True</property>
-    <property name="draw_indicator">True</property>
+    <property name="draw-indicator">True</property>
   </object>
   <object class="GtkWindow" id="MyWindow">
-    <property name="width_request">1080</property>
-    <property name="height_request">720</property>
-    <property name="can_focus">False</property>
+    <property name="width-request">1080</property>
+    <property name="height-request">720</property>
+    <property name="can-focus">False</property>
     <property name="title" translatable="yes">On est là !</property>
-    <property name="default_width">1280</property>
-    <property name="default_height">900</property>
+    <property name="default-width">1280</property>
+    <property name="default-height">900</property>
     <signal name="destroy" handler="exit_app" swapped="no"/>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkInfoBar">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child internal-child="action_area">
               <object class="GtkButtonBox">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="spacing">6</property>
-                <property name="layout_style">end</property>
+                <property name="layout-style">end</property>
                 <child>
                   <placeholder/>
                 </child>
@@ -87,7 +84,7 @@
             </child>
             <child internal-child="content_area">
               <object class="GtkBox">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="spacing">16</property>
                 <child>
                   <placeholder/>
@@ -117,28 +114,28 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="height_request">620</property>
+            <property name="height-request">620</property>
             <property name="visible">True</property>
-            <property name="app_paintable">True</property>
-            <property name="can_focus">False</property>
+            <property name="app-paintable">True</property>
+            <property name="can-focus">False</property>
             <property name="spacing">5</property>
             <child>
               <object class="GtkFixed">
-                <property name="width_request">180</property>
+                <property name="width-request">180</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_right">361</property>
+                <property name="can-focus">False</property>
+                <property name="margin-right">361</property>
                 <child>
                   <object class="GtkScale">
-                    <property name="width_request">170</property>
-                    <property name="height_request">40</property>
+                    <property name="width-request">170</property>
+                    <property name="height-request">40</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <property name="adjustment">adjustment1</property>
-                    <property name="show_fill_level">True</property>
-                    <property name="fill_level">0</property>
-                    <property name="round_digits">1</property>
-                    <property name="value_pos">left</property>
+                    <property name="show-fill-level">True</property>
+                    <property name="fill-level">0</property>
+                    <property name="round-digits">1</property>
+                    <property name="value-pos">left</property>
                   </object>
                   <packing>
                     <property name="x">5</property>
@@ -146,12 +143,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkColorButton">
-                    <property name="width_request">160</property>
-                    <property name="height_request">80</property>
+                  <object class="GtkColorButton" id="Color">
+                    <property name="width-request">160</property>
+                    <property name="height-request">80</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
                   </object>
                   <packing>
                     <property name="x">10</property>
@@ -159,32 +156,34 @@
                   </packing>
                 </child>
                 <child>
+                  <!-- n-columns=2 n-rows=1 -->
                   <object class="GtkGrid">
-                    <property name="width_request">180</property>
-                    <property name="height_request">0</property>
+                    <property name="width-request">180</property>
+                    <property name="height-request">0</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="column_spacing">1</property>
+                    <property name="can-focus">False</property>
+                    <property name="column-spacing">1</property>
                     <child>
-                      <object class="GtkFileChooserButton">
+                      <object class="GtkFileChooserButton" id="FileChooser">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="title" translatable="yes"/>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFileChooserButton">
+                      <object class="GtkButton" id="Save">
+                        <property name="label" translatable="yes">Save</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="title" translatable="yes"/>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                   </object>
@@ -193,329 +192,328 @@
                   </packing>
                 </child>
                 <child>
+                  <!-- n-columns=2 n-rows=1 -->
                   <object class="GtkGrid">
-                    <property name="width_request">160</property>
+                    <property name="width-request">160</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">10</property>
-                    <property name="margin_right">10</property>
-                    <property name="column_spacing">40</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-left">10</property>
+                    <property name="margin-right">10</property>
+                    <property name="column-spacing">40</property>
                     <child>
-                      <object class="GtkButton">
-                        <property name="width_request">60</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkButton" id="previous">
+                        <property name="width-request">60</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="focus-on-click">False</property>
+                        <property name="receives-default">True</property>
                         <property name="relief">none</property>
-                        <property name="use_underline">True</property>
-                        <property name="always_show_image">True</property>
+                        <property name="use-underline">True</property>
+                        <property name="always-show-image">True</property>
                         <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
-                          </object>
+                          <placeholder/>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
-                        <property name="width_request">60</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkButton" id="next">
+                        <property name="width-request">60</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="focus-on-click">False</property>
+                        <property name="receives-default">True</property>
                         <property name="relief">none</property>
-                        <property name="always_show_image">True</property>
+                        <property name="always-show-image">True</property>
                         <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
-                          </object>
+                          <placeholder/>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
+                    <property name="x">9</property>
                     <property name="y">55</property>
                   </packing>
                 </child>
                 <child>
+                  <!-- n-columns=3 n-rows=1 -->
                   <object class="GtkGrid">
-                    <property name="width_request">160</property>
-                    <property name="height_request">55</property>
+                    <property name="width-request">160</property>
+                    <property name="height-request">55</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="margin_left">6</property>
-                    <property name="margin_right">6</property>
-                    <property name="row_spacing">5</property>
-                    <property name="column_spacing">9</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-left">6</property>
+                    <property name="margin-right">6</property>
+                    <property name="row-spacing">5</property>
+                    <property name="column-spacing">9</property>
                     <child>
                       <object class="GtkRadioButton">
-                        <property name="width_request">50</property>
-                        <property name="height_request">50</property>
+                        <property name="width-request">50</property>
+                        <property name="height-request">50</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
                         <property name="active">True</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkRadioButton">
-                        <property name="width_request">50</property>
-                        <property name="height_request">50</property>
+                        <property name="width-request">50</property>
+                        <property name="height-request">50</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
                         <property name="active">True</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkRadioButton">
-                        <property name="width_request">50</property>
-                        <property name="height_request">50</property>
+                        <property name="width-request">50</property>
+                        <property name="height-request">50</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="focus_on_click">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="focus-on-click">False</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">2</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
+                    <property name="x">6</property>
                     <property name="y">110</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkGrid">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
+                  <!-- n-columns=4 n-rows=2 -->
+                  <object class="GtkGrid" id="toolsgrid">
+                    <property name="width-request">100</property>
+                    <property name="height-request">80</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="row_spacing">5</property>
-                    <property name="column_spacing">4</property>
+                    <property name="can-focus">False</property>
+                    <property name="row-spacing">5</property>
+                    <property name="column-spacing">4</property>
                     <child>
-                      <object class="GtkRadioButton" id="radiobutton3">
-                        <property name="width_request">40</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkRadioButton" id="brush">
+                        <property name="width-request">40</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton" id="radiobutton2">
-                        <property name="width_request">40</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkRadioButton" id="bucket">
+                        <property name="width-request">40</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
-                        <property name="width_request">40</property>
-                        <property name="height_request">45</property>
+                      <object class="GtkRadioButton" id="eraser">
+                        <property name="width-request">40</property>
+                        <property name="height-request">45</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">2</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
-                        <property name="width_request">40</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkRadioButton" id="bigeraser">
+                        <property name="width-request">40</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">3</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">3</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
-                        <property name="width_request">40</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkRadioButton" id="segment">
+                        <property name="width-request">40</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
-                        <property name="width_request">40</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkRadioButton" id="square">
+                        <property name="width-request">40</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
-                        <property name="width_request">40</property>
-                        <property name="height_request">45</property>
+                      <object class="GtkRadioButton" id="triangle">
+                        <property name="width-request">40</property>
+                        <property name="height-request">45</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">2</property>
-                        <property name="top_attach">1</property>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
-                        <property name="width_request">40</property>
-                        <property name="height_request">40</property>
+                      <object class="GtkRadioButton" id="circle">
+                        <property name="width-request">40</property>
+                        <property name="height-request">40</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">False</property>
-                        <property name="draw_indicator">False</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">False</property>
+                        <property name="draw-indicator">False</property>
                         <property name="group">radiobutton4</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="left_attach">3</property>
-                        <property name="top_attach">1</property>
+                        <property name="left-attach">3</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                   </object>
@@ -526,21 +524,21 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="width_request">160</property>
+                    <property name="width-request">160</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkComboBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="model">liststore1</property>
                         <property name="active">1</property>
-                        <property name="tearoff_title" translatable="yes">Oui</property>
-                        <property name="button_sensitivity">on</property>
-                        <property name="id_column">0</property>
-                        <property name="active_id">Oui</property>
+                        <property name="tearoff-title" translatable="yes">Oui</property>
+                        <property name="button-sensitivity">on</property>
+                        <property name="id-column">0</property>
+                        <property name="active-id">Oui</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -552,8 +550,8 @@
                       <object class="GtkButton">
                         <property name="label" translatable="yes">Appliquer</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
                         <property name="relief">none</property>
                       </object>
                       <packing>
@@ -576,15 +574,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkDrawingArea">
-                <property name="width_request">950</property>
+              <object class="GtkImage" id="image">
                 <property name="visible">True</property>
-                <property name="app_paintable">True</property>
-                <property name="can_focus">True</property>
-                <property name="halign">center</property>
+                <property name="can-focus">False</property>
+                <property name="stock">gtk-missing-image</property>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>

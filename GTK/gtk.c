@@ -1,23 +1,46 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
-GtkWidget *dialog;
-GtkFileChooser *chooser;
+GdkRGBA* color;
+GdkColorButton ColorButton;
+GtkWidget window;
+GtkRadioButton* brush;
+GtkRadioButton* bucket;
+GtkRadioButton* eraser;
+GtkRadioButton* bigeraser;
+GtkRadioButton* segment;
+GtkRadioButton* square;
+GtkRadioButton* triangle;
+GtkRadioButton* circle;
+GtkGrid* toolsgrid;
+GtkButton* previous;
+GtkButton* next;
 GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
-gint res;
-GtkWidget *window;
-GtkWidget *image;
 GtkWidget *SaveButton;
-GtkWidget *FileChooser;
+GtkWidget *dialog;
 GtkWidget *image;
-GtkWidget *event_box;
-GtkBuilder *Builder;
+GtkWidget *FileChooser;
+GtkFileChooser *chooser;
 
-static gboolean button_press_callback (GtkWidget *event_box, GdkEventButton
-*event, gpointer data);
+GSList* tools = g_list_alloc();
+int tool_value = -1;
+
+
+//functions
+gboolean on_Color_set(GtkColorButton *self, gpointer user_data);
+void set_tools_group(GtkGrid toolsgrid, GtkRadioButton* brush);
+gboolean on_brush(GtkRadioButton *self, gpointer user_data);
+gboolean on_bucket(GtkRadioButton *self, gpointer user_data);
+gboolean on_eraser(GtkRadioButton *self, gpointer user_data);
+gboolean on_bigeraser(GtkRadioButton *self, gpointer user_data);
+gboolean on_segment(GtkRadioButton *self, gpointer user_data);
+gboolean on_square(GtkRadioButton *self, gpointer user_data);
+gboolean on_triangle(GtkRadioButton *self, gpointer user_data);
+gboolean on_circle(GtkRadioButton *self, gpointer user_data);
+gboolean on_previous(GtkButton *self, gpointer user_data);
+gboolean on_next(GtkButton *self, gpointer user_data);
 gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data);
-gboolean on_SaveButton_clicked(GtkButton *f, gpointer user_data); 
-void update_preview_cb (GtkFileChooser *file_chooser, gpointer data);
+gboolean on_SaveButton_clicked(GtkButton *f, gpointer user_data);
 
 
 int main(int argc, char *argv[])
@@ -26,35 +49,52 @@ int main(int argc, char *argv[])
 
     Builder = gtk_builder_new_from_file("GUI.glade");
 
+    // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
-
-    dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action, 
+    ColorButton = gtk_builder_get_object(Builder, "Color");
+    image = GTK_WIDGET(gtk_image_new());
+    toolsgrid = gtk_builder_get_object(Builder, "toolsgrid");
+    dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action,
     "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
-
-    chooser = GTK_FILE_CHOOSER(dialog);                                         
-    gtk_file_chooser_set_current_name (chooser, "Saving Image"); 
-
-    g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-
     SaveButton = GTK_WIDGET(gtk_builder_get_object(Builder, "Save"));
     FileChooser = GTK_WIDGET(gtk_builder_get_object(Builder, "FileChooser"));
-    image = GTK_WIDGET(gtk_image_new());
-    GtkWidget *preview;
-    preview = gtk_image_new();
-    gtk_file_chooser_set_preview_widget (GTK_FILE_CHOOSER(FileChooser), preview);
-    event_box = GTK_WIDGET(gtk_builder_get_object(Builder, "event_box"));
+    // Tools buttons
+    brush = gtk_builder_get_object(Builder, "brush");
+    gtk_radio_button_set_group (brush ,tools);
+    bucket = gtk_builder_get_object(Builder, "bucket"); 
+    eraser = gtk_builder_get_object(Builder, "eraser");
+    bigeraser = gtk_builder_get_object(Builder, "bigeraser");
+    segment = gtk_builder_get_object(Builder, "segment");
+    square = gtk_builder_get_object(Builder, "square");
+    triangle = gtk_builder_get_object(Builder, "triangle");
+    circle = gtk_builder_get_object(Builder, "circle");
+    set_tools_group(toolsgrid, brush);
+    // Previous and Next
+    previous = gtk_builder_get_object(Builder, "previous");
+    next = gtk_builder_get_object(Builder, "next");
 
-    gtk_container_add (GTK_CONTAINER (event_box), image);
+    chooser = GTK_FILE_CHOOSER(dialog);
+    gtk_file_chooser_set_current_name (chooser, "Saving Image");
 
-    g_signal_connect (G_OBJECT (event_box),
-                      "button_press_event",
-                      G_CALLBACK (button_press_callback),
-                      image);
-
-    g_signal_connect (FileChooser, "update-preview", G_CALLBACK (update_preview_cb), preview);
+    // Handling Signals
+    g_signal_connect(ColorButton, "color-set", G_CALLBACK(on_Color_set), NULL);
+    g_signal_connect(brush, "toggled", G_CALLBACK(on_brush), NULL);
+    g_signal_connect(bucket, "toggled", G_CALLBACK(on_bucket), NULL);
+    g_signal_connect(eraser, "toggled", G_CALLBACK(on_eraser), NULL);
+    g_signal_connect(bigeraser, "toggled", G_CALLBACK(on_bigeraser), NULL);
+    g_signal_connect(segment, "toggled", G_CALLBACK(on_segment), NULL);
+    g_signal_connect(square, "toggled", G_CALLBACK(on_square), NULL);
+    g_signal_connect(triangle, "toggled", G_CALLBACK(on_triangle), NULL);
+    g_signal_connect(circle, "toggled", G_CALLBACK(on_circle), NULL);
     
-    g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
+    g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
+    g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
+    //replace NULL by the stack containing the modifications.
+
     g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), image);
+    g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
+    g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    
 
     gtk_widget_show_all(window);
 
@@ -63,37 +103,85 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void update_preview_cb (GtkFileChooser *file_chooser, gpointer data)
+gboolean on_previous(GtkButton* self, gpointer user_data)
 {
-  GtkWidget *preview;
-  char *filename;
-  GdkPixbuf *pixbuf;
-  gboolean have_preview;
-
-  preview = GTK_WIDGET (data);
-  filename = gtk_file_chooser_get_preview_filename (file_chooser);
-
-  pixbuf = gdk_pixbuf_new_from_file_at_size (filename, 128, 128, NULL);
-  have_preview = (pixbuf != NULL);
-  g_free (filename);
-
-  gtk_image_set_from_pixbuf (GTK_IMAGE (preview), pixbuf);
-  if (pixbuf)
-    g_object_unref (pixbuf);
-
-  gtk_file_chooser_set_preview_widget_active (file_chooser, have_preview);
+    //use this fonction to revert last modification
+    return false;
 }
 
-static gboolean button_press_callback (GtkWidget *event_box, GdkEventButton *event, gpointer data)
+gboolean on_next(GtkButton* self, gpointer user_data)
 {
-    if (event_box != NULL && data != NULL)
-        g_print ("Event box clicked at coordinates %f,%f\n",
-                event->x, event->y);
+    //use this fonction to re-do last modification that was reverted
+    return false;
+}
 
-    // Returning TRUE means we handled the event, so the signal
-    // emission should be stopped (don’t call any further callbacks
-    // that may be connected). Return FALSE to continue invoking callbacks.
-    return TRUE;
+gboolean on_brush(GtkRadioButton *self, gpointer user_data)
+{
+    if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+        tool_value = 1;
+
+    return false;
+}
+
+gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
+{
+     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+         tool_value = 2;
+     return false;
+}
+
+gboolean on_eraser(GtkRadioButton *self, gpointer user_data)
+{
+     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+         tool_value = 3;
+     return false;
+}
+
+gboolean on_bigeraser(GtkRadioButton *self, gpointer user_data)
+{
+     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+         tool_value = 4;
+     return false;
+}
+
+gboolean on_segment(GtkRadioButton *self, gpointer user_data)
+{
+     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+         tool_value = 5;
+     return false;
+}
+
+gboolean on_square(GtkRadioButton *self, gpointer user_data)
+{
+     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+         tool_value = 6;
+     return false;
+}
+
+gboolean on_triangle(GtkRadioButton *self, gpointer user_data)
+{
+     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+         tool_value = 7;
+     return false;
+}
+
+gboolean on_circle(GtkRadioButton *self, gpointer user_data)
+{
+     if (user_data == NULL && gtk_toggle_button_get_active(self) == TRUE)
+         tool_value = 8;
+     return false;
+}
+
+void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
+{
+    for (int row = 0: row < 2; row++)
+    {
+        for (int col = 1-row; col < 4; col++)
+        {
+            gtk_radio_button_join_group(gtk_grid_get_child_at (toolsgrid,col,row),
+            brush);
+        }
+    }
 }
 
 gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
@@ -142,4 +230,12 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
 
     return FALSE;
 }
+
+gboolean on_Color_set(GtkColorButton *self, gpointer user_data)
+{
+    gtk_color_button_get_rgba(self,color);
+
+    return false;
+}
+
 
