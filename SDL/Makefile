@@ -3,9 +3,9 @@
 CC=gcc -fsanitize=address
 
 CPPFLAGS= `pkg-config --cflags sdl` -MMD
-CFLAGS= -Wall -Wextra -Werror -std=c99 -O3
+CFLAGS= -Wall -Wextra -Werror -std=c99 -O3 -lm
 LDFLAGS=
-LDLIBS= `pkg-config --libs sdl SDL_image SDL_gfx`
+LDLIBS= -lm `pkg-config --libs sdl SDL_image SDL_gfx`
 
 all: main
 
