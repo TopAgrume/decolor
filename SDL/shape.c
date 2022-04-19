@@ -165,11 +165,6 @@ SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y
          errx(EXIT_FAILURE, "Failure make_empty_triangle(): x out of bounds");
     if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
          errx(EXIT_FAILURE, "Failure make_empty_triangle(): y out of bounds");
-
-    //int move_x1 = 0;
-    //int move_x2 = 0;
-    //int move_y1 = 0;
-    //int move_y2 = 0;
     
     int x3 = 0;
     if (x1 < x2)
@@ -204,3 +199,44 @@ SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y
     drawline(img, new_color, x3, y2, x1, y1, size);
     return img;
 }
+
+SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
+{
+    if (img == NULL)
+        errx(EXIT_FAILURE, "Failure bresenham_circle(): img == NULL");
+    if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
+         errx(EXIT_FAILURE, "Failure bresenham_circle(): x out of bounds");
+    if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
+         errx(EXIT_FAILURE, "Failure bresenham_circle(): y out of bounds");
+
+	int x = 0 , y = sqrt(pow(y2 - y1, 2) + pow(x2 - x1, 2)), d = 3 - 2 * y;
+	point(img, color, x1 + x, y1 + y, size);
+    point(img, color, x1 - x, y1 + y, size);
+    point(img, color, x1 + x, y1 - y, size);
+    point(img, color, x1 - x, y1 - y, size);
+    point(img, color, x1 + y, y1 + x, size);
+    point(img, color, x1 - y, y1 + x, size);
+    point(img, color, x1 + y, y1 - x, size);
+    point(img, color, x1 - y, y1 - x, size);
+
+		while(y >= x){
+		    x++;
+		    if(d > 0){
+			    y--;
+			    d = d + 4*(x - y) + 10;
+		    }
+		    else
+			    d = d + 4*x + 6;
+        
+            point(img, color, x1 + x, y1 + y, size);
+            point(img, color, x1 - x, y1 + y, size);
+            point(img, color, x1 + x, y1 - y, size);
+            point(img, color, x1 - x, y1 - y, size);
+            point(img, color, x1 + y, y1 + x, size);
+            point(img, color, x1 - y, y1 + x, size);
+            point(img, color, x1 + y, y1 - x, size);
+            point(img, color, x1 - y, y1 - x, size);
+        }
+    return img;
+}
+

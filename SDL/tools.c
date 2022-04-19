@@ -108,13 +108,20 @@ SDL_Color pipette(SDL_Surface* img, int x, int y)
     return color;
 }
 
-void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size){
+void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size)
+{
+    if (surface == NULL)
+        return;
+    if (x < 0 || y < 0 || x >= surface->w || y >= surface->h)
+        return;
+
     int i = x-size;
     int j = y;
     int nb = 0;
     while(i < x){
 	    while(j < y+nb){
-		    put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+            if (i >= 0 && j >= 0 && i < surface->w && j < surface->h)
+		        put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
 		    j++;
 	    }
 	    i++;
@@ -123,8 +130,9 @@ void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size){
     }
     while(i <= x+size){
             while(j < y+nb){
+                if (i >= 0 && j >= 0 && i < surface->w && j < surface->h)
                     put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-                    j++;
+                j++;
             }
             i++;
             nb --;

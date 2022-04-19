@@ -9,7 +9,7 @@
 #include "DevTools/shared_stack.h"
 #include "shape.h"
 
-#define TEST_FILTER
+//#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
@@ -17,13 +17,63 @@
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
 //#define TEST_TRIANGLE
+#define TEST_CIRCLE
+
 int main(int argc , char* argv[])
 {
     if(argc != 2)
 	    errx(EXIT_FAILURE, "Il faut le chemin de l'image");
 
     char* path = argv[1];
+
+#ifdef TEST_CIRCLE
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+
+    init_sdl();
+
+    image_surface = load_image(path);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
     
+    SDL_Color color;
+    color.r = 145;
+    color.g = 145;
+    color.b = 0;
+    SDL_Color color1;
+    color1.r = 145;
+    color1.g = 0;
+    color1.b = 145;
+    SDL_Color color2;
+    color2.r = 0;
+    color2.g = 145;
+    color2.b = 145;
+    SDL_Color color3;
+    color3.r = 255;
+    color3.g = 0;
+    color3.b = 0;
+    
+    bresenham_circle(image_surface, 200, 200, 300, 300, color, 5);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+    
+    bresenham_circle(image_surface, 600, 600, 300, 300, color1, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    bresenham_circle(image_surface, 300, 600, 600, 300, color2, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+
+    bresenham_circle(image_surface, 500, 200, 200, 600, color3, 10);
+    update_surface(screen_surface, image_surface);
+    wait_for_keypressed();
+    
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);
+
+#endif
+
 #ifdef TEST_FILTER
     SDL_Surface* image_surface;
     SDL_Surface* screen_surface;
@@ -89,7 +139,7 @@ int main(int argc , char* argv[])
     image_surface = load_image(path);
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
-    
+   
     SDL_Color color;
     color.r = 145;
     color.g = 145;
