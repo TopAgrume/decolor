@@ -2,8 +2,9 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GtkAdjustment" id="adjustment1">
+  <object class="GtkAdjustment" id="Curseur">
     <property name="upper">100</property>
+    <property name="value">10</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -16,26 +17,6 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-missing-image</property>
-  </object>
-  <object class="GtkListStore" id="liststore1">
-    <columns>
-      <!-- column-name Filtres -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Noir&amp;Blanc</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Sépia</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Saturation</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Contraste</col>
-      </row>
-    </data>
   </object>
   <object class="GtkRadioButton" id="radiobutton1">
     <property name="label" translatable="yes">radiobutton</property>
@@ -145,7 +126,7 @@
                     <property name="height_request">40</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="adjustment">adjustment1</property>
+                    <property name="adjustment">Curseur</property>
                     <property name="lower_stepper_sensitivity">off</property>
                     <property name="upper_stepper_sensitivity">off</property>
                     <property name="show_fill_level">True</property>
@@ -538,24 +519,30 @@
                     <property name="orientation">vertical</property>
                     <property name="spacing">5</property>
                     <child>
-                      <object class="GtkComboBox">
+                      <object class="GtkComboBoxText" id="Filtres">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="model">liststore1</property>
-                        <property name="active">1</property>
+                        <property name="active">7</property>
                         <property name="tearoff_title" translatable="yes">Oui</property>
-                        <property name="button_sensitivity">on</property>
-                        <property name="id_column">0</property>
-                        <property name="active_id">Oui</property>
+                        <property name="active_id">0</property>
+                        <items>
+                          <item id="0" translatable="yes"> </item>
+                          <item id="1" translatable="yes">Noir&amp;Blanc</item>
+                          <item id="2" translatable="yes">Sépia</item>
+                          <item id="3" translatable="yes">Inverser</item>
+                          <item id="4" translatable="yes">Contraste</item>
+                          <item id="5" translatable="yes">Luminosité</item>
+                          <item id="6" translatable="yes">Saturation</item>
+                        </items>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="fill">False</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="Appliquer">
                         <property name="label" translatable="yes">Appliquer</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>

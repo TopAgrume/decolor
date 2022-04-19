@@ -25,6 +25,8 @@ GtkWidget *FileChooser;
 GtkFileChooser *chooser;
 GtkScale* scale;
 unsigned char scale_nb = 0;
+GtkComboBoxText* filtres;
+GtkButton* apply;
 
 GSList* tools = g_list_alloc();
 int tool_value = -1;
@@ -45,6 +47,7 @@ gboolean on_previous(GtkButton *self, gpointer user_data);
 gboolean on_next(GtkButton *self, gpointer user_data);
 gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data);
 gboolean on_SaveButton_clicked(GtkButton *f, gpointer user_data);
+gboolean on_apply_clicked(GtkButton *self, gpointer user_data);
 
 
 int main(int argc, char *argv[])
@@ -76,6 +79,8 @@ int main(int argc, char *argv[])
     scale = GTK_SCALE(gtk_builder_get_object(Builder, "scale"));
     scale_nb = gtk_range_get_value(&(scale->range));
     printf("Scale number : %c", scale_nb);
+    filtres = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "Filtres"));
+    apply = GTK_BUTTON(gtk_builder_get_object(Builder, "Appliquer"));
     // Previous and Next
     previous = gtk_builder_get_object(Builder, "previous");
     next = gtk_builder_get_object(Builder, "next");
@@ -246,3 +251,38 @@ gboolean on_Color_set(GtkColorButton *self, gpointer user_data)
 }
 
 
+gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
+{
+    char* fil = gtk_combo_box_text_get_active_text(filtres);
+
+    switch(fil[0])
+    {
+        case 'N':
+            return FALSE; //Filtre noir et blanc
+        
+        case 'I':
+            return FALSE; //Filtre d'inversion de couleur
+
+        case 'C':
+            return FALSE; //Filtre de Contraste
+        
+        case 'L':
+            return FALSE; //Filtre de Luminosité
+
+        case 'S':
+        {
+            if(fil[2] == 'p')
+                return FALSE; //Filtre Sépia
+            
+            else
+                return FALSE; //Filtre Saturation
+        } 
+
+        default :
+            return FALSE; //Aucun filtre
+    }
+
+    free(fil);
+
+    return FALSE;
+}
