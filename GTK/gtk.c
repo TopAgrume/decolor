@@ -2,11 +2,11 @@
 #include <stdio.h>
 #include "gtk.h"
 #include <stdlib.h>
-#include <SDL/SDL.h>
+#include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 
 GdkRGBA* color;
-GtkColorButton* ColorButton;
+GtkColorChooser* ColorButton;
 GtkWidget *window;
 GtkRadioButton* brush;
 GtkRadioButton* bucket;
@@ -31,13 +31,12 @@ GtkComboBoxText* filtres;
 GtkButton* apply;
 GtkWidget* eventbox;
 
-GSList* tools;
 int tool_value = -1;
 
 
 //functions
-gboolean on_Color_set(GtkColorButton *self, gpointer user_data);
-//void set_tools_group(GtkGriid* toolsgrid, GtkRadioButton* brush);
+gboolean on_Color_set(GtkColorChooser *self, gpointer user_data);
+void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush);
 gboolean on_brush(GtkRadioButton *self, gpointer user_data);
 gboolean on_bucket(GtkRadioButton *self, gpointer user_data);
 gboolean on_eraser(GtkRadioButton *self, gpointer user_data);
@@ -51,6 +50,7 @@ gboolean on_next(GtkButton *self, gpointer user_data);
 gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data);
 gboolean on_SaveButton_clicked(GtkButton *f, gpointer user_data);
 gboolean on_apply_clicked(GtkButton *self, gpointer user_data);
+gboolean update_scale_val(GtkScale *self, gpointer user_data);
 static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data);
 
 int main(int argc, char *argv[])
@@ -59,11 +59,11 @@ int main(int argc, char *argv[])
 
     GtkBuilder* Builder = gtk_builder_new_from_file("GUI.glade");
 
-    tools = g_slist_alloc();
+    //tools = g_slist_alloc();
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
-    ColorButton = GTK_COLOR_BUTTON(gtk_builder_get_object(Builder, "Color"));
-    image = GTK_WIDGET(gtk_image_new());
+    ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
+    image = GTK_WIDGET(gtk_builder_get_object(Builder, "image"));
     toolsgrid = GTK_WIDGET(gtk_builder_get_object(Builder, "toolsgrid"));
     dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action,
     "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     gtk_container_add(GTK_CONTAINER (eventbox), image);
     // Tools buttons
     brush = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "brush"));
-    gtk_radio_button_set_group (brush ,tools);
+    //gtk_radio_button_set_group (brush ,tools);
     bucket = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "bucket")); 
     eraser = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "eraser"));
     bigeraser = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "bigeraser"));
@@ -82,9 +82,7 @@ int main(int argc, char *argv[])
     triangle = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "triangle"));
     circle = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "circle"));
     //set_tools_group(toolsgrid, brush);
-    scale = GTK_SCALE(gtk_builder_get_object(Builder, "scale"));
-    scale_nb = gtk_range_get_value(&(scale->range));
-    printf("Scale number : %c", scale_nb);
+    scale = GTK_SCALE(gtk_builder_get_object(Builder, "Scale")); 
     filtres = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "Filtres"));
     apply = GTK_BUTTON(gtk_builder_get_object(Builder, "Appliquer"));
     // Previous and Next
@@ -101,9 +99,10 @@ int main(int argc, char *argv[])
     g_signal_connect(eraser, "toggled", G_CALLBACK(on_eraser), NULL);
     g_signal_connect(bigeraser, "toggled", G_CALLBACK(on_bigeraser), NULL);
     g_signal_connect(segment, "toggled", G_CALLBACK(on_segment), NULL);
-    g_signal_connect(square, "toggled", G_CALLBACK(on_square), NULL);
+    g_signal_connect(square,"toggled", G_CALLBACK(on_square), NULL);
     g_signal_connect(triangle, "toggled", G_CALLBACK(on_triangle), NULL);
     g_signal_connect(circle, "toggled", G_CALLBACK(on_circle), NULL);
+    g_signal_connect(scale, "value_changed", G_CALLBACK(update_scale_val), NULL);
     
     g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
@@ -303,14 +302,23 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     return FALSE;
 }
 
-gboolean on_Color_set(GtkColorButton *self, gpointer user_data)
+gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
 {
 
     if (user_data != NULL)
         return FALSE;
 
-    gtk_color_button_get_rgba(self,color);
+    gtk_color_chooser_get_rgba(self,color);
 
+    return FALSE;
+}
+
+
+gboolean update_scale_val(GtkScale *self, gpointer user_data)
+{
+    scale_nb = gtk_range_get_value(&(self->range));
+    printf("Scale number : %i\n", scale_nb);
+    
     return FALSE;
 }
 

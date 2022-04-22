@@ -11,12 +11,12 @@
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="stock">gtk-missing-image</property>
+    <property name="pixbuf">Interface tools/Symbol/Fleche_retour.png</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="stock">gtk-missing-image</property>
+    <property name="pixbuf">Interface tools/Symbol/Fleche_avant.png</property>
   </object>
   <object class="GtkRadioButton" id="radiobutton1">
     <property name="label" translatable="yes">radiobutton</property>
@@ -26,17 +26,9 @@
     <property name="active">True</property>
     <property name="draw_indicator">True</property>
   </object>
-  <object class="GtkRadioButton" id="radiobutton4">
-    <property name="label" translatable="yes">radiobutton</property>
-    <property name="visible">True</property>
-    <property name="can_focus">True</property>
-    <property name="receives_default">False</property>
-    <property name="active">True</property>
-    <property name="draw_indicator">True</property>
-  </object>
   <object class="GtkWindow" id="MyWindow">
     <property name="width_request">1080</property>
-    <property name="height_request">720</property>
+    <property name="height_request">675</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">On est là !</property>
     <property name="default_width">1280</property>
@@ -126,6 +118,7 @@
                     <property name="height_request">40</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip_text" translatable="yes">Taille/ Intensité</property>
                     <property name="adjustment">Curseur</property>
                     <property name="lower_stepper_sensitivity">off</property>
                     <property name="upper_stepper_sensitivity">off</property>
@@ -147,8 +140,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="alpha">65535</property>
-                    <property name="rgba"/>
+                    <property name="tooltip_text" translatable="yes">Séléction de la couleur</property>
                   </object>
                   <packing>
                     <property name="x">10</property>
@@ -157,15 +149,17 @@
                 </child>
                 <child>
                   <object class="GtkGrid">
-                    <property name="width_request">180</property>
+                    <property name="width_request">175</property>
                     <property name="height_request">0</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="column_spacing">1</property>
+                    <property name="margin_left">5</property>
+                    <property name="column_spacing">6</property>
                     <child>
                       <object class="GtkFileChooserButton" id="FileChooser">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Charger une image</property>
                         <property name="title" translatable="yes"/>
                       </object>
                       <packing>
@@ -179,6 +173,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Sauvegarder une image</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -206,6 +201,7 @@
                         <property name="can_focus">True</property>
                         <property name="focus_on_click">False</property>
                         <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Retour arrière</property>
                         <property name="image">image1</property>
                         <property name="relief">none</property>
                       </object>
@@ -222,6 +218,7 @@
                         <property name="can_focus">True</property>
                         <property name="focus_on_click">False</property>
                         <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Retour avant</property>
                         <property name="image">image2</property>
                         <property name="relief">none</property>
                       </object>
@@ -238,7 +235,7 @@
                 </child>
                 <child>
                   <object class="GtkGrid">
-                    <property name="width_request">160</property>
+                    <property name="width_request">175</property>
                     <property name="height_request">55</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -247,12 +244,13 @@
                     <property name="row_spacing">5</property>
                     <property name="column_spacing">9</property>
                     <child>
-                      <object class="GtkRadioButton">
+                      <object class="GtkRadioButton" id="Crop">
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Rogner</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
@@ -260,7 +258,7 @@
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Rogner.png</property>
                           </object>
                         </child>
                       </object>
@@ -270,12 +268,13 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
+                      <object class="GtkRadioButton" id="Select">
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Zone de séléction</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
@@ -283,7 +282,7 @@
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Selection.png</property>
                           </object>
                         </child>
                       </object>
@@ -293,20 +292,21 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton">
+                      <object class="GtkRadioButton" id="Text">
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="focus_on_click">False</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Zone de texte</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Texte.png</property>
                           </object>
                         </child>
                       </object>
@@ -317,7 +317,7 @@
                     </child>
                   </object>
                   <packing>
-                    <property name="x">6</property>
+                    <property name="x">5</property>
                     <property name="y">110</property>
                   </packing>
                 </child>
@@ -336,13 +336,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Pinceau</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Pinceau.png</property>
                           </object>
                         </child>
                       </object>
@@ -358,13 +359,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Sceau</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Sceau.png</property>
                           </object>
                         </child>
                       </object>
@@ -380,13 +382,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Gomme</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Gomme_petite.png</property>
                           </object>
                         </child>
                       </object>
@@ -402,13 +405,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Gomme large</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Gomme_large.png</property>
                           </object>
                         </child>
                       </object>
@@ -424,13 +428,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Traits</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Trait.png</property>
                           </object>
                         </child>
                       </object>
@@ -446,13 +451,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Carré</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Rectangle.png</property>
                           </object>
                         </child>
                       </object>
@@ -468,13 +474,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Triangle</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Triangle.png</property>
                           </object>
                         </child>
                       </object>
@@ -490,13 +497,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Cercle</property>
                         <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton4</property>
+                        <property name="group">radiobutton1</property>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="stock">gtk-missing-image</property>
+                            <property name="pixbuf">Interface tools/Symbol/Cercle.png</property>
                           </object>
                         </child>
                       </object>
@@ -522,6 +530,7 @@
                       <object class="GtkComboBoxText" id="Filtres">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Séléction du filtre</property>
                         <property name="active">7</property>
                         <property name="tearoff_title" translatable="yes">Oui</property>
                         <property name="active_id">0</property>
@@ -547,6 +556,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Appliquer le filtre</property>
                         <property name="relief">none</property>
                       </object>
                       <packing>
@@ -628,7 +638,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_right">5</property>
-                <property name="stock">gtk-missing-image</property>
+                <property name="stock">gtk-discard</property>
               </object>
               <packing>
                 <property name="expand">True</property>
