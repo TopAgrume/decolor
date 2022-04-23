@@ -11,7 +11,7 @@
 typedef struct stack
 {
     // Image
-    GtkImage* img;
+    GtkWidget* img;
 
     // Pointer to the next element
     struct stack* next;
@@ -21,19 +21,19 @@ typedef struct stack
 
 // Pushes a new value onto a stack.
 // start = Starting address of the stack.
-// img = SDL_Surface image to stack
+// img = GtkWidget image to stack
 // Returns the new starting address of the stack.
-stack* stack_push(stack* start, SDL_Surface* img);
+stack* stack_push(stack* start, GtkWidget* img);
 
 // Pops a value off at the end of a stack.
 // start = Starting address of the stack.
-// img = SDL_Surface image to destack
+// img = GtkWidget image to destack
 // Returns the new starting address of the stack.
 stack* stack_pop_last(stack* start);
 
 // Pops a value off a stack.
 // start = Starting address of the stack.
-// img = SDL_Surface image to destack
+// img = GtkWidget image to destack
 // Returns the new starting address of the stack.
 stack* stack_pop(stack* start);
 

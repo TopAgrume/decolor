@@ -23,8 +23,8 @@ shared_stack* shared_stack_new();
 
 // Pushes a new value onto the shared stack.
 // stack = Address of the shared stack.
-// img = SDL_Surface imgage to push
-void shared_stack_push(shared_stack* ss, SDL_Surface* img);
+// img = GtkWidget imgage to push
+void shared_stack_push(shared_stack* ss, GtkWidget* img);
 
 // Pops a value off the to of the shared stack.
 // stack = Address of the shared stack.
@@ -34,7 +34,7 @@ void shared_stack_pop_last(shared_stack* ss);
 // Pops a value off the end of the shared stack.
 // stack = Address of the shared stack.
 // Returns the image.
-SDL_Surface* shared_stack_pop(shared_stack* ss);
+GtkWidget* shared_stack_pop(shared_stack* ss);
 
 // Frees the shared stack.
 // stack = Address of the shared stack.

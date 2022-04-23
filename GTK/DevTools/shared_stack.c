@@ -3,10 +3,15 @@
 #include "shared_stack.h"
 
 
-SDL_Surface* copy_image(SDL_Surface* img)
+GtkWidget* copy_image(GtkWidget* img)
 {
+    GtkWidget save = *img;
+    GtkWidget* save2 = calloc(1, sizeof(GtkWidget));
+    save2 = &save;
+    return save2;
+    /*
     Uint32 pixel;
-    SDL_Surface *copy;
+    GtkWidget*copy;
     copy = SDL_CreateRGBSurface(SDL_HWSURFACE, img->w, img->h, img->format->BitsPerPixel, img->format->Rmask, img->format->Gmask, img->format->Bmask, img->format->Amask);
 
     if(copy == NULL || img == NULL)
@@ -21,7 +26,7 @@ SDL_Surface* copy_image(SDL_Surface* img)
         }
     }
 
-    return copy;
+    return copy;*/
 }
 
 shared_stack* shared_stack_new()
@@ -34,12 +39,12 @@ shared_stack* shared_stack_new()
     return newstack;
 }
 
-void shared_stack_push(shared_stack* ss, SDL_Surface* img)
+void shared_stack_push(shared_stack* ss, GtkWidget* img)
 {
     // Save 10 moves max
     if (ss->size >= 10)
         ss->stack = stack_pop_last(ss->stack);
-    ss->stack = stack_push(ss->stack, copy_image(img));
+    ss->stack = stack_push(ss->stack, img);
     ss->size += 1;
 }
 
@@ -51,11 +56,11 @@ void shared_stack_pop_last(shared_stack* ss)
     ss->size -= 1;
 }
 
-SDL_Surface* shared_stack_pop(shared_stack* ss)
+GtkWidget* shared_stack_pop(shared_stack* ss)
 {
     if (ss->size == 0)
         errx(EXIT_FAILURE, "Stack already empty\n");
-    SDL_Surface* img = copy_image(ss->stack->img);
+    GtkWidget* img = copy_image(ss->stack->img);
     ss->stack = stack_pop(ss->stack);
     ss->size -= 1;
     return img;
