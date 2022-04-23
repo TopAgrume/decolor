@@ -26,7 +26,7 @@ GtkWidget *dialog;
 //SDL_Surface* img;
 //shared_stack* previous = shared_stack_new();
 //shared_stack* next = shared_stack_new();
-GtkDrawingArea *image;
+GtkWidget *image;
 GtkFileChooser *FileChooser;
 GtkFileChooser *chooser;
 GtkScale* scale;
@@ -34,6 +34,12 @@ unsigned char scale_nb = 0;
 GtkComboBoxText* filtres;
 GtkButton* apply;
 GtkWidget* eventbox;
+int pos_x = 0;
+int pos_y = 0;
+int start_x = 0;
+int start_y = 0;
+int end_x = 0;
+int end_y = 0;
 
 int tool_value = -1;
 
@@ -56,6 +62,8 @@ gboolean on_SaveButton_clicked(GtkButton *f, gpointer user_data);
 gboolean on_apply_clicked(GtkButton *self, gpointer user_data);
 gboolean update_scale_val(GtkScale *self, gpointer user_data);
 gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data);
+gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data);
+gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data);
 
 int main(int argc, char *argv[])
 {
@@ -64,10 +72,14 @@ int main(int argc, char *argv[])
     GtkBuilder* Builder = gtk_builder_new_from_file("GUI.glade");
 
     //tools = g_slist_alloc();
+    
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
     ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
-    image = GTK_DRAWING_AREA(gtk_builder_get_object(Builder, "image"));
+    image = GTK_WIDGET(gtk_builder_get_object(Builder, "image"));
+    gtk_widget_add_events(image, GDK_POINTER_MOTION_MASK);
+    gtk_widget_add_events(image, GDK_BUTTON_PRESS_MASK);
+    gtk_widget_add_events(image, GDK_BUTTON_RELEASE_MASK);
     toolsgrid = GTK_WIDGET(gtk_builder_get_object(Builder, "toolsgrid"));
     dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action,
     "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
@@ -75,6 +87,7 @@ int main(int argc, char *argv[])
     FileChooser = GTK_FILE_CHOOSER(gtk_builder_get_object(Builder, "FileChooser"));
     eventbox = gtk_event_box_new ();
     //gtk_container_add(GTK_CONTAINER (eventbox), image);
+    
     // Tools buttons
     brush = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "brush"));
     //gtk_radio_button_set_group (brush ,tools);
@@ -89,6 +102,7 @@ int main(int argc, char *argv[])
     scale = GTK_SCALE(gtk_builder_get_object(Builder, "Scale")); 
     filtres = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "Filtres"));
     apply = GTK_BUTTON(gtk_builder_get_object(Builder, "Appliquer"));
+    
     // Previous and Next
     previous = GTK_WIDGET(gtk_builder_get_object(Builder, "previous"));
     next = GTK_WIDGET(gtk_builder_get_object(Builder, "next"));
@@ -116,8 +130,11 @@ int main(int argc, char *argv[])
     g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), image);
     g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    g_signal_connect (image, "button-press-event", G_CALLBACK(mouse_moved), NULL);    
-    gtk_widget_set_events(eventbox, GDK_POINTER_MOTION_MASK);
+    
+    g_signal_connect (image, "motion-notify-event", G_CALLBACK(mouse_moved), NULL);
+    g_signal_connect (image, "button-press-event", G_CALLBACK(mouse_press), NULL);
+    g_signal_connect (image, "button-release-event", G_CALLBACK(mouse_release), NULL);
+
 
     gtk_widget_show_all(window);
 
@@ -138,18 +155,42 @@ void update(SDL_Surface* src)
     if (pixbuf)
         g_object_unref(pixbuf);
 
-//    gtk_widget_show(image);
+    gtk_widget_show(image);
+}
+
+gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
+{
+    if(self != NULL && user_data == NULL)
+    {
+        end_x = pos_x;
+        end_y = pos_y;
+        printf("End coordinates: (%u,%u)\n", end_x, end_y);
+    }
+
+        return FALSE;
+}
+
+gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
+{
+    if(self != NULL && user_data == NULL)
+    {
+        start_x = pos_x;
+        start_y = pos_y;
+        printf("Start coordinates: (%u,%u)\n", start_x, start_y);
+    }
+
+    return FALSE;
 }
 
 gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) 
 {
-    printf("a\n");
     if (event->type==GDK_MOTION_NOTIFY && widget != NULL && user_data == NULL) 
     {
         GdkEventMotion* e =(GdkEventMotion*)event;
-        printf("Coordinates: (%u,%u)\n", (guint)e->x,(guint)e->y);
+        pos_x = (guint)e->x;
+        pos_y = (guint)e->y;
     }
-    return FALSE;
+    return TRUE;
 }
 
 gboolean on_previous(GtkButton* self, gpointer user_data)
