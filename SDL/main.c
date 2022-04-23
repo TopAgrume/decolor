@@ -9,7 +9,7 @@
 #include "DevTools/shared_stack.h"
 #include "shape.h"
 
-//#define TEST_FILTER
+#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
@@ -17,7 +17,7 @@
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
 //#define TEST_TRIANGLE
-#define TEST_CIRCLE
+//#define TEST_CIRCLE
 
 int main(int argc , char* argv[])
 {
@@ -76,6 +76,7 @@ int main(int argc , char* argv[])
 
 #ifdef TEST_FILTER
     SDL_Surface* image_surface;
+    SDL_Surface* reverse;
     SDL_Surface* screen_surface;
 
     init_sdl();
@@ -84,10 +85,11 @@ int main(int argc , char* argv[])
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
-    negative(image_surface);
-    screen_surface = display_image(image_surface);
+    reverse = reversion(image_surface, 1, 1);
+    screen_surface = display_image(reverse);
     wait_for_keypressed();
 
+    SDL_FreeSurface(reverse);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 #endif
@@ -102,7 +104,7 @@ int main(int argc , char* argv[])
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
-    SDL_Surface* image_surface2 = crop(image_surface, 200, 200, 400, 200);
+    SDL_Surface* image_surface2 = crop(image_surface, 200, 200, 700, 500);
     screen_surface = display_image(image_surface2);
     wait_for_keypressed();
 
@@ -244,32 +246,34 @@ int main(int argc , char* argv[])
 
 #ifdef TEST_BRUSH
     SDL_Surface* image_surface;
+    SDL_Surface* image_surface2;
     SDL_Surface* screen_surface;
     int width = 600;
     int height = 600;
 
     init_sdl();
 
-    printf("%s\n",path);
+    image_surface2 = load_image(path);
     image_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 255);
     SDL_FillRect(image_surface, NULL, SDL_MapRGB(image_surface->format, 0, 0, 0));
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
-    SDL_Color color;
+    /*SDL_Color color;
     color.r = 255;
     color.g = 255;
-    color.b = 255;
+    color.b = 255;*/
 
-    drawline(image_surface, color, 20, 20, 500, 500, 2);
-    drawline(image_surface, color, 20, 500, 500, 500, 2);
-    drawline(image_surface, color, 500, 20, 20, 500, 2);
-    drawline(image_surface, color, 500, 20, 20, 20, 2);
+    drawline_image(image_surface, image_surface2, 20, 20, 500, 500, 10);
+    drawline_image(image_surface, image_surface2, 20, 500, 500, 500, 10);
+    drawline_image(image_surface, image_surface2, 500, 20, 20, 500, 10);
+    drawline_image(image_surface, image_surface2, 500, 20, 20, 20, 10);
 
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
     SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(image_surface2);
     SDL_FreeSurface(screen_surface);
 #endif
 

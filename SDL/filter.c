@@ -5,6 +5,8 @@
 #include <err.h>
 #include "pixel_operations.h"
 
+//the grayscale filter
+// -> 'surface' the image to apply the filter
 void grayscale(SDL_Surface* surface){
     Uint8 r, g, b, gris;
     Uint32 pixel;
@@ -19,6 +21,8 @@ void grayscale(SDL_Surface* surface){
     }
 }
 
+//the negative filter
+// -> 'surface' the image to apply the filter
 void negative(SDL_Surface* surface){
     Uint8 r, g, b;
     Uint32 pixel;
@@ -35,7 +39,13 @@ void negative(SDL_Surface* surface){
     }
 }
 
+//A customizable filter
+// -> 'surface' the img to apply the filter
+// -> 'rcons', 'gcons' and 'bcons' booleans to know which colors are constants
+// -> 'cons' the minimum threshold for the constants colors
 void color(SDL_Surface* surface, Uint8 rcons, Uint8 gcons, Uint8 bcons, Uint8 cons){
+    if((rcons != 0 && rcons != 1) || (gcons != 0 && gcons != 1) || (bcons != 0 && bcons != 1))
+	    errx(EXIT_FAILURE, "color() : rcons/gcons/bcons is a boolean !");
     Uint8 r, g, b;
     Uint32 pixel;
     for(int i = 0; i < surface->w; i++){
