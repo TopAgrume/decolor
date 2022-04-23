@@ -3,7 +3,7 @@
 #include "stack.h"
 
 // Stack Functions
-stack* stack_push(stack* start, GtkWidget* img)
+stack* stack_push(stack* start, GdkPixbuf* img)
 {
     struct stack* element = malloc(sizeof(struct stack));
     if (element == NULL)
@@ -31,13 +31,13 @@ stack* stack_pop_last(stack* start)
     if (before_p != NULL)
     {
         before_p->next = NULL;
-        gtk_widget_destroy(p->img);
+        gdk_pixbuf_unref(p->img);
         free(p);
         return start;
     }
     else
     {
-        gtk_widget_destroy(p->img);
+        gdk_pixbuf_unref(p->img);
         free(p);
         return NULL;
     }
@@ -49,7 +49,7 @@ stack* stack_pop(stack* start)
         errx(EXIT_FAILURE, "Nothing to pop from the stack");
     struct stack* new = start;
     start = start->next;
-    gtk_widget_destroy(new->img);
+    gdk_pixbuf_unref(new->img);
     free(new);
     return start;
 }
@@ -60,7 +60,7 @@ void stack_empty(stack** pstart)
     while (*pstart)
     {
         *pstart = (*pstart)->next;
-        gtk_widget_destroy(prev->img);
+        gdk_pixbuf_unref(prev->img);
         free(prev);
         prev = *pstart;
     }

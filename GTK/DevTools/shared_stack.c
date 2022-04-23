@@ -3,15 +3,11 @@
 #include "shared_stack.h"
 
 
-GtkWidget* copy_image(GtkWidget* img)
+void copy_image(GdkPixbuf* img)
 {
-    GtkWidget save = *img;
-    GtkWidget* save2 = calloc(1, sizeof(GtkWidget));
-    save2 = &save;
-    return save2;
     /*
     Uint32 pixel;
-    GtkWidget*copy;
+    GdkPixbuf*copy;
     copy = SDL_CreateRGBSurface(SDL_HWSURFACE, img->w, img->h, img->format->BitsPerPixel, img->format->Rmask, img->format->Gmask, img->format->Bmask, img->format->Amask);
 
     if(copy == NULL || img == NULL)
@@ -39,12 +35,12 @@ shared_stack* shared_stack_new()
     return newstack;
 }
 
-void shared_stack_push(shared_stack* ss, GtkWidget* img)
+void shared_stack_push(shared_stack* ss, GdkPixbuf* img)
 {
     // Save 10 moves max
     if (ss->size >= 10)
         ss->stack = stack_pop_last(ss->stack);
-    ss->stack = stack_push(ss->stack, img);
+    ss->stack = stack_push(ss->stack, gdk_pixbuf_copy(img));
     ss->size += 1;
 }
 
@@ -56,11 +52,11 @@ void shared_stack_pop_last(shared_stack* ss)
     ss->size -= 1;
 }
 
-GtkWidget* shared_stack_pop(shared_stack* ss)
+GdkPixbuf* shared_stack_pop(shared_stack* ss)
 {
     if (ss->size == 0)
         errx(EXIT_FAILURE, "Stack already empty\n");
-    GtkWidget* img = copy_image(ss->stack->img);
+    GdkPixbuf* img = copy_image(ss->stack->img);
     ss->stack = stack_pop(ss->stack);
     ss->size -= 1;
     return img;
