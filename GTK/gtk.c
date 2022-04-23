@@ -153,14 +153,31 @@ gboolean on_previous(GtkButton* self, gpointer user_data)
     //use this fonction to revert last modification
     if (self && user_data)
         return FALSE;
+
+    //if (previous->size > 0)
+    //{
+        //actual_surface = shared_stack_pop(shared_stack* previous);
+        //update(SDL_Surface* src);
+        //shared_stack_push(shared_stack* next, SDL_Surface* img);
+        /* SDL_FreeSurface(?); */
+    //}
+
     return FALSE;
 }
 
 gboolean on_next(GtkButton* self, gpointer user_data)
 {
     //use this fonction to re-do last modification that was reverted
-    if (self && user_data)
-        return FALSE;  
+    if (self && user_data)  
+        return FALSE;
+
+    //if (next->size > 0)
+    //{
+        //actual_surface = shared_stack_pop(shared_stack* next);
+        //update(SDL_Surface* src);
+        //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+        /* SDL_FreeSurface(?); */
+    //}
     return FALSE;
 }
 
@@ -170,6 +187,12 @@ gboolean on_brush(GtkRadioButton *self, gpointer user_data)
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 1;
+        //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+        //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+        ////get coordinates (clic long) and in a while loop:
+        ////drawline(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
+        ////update(SDL_Surface* src);
+
     }
 
     return FALSE;
@@ -181,6 +204,11 @@ gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 2;
+         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //get coordinates (clic only)
+         //filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, int threshold);
+         //update(SDL_Surface* src);
      }
      return FALSE;
 }
@@ -191,6 +219,11 @@ gboolean on_eraser(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 3;
+         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         ////get coordinates (clic long) and in a while loop:
+         ////drawline(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
+         ////update(SDL_Surface* src);
      }
      return FALSE;
 }
@@ -201,6 +234,12 @@ gboolean on_bigeraser(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 4;
+         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         ////get coordinates (clic long) and in a while loop:
+         ////drawline_image(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
+         ////update(SDL_Surface* src);
+
      }
      return FALSE;
 }
@@ -211,6 +250,12 @@ gboolean on_segment(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 5;
+         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //get coordinates (start and final)
+         //drawline(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
+         //update(SDL_Surface* src);
+
      }
      return FALSE;
 }
@@ -221,6 +266,12 @@ gboolean on_square(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 6;
+         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //get coordinates (start and final)
+         //make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
+         //update(SDL_Surface* src);
+
      }
      return FALSE;
 }
@@ -231,6 +282,12 @@ gboolean on_triangle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 7;
+         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //get coordinates (start and final)
+         //make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
+         //update(SDL_Surface* src);
+
      }
      return FALSE;
 }
@@ -241,6 +298,12 @@ gboolean on_circle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 8;
+         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
+         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //get coordinates (start and final)
+         //bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size);
+         //update(SDL_Surface* src);
+
      }
      return FALSE;
 }
