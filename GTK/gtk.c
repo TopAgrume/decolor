@@ -6,6 +6,7 @@
 #include "SDL/SDL_image.h"
 
 GdkRGBA* color;
+//SDL_Color sdl_color {.r = 255, .g = 255, .b = 255};
 GtkColorChooser* ColorButton;
 GtkWidget *window;
 GtkRadioButton* brush;
@@ -22,6 +23,9 @@ GtkWidget* next;
 GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 GtkButton *SaveButton;
 GtkWidget *dialog;
+//SDL_Surface* img;
+//shared_stack* previous = shared_stack_new();
+//shared_stack* next = shared_stack_new();
 GtkDrawingArea *image;
 GtkFileChooser *FileChooser;
 GtkFileChooser *chooser;
@@ -156,10 +160,10 @@ gboolean on_previous(GtkButton* self, gpointer user_data)
 
     //if (previous->size > 0)
     //{
-        //actual_surface = shared_stack_pop(shared_stack* previous);
-        //update(SDL_Surface* src);
-        //shared_stack_push(shared_stack* next, SDL_Surface* img);
-        /* SDL_FreeSurface(?); */
+        //img = shared_stack_pop(previous);
+        //update(img);
+        //shared_stack_push(next, img);
+        /* SDL_FreeSurface(img); ?*/
     //}
 
     return FALSE;
@@ -173,10 +177,10 @@ gboolean on_next(GtkButton* self, gpointer user_data)
 
     //if (next->size > 0)
     //{
-        //actual_surface = shared_stack_pop(shared_stack* next);
-        //update(SDL_Surface* src);
-        //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-        /* SDL_FreeSurface(?); */
+        //img = shared_stack_pop(img);
+        //update(img);
+        //shared_stack_push(previous, img);
+        /* SDL_FreeSurface(img); ?*/
     //}
     return FALSE;
 }
@@ -187,11 +191,11 @@ gboolean on_brush(GtkRadioButton *self, gpointer user_data)
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 1;
-        //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-        //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+        //shared_stack_push(previous, img);
+        //shared_stack_empty(next, img);
         ////get coordinates (clic long) and in a while loop:
-        ////drawline(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
-        ////update(SDL_Surface* src);
+        ////drawline(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
+        ////update(img);
 
     }
 
@@ -204,11 +208,11 @@ gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 2;
-         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //shared_stack_push(previous, img);
+         //shared_stack_empty(next, img);
          //get coordinates (clic only)
-         //filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, int threshold);
-         //update(SDL_Surface* src);
+         //filling_seal(img, int x, int y, SDL_Color new_color, (int)scale_nb);
+         //update(img)
      }
      return FALSE;
 }
@@ -219,11 +223,11 @@ gboolean on_eraser(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 3;
-         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //shared_stack_push(previous, img);
+         //shared_stack_empty(next, img);
          ////get coordinates (clic long) and in a while loop:
-         ////drawline(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
-         ////update(SDL_Surface* src);
+         ////drawline(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
+         ////update(img);
      }
      return FALSE;
 }
@@ -234,11 +238,11 @@ gboolean on_bigeraser(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 4;
-         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //shared_stack_push(previous, img);
+         //shared_stack_empty(next, img);
          ////get coordinates (clic long) and in a while loop:
-         ////drawline_image(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
-         ////update(SDL_Surface* src);
+         ////drawline_image(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
+         ////update(img);
 
      }
      return FALSE;
@@ -250,11 +254,11 @@ gboolean on_segment(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 5;
-         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //shared_stack_push(previous, img);
+         //shared_stack_empty(next, img);
          //get coordinates (start and final)
-         //drawline(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size);
-         //update(SDL_Surface* src);
+         //drawline(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
+         //update(img);
 
      }
      return FALSE;
@@ -266,11 +270,11 @@ gboolean on_square(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 6;
-         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //shared_stack_push(previous, img);
+         //shared_stack_empty(next, img);
          //get coordinates (start and final)
-         //make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
-         //update(SDL_Surface* src);
+         //make_empty_square(img, int x1, int y1, int x2, int y2, SDL_Color new_color, (int)scale_nb);
+         //update(img);
 
      }
      return FALSE;
@@ -282,11 +286,11 @@ gboolean on_triangle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 7;
-         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //shared_stack_push(previous, img);
+         //shared_stack_empty(next, img);
          //get coordinates (start and final)
-         //make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
-         //update(SDL_Surface* src);
+         //make_empty_triangle(img, int x1, int y1, int x2, int y2, SDL_Color new_color, (int)scale_nb);
+         //update(img);
 
      }
      return FALSE;
@@ -298,11 +302,11 @@ gboolean on_circle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 8;
-         //shared_stack_push(shared_stack* previous, SDL_Surface* img);
-         //shared_stack_empty(shared_stack* next, SDL_Surface* img);
+         //shared_stack_push(previous, img);
+         //shared_stack_empty(next, img);
          //get coordinates (start and final)
-         //bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size);
-         //update(SDL_Surface* src);
+         //bresenham_circle(img, int x1, int y1, int x2, int y2, SDL_Color color, (int)scale_nb);
+         //update(img);
 
      }
      return FALSE;
@@ -356,6 +360,7 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
 
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(f));
     pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+
     g_free(filename);
 
     gtk_image_set_from_pixbuf(GTK_IMAGE(image), pixbuf);
@@ -372,9 +377,12 @@ gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
 
     if (user_data != NULL)
         return FALSE;
-
+    
     gtk_color_chooser_get_rgba(self,color);
-
+    //sdl_color.r = (int) (color->red * 255);
+    //sdl_color.g = (int) (color->green * 255);
+    //sdl_color.b = (int) (color->blue * 255);
+    //sdl_color.a = (int) (color->alpha * 255);
     return FALSE;
 }
 
