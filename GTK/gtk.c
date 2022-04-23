@@ -22,7 +22,7 @@ GtkWidget* next;
 GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 GtkButton *SaveButton;
 GtkWidget *dialog;
-GtkWidget *image;
+GtkDrawingArea *image;
 GtkFileChooser *FileChooser;
 GtkFileChooser *chooser;
 GtkScale* scale;
@@ -51,7 +51,7 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data);
 gboolean on_SaveButton_clicked(GtkButton *f, gpointer user_data);
 gboolean on_apply_clicked(GtkButton *self, gpointer user_data);
 gboolean update_scale_val(GtkScale *self, gpointer user_data);
-static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data);
+gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data);
 
 int main(int argc, char *argv[])
 {
@@ -63,14 +63,14 @@ int main(int argc, char *argv[])
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
     ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
-    image = GTK_WIDGET(gtk_builder_get_object(Builder, "image"));
+    image = GTK_DRAWING_AREA(gtk_builder_get_object(Builder, "image"));
     toolsgrid = GTK_WIDGET(gtk_builder_get_object(Builder, "toolsgrid"));
     dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action,
     "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
     SaveButton = GTK_BUTTON(gtk_builder_get_object(Builder, "Save"));
     FileChooser = GTK_FILE_CHOOSER(gtk_builder_get_object(Builder, "FileChooser"));
     eventbox = gtk_event_box_new ();
-    gtk_container_add(GTK_CONTAINER (eventbox), image);
+    //gtk_container_add(GTK_CONTAINER (eventbox), image);
     // Tools buttons
     brush = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "brush"));
     //gtk_radio_button_set_group (brush ,tools);
@@ -103,6 +103,7 @@ int main(int argc, char *argv[])
     g_signal_connect(triangle, "toggled", G_CALLBACK(on_triangle), NULL);
     g_signal_connect(circle, "toggled", G_CALLBACK(on_circle), NULL);
     g_signal_connect(scale, "value_changed", G_CALLBACK(update_scale_val), NULL);
+    g_signal_connect(apply, "clicked", G_CALLBACK(on_apply_clicked), NULL);
     
     g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
@@ -111,7 +112,7 @@ int main(int argc, char *argv[])
     g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), image);
     g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-    g_signal_connect (G_OBJECT (eventbox), "motion-notify-event",G_CALLBACK (mouse_moved), NULL);    
+    g_signal_connect (image, "button-press-event", G_CALLBACK(mouse_moved), NULL);    
     gtk_widget_set_events(eventbox, GDK_POINTER_MOTION_MASK);
 
     gtk_widget_show_all(window);
@@ -133,11 +134,12 @@ void update(SDL_Surface* src)
     if (pixbuf)
         g_object_unref(pixbuf);
 
-    gtk_widget_show(image);
+//    gtk_widget_show(image);
 }
 
-static gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) 
+gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) 
 {
+    printf("a\n");
     if (event->type==GDK_MOTION_NOTIFY && widget != NULL && user_data == NULL) 
     {
         GdkEventMotion* e =(GdkEventMotion*)event;
@@ -331,35 +333,61 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
 
 
     char* fil = gtk_combo_box_text_get_active_text(filtres);
+    
+    if(!fil)
+    {
+        printf("Nothing\n");
+        return FALSE;
+    }
 
     switch(fil[0])
     {
         case 'N':
+        {
+            printf("Noir et Blanc\n");
             return FALSE; //Filtre noir et blanc
-        
+        }
+
         case 'I':
+        {
+            printf("Inversion\n");
             return FALSE; //Filtre d'inversion de couleur
+        }
 
         case 'C':
+        {
+            printf("Contraste\n");
             return FALSE; //Filtre de Contraste
-        
+        }
+
         case 'L':
+        {
+            printf("Luminosité\n");
             return FALSE; //Filtre de Luminosité
+        }
 
         case 'S':
         {
-            if(fil[2] == 'p')
+            if(fil[3] == 'p') // 'é'= two chars
+            {
+                printf("Sépia\n");
                 return FALSE; //Filtre Sépia
-            
+            }
+
             else
+            {
+                printf("Saturation\n");
                 return FALSE; //Filtre Saturation
+            }
         } 
 
         default :
+        {
+            printf("Nothing\n");
             return FALSE; //Aucun filtre
+        }
     }
 
     free(fil);
-
     return FALSE;
 }
