@@ -250,7 +250,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // bucket call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);                                        
-                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 2);   
+                filling_seal(img, start_x, start_y, sdl_color, 10/*(((int)scale_nb * 100) / 100)*/);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
                 
@@ -283,7 +283,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 //printf("try to stack\n");
             }
             //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb / 4);
+            drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
         if (tool_value == 3 && is_pressed)
@@ -296,7 +296,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
             }
 
             //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 4);
+            drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
         
@@ -310,7 +310,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
             }
 
             //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline_image(img, img2, old_x, old_y, pos_x, pos_y, (int)scale_nb);
+            drawline_image(img, img2, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
         if (!is_pressed)
@@ -393,12 +393,6 @@ gboolean on_bigeraser(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 4;
-         //shared_stack_push(previous, img);
-         //shared_stack_empty(next, img);
-         ////get coordinates (clic long) and in a while loop:
-         ////drawline_image(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
-         ////update(img);
-
      }
      return FALSE;
 }
@@ -483,8 +477,10 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     char *filename;
 
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(f));
+     
     img = load_image(filename);
     img2 = load_image(filename);
+    shared_stack_empty(before); 
     //image = gtk_image_new_from_sdl_surface(img);
     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
 

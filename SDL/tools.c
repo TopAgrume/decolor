@@ -4,6 +4,7 @@
 // -> 'color1', 'color2', 'threshold' are integers
 int compare(int color1, int color2, int threshold)
 {
+    //printf("%i; %i\n", color1 - color2, color2 - color1);
     if (color1 > color2)
         return (color1 - color2) <= threshold;
     else
@@ -53,6 +54,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
         color2.b = 0;
         
         pixel = shared_queue_pop(seal_queue, &dequeue_x, &dequeue_y);
+        //if (new_color.r != color2.r || new_color.g != color2.g || new_color.b == color2.b)
         for (move = -1; move < 2; move += 2)
         {
             neighbour_x = dequeue_x + move;
@@ -61,7 +63,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
             {
                 pixel = get_pixel(img, neighbour_x, dequeue_y);
                 SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
-                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                //if (new_color.r != color2.r || new_color.g != color2.g || new_color.b == color2.b)
                     if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
                     {
                         pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
@@ -75,7 +77,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
             {
                 pixel = get_pixel(img, dequeue_x, neighbour_y);
                 SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
-                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                //if (new_color.r != color2.r || new_color.g != color2.g || new_color.b == color2.b)
                     if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
                     {
                         pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
@@ -86,7 +88,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
                     //printf("Rejet\n");
             }
         }
-    printf("seal_queue->size: %li\n", seal_queue->size);
+    //printf("seal_queue->size: %li\n", seal_queue->size);
 
     }
     shared_queue_destroy(seal_queue);
