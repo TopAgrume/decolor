@@ -327,12 +327,7 @@ gboolean on_brush(GtkRadioButton *self, gpointer user_data)
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 1;
-        //shared_stack_push(previous, img);
-        //shared_stack_empty(next, img);
-        ////get coordinates (clic long) and in a while loop:
-        ////drawline(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
-        ////update(img);
-
+        
     }
 
     return FALSE;
@@ -354,11 +349,6 @@ gboolean on_eraser(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 3;
-         //shared_stack_push(previous, img);
-         //shared_stack_empty(next, img);
-         ////get coordinates (clic long) and in a while loop:
-         ////drawline(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
-         ////update(img);
      }
      return FALSE;
 }
