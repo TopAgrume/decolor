@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include "gtk.h"
 #include <stdlib.h>
-//#include "../SDL/tools.h"
+#include "../SDL/tools.h"
 
-GdkRGBA* color;
-//SDL_Color sdl_color = {.r = 255, .g = 255, .b = 255};
+GdkRGBA color;
+SDL_Color sdl_color = {.r = 255, .g = 255, .b = 255};
 GtkColorChooser* ColorButton;
 GtkWidget *window;
 GtkRadioButton* brush;
@@ -22,7 +22,7 @@ GtkWidget* next;
 GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 GtkButton *SaveButton;
 GtkWidget *dialog;
-//SDL_Surface* img;
+SDL_Surface* img;
 //shared_stack* previous = shared_stack_new();
 //shared_stack* next = shared_stack_new();
 GtkWidget *image;
@@ -252,8 +252,8 @@ gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
          //shared_stack_push(previous, img);
          //shared_stack_empty(next, img);
          //get coordinates (clic only)
-         //filling_seal(img, start_x, start_y, SDL_Color new_color, (int)scale_nb);
-         //update(img)
+         filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 3);
+         update(img);
      }
      return FALSE;
 }
@@ -393,39 +393,27 @@ gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
     return FALSE;
 }
 
-SDL_Surface* load_image(char *path)
-{
-    SDL_Surface *img;
-
-    // Load an image using SDL_image with format detection.
-    // If it fails, die with an error message.
-    img = IMG_Load(path);
-    if (!img)
-        errx(3, "can't load %s: %s", path, IMG_GetError());
-
-    return img;
-}
-
 
 gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
 {
-    GdkPixbuf *pixbuf;
+    //GdkPixbuf *pixbuf;
     GtkWidget* image = user_data;
     char *filename;
 
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(f));
-    /*img = load_image(filename);
-    image = gtk_image_new_from_sdl_surface(img);*/
+    img = load_image(filename);
+    //image = gtk_image_new_from_sdl_surface(img);
+    update(img);
     
-    pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
+    //pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
     g_free(filename);
-
+    /*
     gtk_image_set_from_pixbuf(GTK_IMAGE(image), pixbuf);
     if (pixbuf)
         g_object_unref(pixbuf);
 
-    gtk_widget_show(image);
+    gtk_widget_show(image);*/
 
     return FALSE;
 }
@@ -436,11 +424,12 @@ gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
     if (user_data != NULL)
         return FALSE;
     
-    gtk_color_chooser_get_rgba(self,color);
-    //sdl_color.r = (int) (color->red * 255);
-    //sdl_color.g = (int) (color->green * 255);
-    //sdl_color.b = (int) (color->blue * 255);
-    //sdl_color.a = (int) (color->alpha * 255);
+    gtk_color_chooser_get_rgba(self,&color);
+    //printf("R:%f, G:%f, B:%f\n", color.red, color.green, color.blue);
+    sdl_color.r = (Uint8) (color.red * 255);
+    sdl_color.g = (Uint8) (color.green * 255);
+    sdl_color.b = (Uint8) (color.blue * 255);
+    //sdl_color->a = (int) (color->alpha * 255);
     return FALSE;
 }
 
