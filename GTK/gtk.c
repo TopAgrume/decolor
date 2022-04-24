@@ -64,6 +64,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data);
 gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data);
 gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data);
 //GtkWidget* gtk_image_new_from_sdl_surface (SDL_Surface *surface);
+gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data);
 
 int main(int argc, char *argv[])
 {
@@ -72,11 +73,13 @@ int main(int argc, char *argv[])
     GtkBuilder* Builder = gtk_builder_new_from_file("GUI.glade");
 
     //tools = g_slist_alloc();
-    
+    img = load_image("blank.png");
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
     ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
     image = GTK_WIDGET(gtk_builder_get_object(Builder, "image"));
+    if (image == NULL)
+        printf("%s", "image is NULL");
     gtk_widget_add_events(image, GDK_POINTER_MOTION_MASK);
     gtk_widget_add_events(image, GDK_BUTTON_PRESS_MASK);
     gtk_widget_add_events(image, GDK_BUTTON_RELEASE_MASK);
@@ -135,6 +138,7 @@ int main(int argc, char *argv[])
     g_signal_connect (image, "button-press-event", G_CALLBACK(mouse_press), NULL);
     g_signal_connect (image, "button-release-event", G_CALLBACK(mouse_release), NULL);
 
+    g_signal_connect (G_OBJECT (image), "draw", G_CALLBACK (draw_callback), NULL);
 
     gtk_widget_set_app_paintable(image, TRUE);
     gtk_widget_show_all(window);
@@ -144,15 +148,13 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void update(SDL_Surface* src)
+gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
 {
-    SDL_SaveBMP(src, "tmpfile.bmp");
+    SDL_SaveBMP(img, "tmpfile.bmp");
     GdkPixbuf *pixbuf;
 
     pixbuf = gdk_pixbuf_new_from_file("tmpfile.bmp", NULL);
     
-    cairo_t *cr;
-    cr = gdk_cairo_create (gtk_widget_get_window(image));
 
     gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
     cairo_paint(cr);
@@ -160,8 +162,6 @@ void update(SDL_Surface* src)
 
     if (pixbuf)
         g_object_unref(pixbuf);
-
-    gtk_widget_show(image);
 }
 
 gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
@@ -430,7 +430,8 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(f));
     img = load_image(filename);
     //image = gtk_image_new_from_sdl_surface(img);
-    update(img);
+    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+
     
     //pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
