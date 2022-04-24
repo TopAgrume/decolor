@@ -257,7 +257,8 @@ SDL_Surface* crop(SDL_Surface* surface, int x, int y, int width, int height){
     if(x + width > surface->w || y + height > surface->h)
 	    errx(EXIT_FAILURE, "Problème au rognage");
 
-    SDL_Surface* crop = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 255);
+    SDL_Surface* crop = SDL_CreateRGBSurface(SDL_HWSURFACE, width, height, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+
     Uint8 r, g, b;
     Uint32 pixel;
     for(int i = 0; i < width; i++){
@@ -276,7 +277,7 @@ SDL_Surface* crop(SDL_Surface* surface, int x, int y, int width, int height){
 // -> 'surface' the pointer on SDL_Surface
 // -> 'horizontal and 'vertical' are booleans to know the axes
 SDL_Surface* reversion(SDL_Surface* surface, int horizontal, int vertical){
-    SDL_Surface* reverse = SDL_CreateRGBSurface(0, surface->w, surface->h, 32, 0, 0, 0, 255);
+    SDL_Surface* reverse = SDL_CreateRGBSurface(SDL_HWSURFACE, surface->w, surface->h, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
     Uint8 r, g, b;
     Uint32 pixel;
 
