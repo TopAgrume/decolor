@@ -36,11 +36,12 @@ shared_stack* shared_stack_new()
 
 void shared_stack_push(shared_stack* ss, SDL_Surface* img)
 {
-    // Save 10 moves max
-    if (ss->size >= 10)
+    // Save 15 moves max
+    if (ss->size >= 15)
         ss->stack = stack_pop_last(ss->stack);
+    else
+        ss->size += 1;
     ss->stack = stack_push(ss->stack, copy_image(img));
-    ss->size += 1;
 }
 
 void shared_stack_pop_last(shared_stack* ss)
@@ -48,7 +49,7 @@ void shared_stack_pop_last(shared_stack* ss)
     if (ss->size == 0)
         errx(EXIT_FAILURE, "Stack already empty\n");
     ss->stack = stack_pop_last(ss->stack);
-    ss->size -= 1;
+    //ss->size -= 1;
 }
 
 SDL_Surface* shared_stack_pop(shared_stack* ss)
@@ -70,4 +71,5 @@ void shared_stack_destroy(shared_stack* ss)
 void shared_stack_empty(shared_stack* ss)
 {
     stack_empty(&(ss->stack));
+    ss->size = 0;
 }

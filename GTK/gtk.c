@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "../SDL/tools.h"
 #include "../SDL/shape.h"
-
+#include "../SDL/DevTools/shared_stack.h"
 
 GdkRGBA color;
 SDL_Color sdl_color = {.r = 255, .g = 255, .b = 255};
@@ -26,8 +26,8 @@ GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 GtkButton *SaveButton;
 GtkWidget *dialog;
 SDL_Surface* img;
-//shared_stack* previous = shared_stack_new();
-//shared_stack* next = shared_stack_new();
+shared_stack* before;
+shared_stack* after;
 GtkWidget *image;
 GtkFileChooser *FileChooser;
 GtkFileChooser *chooser;
@@ -45,7 +45,7 @@ int start_y = 0;
 int end_x = 0;
 int end_y = 0;
 gboolean is_pressed = FALSE;
-
+gboolean save_draw = TRUE;
 
 int tool_value = -1;
 
@@ -81,6 +81,11 @@ int main(int argc, char *argv[])
 
     //tools = g_slist_alloc();
     img = load_image("blank.png");
+    
+    // tools previous / next image
+    before = shared_stack_new();
+    after = shared_stack_new();
+
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
     ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
@@ -180,7 +185,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
         is_pressed = FALSE;
         end_x = pos_x;
         end_y = pos_y;
-        printf("End coordinates: (%u,%u)\n", end_x, end_y);
+        //printf("End coordinates: (%u,%u)\n", end_x, end_y);
 
         switch (tool_value)
         {
@@ -188,33 +193,35 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 break;
 
             case 5:
-                //shared_stack_push(previous, img);                                    
-                //shared_stack_empty(next, img);                                     
-                //get coordinates (start and final)                                    
-                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 5);
+                // Line call
+                shared_stack_push(before, img);                                    
+                shared_stack_empty(after);                                  
+                printf("%li\n", before->size);
+                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 4);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
             case 6:
-                //shared_stack_push(previous, img);
-                //shared_stack_empty(next, img);
-                make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 5);
+                // Square call
+                shared_stack_push(before, img);
+                shared_stack_empty(after);
+                make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 2);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
             case 7:
-                //shared_stack_push(previous, img);                                    
-                //shared_stack_empty(next, img);                                       
-                //get coordinates (start and final)                                    
-                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 5);
+                // Traingle call
+                shared_stack_push(before, img);                                    
+                shared_stack_empty(after);                                    
+                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 4);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
             case 8:
-                //shared_stack_push(previous, img);                                    
-                //shared_stack_empty(next, img);                                       
-                //get coordinates (start and final)                                    
-                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 5);
+                // Circle call
+                shared_stack_push(before, img);                                    
+                shared_stack_empty(after);                                 
+                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 4);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
         }
@@ -229,7 +236,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
         is_pressed = TRUE;
         start_x = pos_x;
         start_y = pos_y;
-        printf("Start coordinates: (%u,%u)\n", start_x, start_y);
+        //printf("Start coordinates: (%u,%u)\n", start_x, start_y);
 
         switch (tool_value)         
         {
@@ -237,10 +244,10 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 break;
 
              case 2:
-                //shared_stack_push(previous, img);                                    
-                //shared_stack_empty(next, img);                                       
-                //get coordinates (clic only)                                          
-                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 1);   
+                // bucket call
+                shared_stack_push(before, img);
+                shared_stack_empty(after);                                        
+                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
                 
@@ -260,30 +267,53 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
         pos_x = (guint)e->x;
         pos_y = (guint)e->y;
 
-        printf("Old coordinates: (%u,%u)\n", old_x, old_y);
-        printf("coordinates: (%u,%u)\n", pos_x, pos_y);
+        //printf("Old coordinates: (%u,%u)\n", old_x, old_y);
+        //printf("coordinates: (%u,%u)\n", pos_x, pos_y);
 
         if (tool_value == 1 && is_pressed)
         {
+            if (save_draw)
+            {
+                save_draw = FALSE;
+                shared_stack_push(before, img);
+                shared_stack_empty(after);
+                //printf("try to stack\n");
+            }
             //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb);
+            drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb / 4);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
         if (tool_value == 3 && is_pressed)
         {
+            if (save_draw)
+            {
+                save_draw = FALSE;
+                shared_stack_push(before, img);
+                shared_stack_empty(after);  
+            }
+
             //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb);
+            drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 4);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
         /*
         if (tool_value == 4 && is_pressed)
         {
+            if (save_draw)
+            {
+                save_draw = FALSE;
+                shared_stack_push(before, img);
+                shared_stack_empty(after);  
+            }
+
             //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
             drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }*/
-
-
+        if (!is_pressed)
+        {
+            save_draw = TRUE;
+        }
     }
     return TRUE;
 }
@@ -294,13 +324,14 @@ gboolean on_previous(GtkButton* self, gpointer user_data)
     if (self && user_data)
         return FALSE;
 
-    //if (previous->size > 0)
-    //{
-        //img = shared_stack_pop(previous);
-        //update(img);
-        //shared_stack_push(next, img);
+    if (before->size > 0)
+    {
+        //printf("%li\n", before->size);
+        shared_stack_push(after, img);
+        img = shared_stack_pop(before);
+        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         /* SDL_FreeSurface(img); ?*/
-    //}
+    }
 
     return FALSE;
 }
@@ -311,13 +342,14 @@ gboolean on_next(GtkButton* self, gpointer user_data)
     if (self && user_data)  
         return FALSE;
 
-    //if (next->size > 0)
-    //{
-        //img = shared_stack_pop(img);
-        //update(img);
-        //shared_stack_push(previous, img);
+    if (after->size > 0)
+    {
+        //printf("%li\n", after->size);
+        shared_stack_push(before, img);
+        img = shared_stack_pop(after);
+        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         /* SDL_FreeSurface(img); ?*/
-    //}
+    }
     return FALSE;
 }
 
@@ -327,7 +359,6 @@ gboolean on_brush(GtkRadioButton *self, gpointer user_data)
         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 1;
-        
     }
 
     return FALSE;
@@ -375,7 +406,6 @@ gboolean on_segment(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 5;
-         
      }
      return FALSE;
 }
@@ -386,7 +416,6 @@ gboolean on_square(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 6;
-         
      }
      return FALSE;
 }
@@ -397,7 +426,6 @@ gboolean on_triangle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 7;
-         
      }
      return FALSE;
 }
@@ -408,7 +436,6 @@ gboolean on_circle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 8;
-         
      }
      return FALSE;
 }
@@ -490,7 +517,7 @@ gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
 gboolean update_scale_val(GtkScale *self, gpointer user_data)
 {
     scale_nb = gtk_range_get_value(&(self->range));
-    printf("Scale number : %i\n", scale_nb);
+    //printf("Scale number : %i\n", scale_nb);
     
     return FALSE;
 }
