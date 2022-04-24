@@ -158,7 +158,7 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
 
     gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
     cairo_paint(cr);
-    cairo_destroy (cr);
+    //cairo_destroy (cr);
 
     if (pixbuf)
         g_object_unref(pixbuf);
