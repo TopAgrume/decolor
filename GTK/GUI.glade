@@ -631,17 +631,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkDrawingArea" id="image">
+              <object class="GtkImage" id="image">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_bottom">5</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
+                <property name="stock">gtk-missing-image</property>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
