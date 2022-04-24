@@ -428,9 +428,6 @@ void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
 
 gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 {
-    GtkWidget *img = GTK_WIDGET(user_data);
-    GdkPixbuf *pixbuf = gtk_image_get_pixbuf(GTK_IMAGE(img));
-    GError* error = NULL;
 
     int res = gtk_dialog_run (GTK_DIALOG (dialog));
     if (res == GTK_RESPONSE_ACCEPT)
@@ -439,16 +436,11 @@ gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 
         filename = gtk_file_chooser_get_filename (chooser);
         printf("%s", gtk_button_get_label(f));
-        if (gdk_pixbuf_save(pixbuf, filename, "jpeg", &error, NULL) == FALSE)
-        {
-            fprintf(stderr,"%s" , error->message);
-            g_error_free(error);
-        }
+        if (img != NULL)
+            SDL_SaveBMP(img, filename);
         g_free (filename);
     }
 
-    if (pixbuf)
-        g_object_unref(pixbuf);
     gtk_widget_destroy (dialog);
 
     return FALSE;
