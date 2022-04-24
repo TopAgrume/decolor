@@ -61,13 +61,13 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
             {
                 pixel = get_pixel(img, neighbour_x, dequeue_y);
                 SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
-                //if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
-                if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
-                {
-                    pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
-                    put_pixel(img, neighbour_x, dequeue_y, pixel);
-                    shared_queue_push(seal_queue, pixel, neighbour_x, dequeue_y);
-                }
+                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                    if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
+                    {
+                        pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+                        put_pixel(img, neighbour_x, dequeue_y, pixel);
+                        shared_queue_push(seal_queue, pixel, neighbour_x, dequeue_y);
+                    }
                 //else
                     //printf("Rejet\n");
             }
@@ -75,17 +75,19 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
             {
                 pixel = get_pixel(img, dequeue_x, neighbour_y);
                 SDL_GetRGB(pixel, img->format, &(color2.r), &(color2.g), &(color2.b));
-                //if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
-                if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
-                {
-                    pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
-                    put_pixel(img, dequeue_x, neighbour_y, pixel);
-                    shared_queue_push(seal_queue, pixel, dequeue_x, neighbour_y);
-                }
+                if (color.r == color2.r && color.g == color2.g && color.b == color2.b)
+                    if (compare(color.r, color2.r, threshold) && compare(color.g, color2.g, threshold) && compare(color.b, color2.b, threshold)) 
+                    {
+                        pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+                        put_pixel(img, dequeue_x, neighbour_y, pixel);
+                        shared_queue_push(seal_queue, pixel, dequeue_x, neighbour_y);
+                    }
                 //else
                     //printf("Rejet\n");
             }
         }
+    printf("seal_queue->size: %li\n", seal_queue->size);
+
     }
     shared_queue_destroy(seal_queue);
     return img;

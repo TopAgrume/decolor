@@ -247,7 +247,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // bucket call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);                                        
-                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb);   
+                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 2);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
                 
