@@ -37,10 +37,14 @@ GtkButton* apply;
 GtkWidget* eventbox;
 int pos_x = 0;
 int pos_y = 0;
+int old_x = 0;
+int old_y = 0;
 int start_x = 0;
 int start_y = 0;
 int end_x = 0;
 int end_y = 0;
+gboolean is_pressed = FALSE;
+
 
 int tool_value = -1;
 
@@ -172,6 +176,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
 {
     if(user_data == NULL)
     {
+        is_pressed = FALSE;
         end_x = pos_x;
         end_y = pos_y;
         printf("End coordinates: (%u,%u)\n", end_x, end_y);
@@ -220,6 +225,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
 {
     if(user_data == NULL)
     {
+        is_pressed = TRUE;
         start_x = pos_x;
         start_y = pos_y;
         printf("Start coordinates: (%u,%u)\n", start_x, start_y);
@@ -248,8 +254,19 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
     if (event->type==GDK_MOTION_NOTIFY && user_data == NULL) 
     {
         GdkEventMotion* e =(GdkEventMotion*)event;
+        old_x = pos_x;
+        old_y = pos_y;
         pos_x = (guint)e->x;
         pos_y = (guint)e->y;
+
+        printf("Old coordinates: (%u,%u)\n", old_x, old_y);
+        printf("coordinates: (%u,%u)\n", pos_x, pos_y);
+
+        if (tool_value == 1 && is_pressed)
+        {
+            drawline(img, sdl_color, old_x, old_y, pos_y, pos_x, (int)scale_nb);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+        }
     }
     return TRUE;
 }
