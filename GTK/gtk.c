@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include "gtk.h"
 #include <stdlib.h>
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
 //#include "../SDL/tools.h"
 
 GdkRGBA* color;

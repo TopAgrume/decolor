@@ -2,7 +2,7 @@ CC=gcc
 CPPFLAGS=
 CFLAGS= -Wall -Wextra -Werror -std=c99 $$(pkg-config --cflags gtk+-3.0)
 LDFLAGS=
-LDLIBS=-lm $$(pkg-config --libs gtk+-3.0) `sdl2-config --cflags --libs`
+LDLIBS=-lm $$(pkg-config --libs gtk+-3.0) `sdl-config --cflags --libs`
 EXEC= main
 
 SRC= gtk.c
