@@ -187,20 +187,12 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
             case -1:
                 break;
 
-            case 1:
-                //shared_stack_push(previous, img);
-                //shared_stack_empty(next, img);
-                //get coordinates (clic long) and in a while loop:
-                //drawline(img, sdl_color, int x1, int y1, int x2, int y2, (int)scale_nb);
-                //update(img);
-                break;
-
              case 2:
                 //shared_stack_push(previous, img);                                    
                 //shared_stack_empty(next, img);                                       
                 //get coordinates (clic only)                                          
-                //filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 3);   
-                //update(img);
+                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 2);   
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
                 
          }
