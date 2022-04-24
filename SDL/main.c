@@ -9,11 +9,11 @@
 #include "DevTools/shared_stack.h"
 #include "shape.h"
 
-#define TEST_FILTER
+//#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
-//#define TEST_CROP
+#define TEST_CROP
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
 //#define TEST_TRIANGLE

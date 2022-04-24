@@ -43,7 +43,7 @@ void negative(SDL_Surface* surface){
 // -> 'surface' the img to apply the filter
 // -> 'rcons', 'gcons' and 'bcons' booleans to know which colors are constants
 // -> 'cons' the minimum threshold for the constants colors
-void color(SDL_Surface* surface, Uint8 rcons, Uint8 gcons, Uint8 bcons, Uint8 cons){
+void color_filter(SDL_Surface* surface, Uint8 rcons, Uint8 gcons, Uint8 bcons, Uint8 cons){
     if((rcons != 0 && rcons != 1) || (gcons != 0 && gcons != 1) || (bcons != 0 && bcons != 1))
 	    errx(EXIT_FAILURE, "color() : rcons/gcons/bcons is a boolean !");
     Uint8 r, g, b;

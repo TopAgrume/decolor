@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include "../SDL/tools.h"
 #include "../SDL/shape.h"
+#include "../SDL/filter.h"
 #include "../SDL/DevTools/shared_stack.h"
 
 GdkRGBA color;
-SDL_Color sdl_color = {.r = 255, .g = 255, .b = 255};
+SDL_Color sdl_color = {.r = 0, .g = 0, .b = 0};
 SDL_Color white = {.r = 255, .g = 255, .b = 255};
 GtkColorChooser* ColorButton;
 GtkWidget *window;
@@ -26,6 +27,7 @@ GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SAVE;
 GtkButton *SaveButton;
 GtkWidget *dialog;
 SDL_Surface* img;
+SDL_Surface* img2;
 shared_stack* before;
 shared_stack* after;
 GtkWidget *image;
@@ -81,6 +83,7 @@ int main(int argc, char *argv[])
 
     //tools = g_slist_alloc();
     img = load_image("blank.png");
+    img2 = load_image("blank.png");
     
     // tools previous / next image
     before = shared_stack_new();
@@ -296,7 +299,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
             drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 4);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
-        /*
+        
         if (tool_value == 4 && is_pressed)
         {
             if (save_draw)
@@ -307,9 +310,9 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
             }
 
             //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb);
+            drawline_image(img, img2, old_x, old_y, pos_x, pos_y, (int)scale_nb);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-        }*/
+        }
         if (!is_pressed)
         {
             save_draw = TRUE;
@@ -481,6 +484,7 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
 
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(f));
     img = load_image(filename);
+    img2 = load_image(filename);
     //image = gtk_image_new_from_sdl_surface(img);
     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
 
@@ -543,24 +547,40 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
         case 'N':
         {
             printf("Noir et Blanc\n");
+	    shared_stack_push(before, img);
+            shared_stack_empty(after);
+	    grayscale(img);
+	    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre noir et blanc
         }
 
         case 'I':
         {
             printf("Inversion\n");
+	    shared_stack_push(before, img);
+            shared_stack_empty(after);
+            negative(img);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre d'inversion de couleur
         }
 
         case 'C':
         {
             printf("Contraste\n");
+	    shared_stack_push(before, img);
+            shared_stack_empty(after);
+            color_filter(img, 1, 1, 1, 0);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre de Contraste
         }
 
         case 'L':
         {
             printf("Luminosité\n");
+	    shared_stack_push(before, img);
+            shared_stack_empty(after);
+            color_filter(img, 1, 1, 1, 255);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre de Luminosité
         }
 
