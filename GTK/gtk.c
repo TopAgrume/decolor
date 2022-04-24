@@ -3,6 +3,8 @@
 #include "gtk.h"
 #include <stdlib.h>
 #include "../SDL/tools.h"
+#include "../SDL/shape.h"
+
 
 GdkRGBA color;
 SDL_Color sdl_color = {.r = 255, .g = 255, .b = 255};
@@ -162,6 +164,8 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
 
     if (pixbuf)
         g_object_unref(pixbuf);
+
+    return FALSE;
 }
 
 gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
@@ -171,7 +175,45 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
         end_x = pos_x;
         end_y = pos_y;
         printf("End coordinates: (%u,%u)\n", end_x, end_y);
+
+        switch (tool_value)
+        {
+            case -1:
+                break;
+
+            case 5:
+                //shared_stack_push(previous, img);                                    
+                //shared_stack_empty(next, img);                                     
+                //get coordinates (start and final)                                    
+                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+            case 6:
+                //shared_stack_push(previous, img);
+                //shared_stack_empty(next, img);
+                make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+            case 7:
+                //shared_stack_push(previous, img);                                    
+                //shared_stack_empty(next, img);                                       
+                //get coordinates (start and final)                                    
+                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+            case 8:
+                //shared_stack_push(previous, img);                                    
+                //shared_stack_empty(next, img);                                       
+                //get coordinates (start and final)                                    
+                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+        }
     }
+    return FALSE;
 }
 
 gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
