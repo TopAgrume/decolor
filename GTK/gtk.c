@@ -8,6 +8,7 @@
 
 GdkRGBA color;
 SDL_Color sdl_color = {.r = 255, .g = 255, .b = 255};
+SDL_Color white = {.r = 255, .g = 255, .b = 255};
 GtkColorChooser* ColorButton;
 GtkWidget *window;
 GtkRadioButton* brush;
@@ -264,9 +265,25 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
 
         if (tool_value == 1 && is_pressed)
         {
-            drawline(img, sdl_color, old_x, old_y, pos_y, pos_x, (int)scale_nb);
+            //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
+            drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
+        if (tool_value == 3 && is_pressed)
+        {
+            //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
+            drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+        }
+        /*
+        if (tool_value == 4 && is_pressed)
+        {
+            //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
+            drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+        }*/
+
+
     }
     return TRUE;
 }
