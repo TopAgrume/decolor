@@ -31,7 +31,7 @@ GtkWidget *image;
 GtkFileChooser *FileChooser;
 GtkFileChooser *chooser;
 GtkScale* scale;
-unsigned char scale_nb = 0;
+unsigned char scale_nb = 10;
 GtkComboBoxText* filtres;
 GtkButton* apply;
 GtkWidget* eventbox;
@@ -185,14 +185,14 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 //shared_stack_push(previous, img);                                    
                 //shared_stack_empty(next, img);                                     
                 //get coordinates (start and final)                                    
-                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb);
+                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 5);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
             case 6:
                 //shared_stack_push(previous, img);
                 //shared_stack_empty(next, img);
-                make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb);
+                make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 5);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -200,7 +200,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 //shared_stack_push(previous, img);                                    
                 //shared_stack_empty(next, img);                                       
                 //get coordinates (start and final)                                    
-                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb);
+                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 5);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -208,7 +208,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 //shared_stack_push(previous, img);                                    
                 //shared_stack_empty(next, img);                                       
                 //get coordinates (start and final)                                    
-                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb);
+                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 5);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
         }
@@ -233,7 +233,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 //shared_stack_push(previous, img);                                    
                 //shared_stack_empty(next, img);                                       
                 //get coordinates (clic only)                                          
-                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 2);   
+                filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 1);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
                 
@@ -310,11 +310,6 @@ gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 2;
-         //shared_stack_push(previous, img);
-         //shared_stack_empty(next, img);
-         //get coordinates (clic only)
-         //filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 3);
-         //update(img);
      }
      return FALSE;
 }
@@ -356,12 +351,7 @@ gboolean on_segment(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 5;
-         //shared_stack_push(previous, img);
-         //shared_stack_empty(next, img);
-         //get coordinates (start and final)
-         //drawline(img, SDL_Color color, int x1, int y1, int x2, int y2, (int)scale_nb);
-         //update(img);
-
+         
      }
      return FALSE;
 }
@@ -372,12 +362,7 @@ gboolean on_square(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 6;
-         //shared_stack_push(previous, img);
-         //shared_stack_empty(next, img);
-         //get coordinates (start and final)
-         //make_empty_square(img, int x1, int y1, int x2, int y2, SDL_Color new_color, (int)scale_nb);
-         //update(img);
-
+         
      }
      return FALSE;
 }
@@ -388,12 +373,7 @@ gboolean on_triangle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 7;
-         //shared_stack_push(previous, img);
-         //shared_stack_empty(next, img);
-         //get coordinates (start and final)
-         //make_empty_triangle(img, int x1, int y1, int x2, int y2, SDL_Color new_color, (int)scale_nb);
-         //update(img);
-
+         
      }
      return FALSE;
 }
@@ -404,12 +384,7 @@ gboolean on_circle(GtkRadioButton *self, gpointer user_data)
          gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
      {
          tool_value = 8;
-         //shared_stack_push(previous, img);
-         //shared_stack_empty(next, img);
-         //get coordinates (start and final)
-         //bresenham_circle(img, int x1, int y1, int x2, int y2, SDL_Color color, (int)scale_nb);
-         //update(img);
-
+         
      }
      return FALSE;
 }
