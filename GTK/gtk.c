@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
     g_signal_connect (image, "button-release-event", G_CALLBACK(mouse_release), NULL);
 
 
+    gtk_widget_set_app_paintable(image, TRUE);
     gtk_widget_show_all(window);
 
     gtk_main();
@@ -150,7 +151,12 @@ void update(SDL_Surface* src)
 
     pixbuf = gdk_pixbuf_new_from_file("tmpfile.bmp", NULL);
     
-    gtk_image_set_from_pixbuf(GTK_IMAGE(image), pixbuf);
+    cairo_t *cr;
+    cr = gdk_cairo_create (gtk_widget_get_window(image));
+
+    gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
+    cairo_paint(cr);
+    cairo_destroy (cr);
 
     if (pixbuf)
         g_object_unref(pixbuf);
@@ -160,23 +166,44 @@ void update(SDL_Surface* src)
 
 gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
 {
-    if(self != NULL && user_data == NULL)
+    if(user_data == NULL)
     {
         end_x = pos_x;
         end_y = pos_y;
         printf("End coordinates: (%u,%u)\n", end_x, end_y);
     }
-
-        return FALSE;
 }
 
 gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
 {
-    if(self != NULL && user_data == NULL)
+    if(user_data == NULL)
     {
         start_x = pos_x;
         start_y = pos_y;
         printf("Start coordinates: (%u,%u)\n", start_x, start_y);
+
+        switch (tool_value)         
+        {
+            case -1:
+                break;
+
+            case 1:
+                //shared_stack_push(previous, img);
+                //shared_stack_empty(next, img);
+                //get coordinates (clic long) and in a while loop:
+                //drawline(img, sdl_color, int x1, int y1, int x2, int y2, (int)scale_nb);
+                //update(img);
+                break;
+
+             case 2:
+                //shared_stack_push(previous, img);                                    
+                //shared_stack_empty(next, img);                                       
+                //get coordinates (clic only)                                          
+                //filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 3);   
+                //update(img);
+                break;
+                
+         }
     }
 
     return FALSE;
@@ -184,7 +211,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
 
 gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) 
 {
-    if (event->type==GDK_MOTION_NOTIFY && widget != NULL && user_data == NULL) 
+    if (event->type==GDK_MOTION_NOTIFY && user_data == NULL) 
     {
         GdkEventMotion* e =(GdkEventMotion*)event;
         pos_x = (guint)e->x;
@@ -252,8 +279,8 @@ gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
          //shared_stack_push(previous, img);
          //shared_stack_empty(next, img);
          //get coordinates (clic only)
-         filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 3);
-         update(img);
+         //filling_seal(img, start_x, start_y, sdl_color, (int)scale_nb * 3);
+         //update(img);
      }
      return FALSE;
 }
