@@ -7,7 +7,8 @@
 #include "../SDL/filter.h"
 #include "../SDL/DevTools/shared_stack.h"
 
-GdkRGBA color;
+const GdkRGBA black = {.red = 0, .green = 0, .blue = 0, .alpha = 1};
+GdkRGBA color = {.red = 0, .green = 0, .blue = 0, .alpha = 1};
 SDL_Color sdl_color = {.r = 0, .g = 0, .b = 0};
 SDL_Color white = {.r = 255, .g = 255, .b = 255};
 GtkColorChooser* ColorButton;
@@ -92,6 +93,7 @@ int main(int argc, char *argv[])
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
     ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
+    gtk_color_chooser_set_rgba(ColorButton,&black);
     image = GTK_WIDGET(gtk_builder_get_object(Builder, "image"));
     if (image == NULL)
         printf("%s", "image is NULL");
@@ -99,8 +101,6 @@ int main(int argc, char *argv[])
     gtk_widget_add_events(image, GDK_BUTTON_PRESS_MASK);
     gtk_widget_add_events(image, GDK_BUTTON_RELEASE_MASK);
     toolsgrid = GTK_WIDGET(gtk_builder_get_object(Builder, "toolsgrid"));
-    dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action,
-    "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
     SaveButton = GTK_BUTTON(gtk_builder_get_object(Builder, "Save"));
     FileChooser = GTK_FILE_CHOOSER(gtk_builder_get_object(Builder, "FileChooser"));
     eventbox = gtk_event_box_new ();
@@ -125,8 +125,6 @@ int main(int argc, char *argv[])
     previous = GTK_WIDGET(gtk_builder_get_object(Builder, "previous"));
     next = GTK_WIDGET(gtk_builder_get_object(Builder, "next"));
 
-    chooser = GTK_FILE_CHOOSER(dialog);
-    gtk_file_chooser_set_current_name (chooser, "Saving Image");
 
     // Handling Signals
     g_signal_connect(ColorButton, "color-set", G_CALLBACK(on_Color_set), NULL);
@@ -451,6 +449,11 @@ void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
 
 gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 {
+    dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action, 
+    "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
+
+    chooser = GTK_FILE_CHOOSER(dialog);
+    gtk_file_chooser_set_current_name (chooser, "Saving Image");
 
     int res = gtk_dialog_run (GTK_DIALOG (dialog));
     if (res == GTK_RESPONSE_ACCEPT)
