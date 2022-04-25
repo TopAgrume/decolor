@@ -2,7 +2,7 @@
 #define GRAYSCALE_H_
 
 #include <stdlib.h>
-#include <SDL.h>
+//#include <SDL.h>
 
 void grayscale(SDL_Surface* surface);
 void negative(SDL_Surface* surface);

@@ -630,7 +630,8 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             printf("Contraste\n");
 	    shared_stack_push(before, img);
             shared_stack_empty(after);
-            color_filter(img, 1, 1, 1, 0);
+            color_filter(img, 1, 0, 0, 0);
+            grayscale(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre de Contraste
         }
@@ -640,7 +641,8 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             printf("Luminosité\n");
 	    shared_stack_push(before, img);
             shared_stack_empty(after);
-            color_filter(img, 1, 1, 1, 255);
+            color_filter(img, 1, 0, 0, 255);
+            grayscale(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre de Luminosité
         }
@@ -650,12 +652,20 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             if(fil[3] == 'p') // 'é'= two chars
             {
                 printf("Sépia\n");
+		shared_stack_push(before, img);
+                shared_stack_empty(after);
+                color_filter(img, 1, 0, 0, 0);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 return FALSE; //Filtre Sépia
             }
 
             else
             {
                 printf("Saturation\n");
+		shared_stack_push(before, img);
+                shared_stack_empty(after);
+                color_filter(img, 1, 0, 0, 255);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 return FALSE; //Filtre Saturation
             }
         } 

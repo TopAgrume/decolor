@@ -9,11 +9,11 @@
 #include "DevTools/shared_stack.h"
 #include "shape.h"
 
-//#define TEST_FILTER
+#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
-#define TEST_CROP
+//#define TEST_CROP
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
 //#define TEST_TRIANGLE
@@ -76,7 +76,7 @@ int main(int argc , char* argv[])
 
 #ifdef TEST_FILTER
     SDL_Surface* image_surface;
-    SDL_Surface* reverse;
+    //SDL_Surface* reverse;
     SDL_Surface* screen_surface;
 
     init_sdl();
@@ -85,11 +85,14 @@ int main(int argc , char* argv[])
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
-    reverse = reversion(image_surface, 1, 1);
-    screen_surface = display_image(reverse);
+    //reverse = reversion(image_surface, 1, 1);
+  
+    color_filter(image_surface, 1, 0, 0, 255);
+    grayscale(image_surface);
+    screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
-    SDL_FreeSurface(reverse);
+    //SDL_FreeSurface(reverse);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 #endif
