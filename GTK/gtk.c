@@ -210,7 +210,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);                                  
                 printf("%li\n", before->size);
-                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 4);
+                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -226,7 +226,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Traingle call
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);                                    
-                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 4);
+                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -234,7 +234,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Circle call
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);                                 
-                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 4);
+                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -281,7 +281,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // bucket call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);                                        
-                filling_seal(img, start_x, start_y, sdl_color, 10/*(((int)scale_nb * 100) / 100)*/);   
+                filling_seal(img, start_x, start_y, sdl_color, ((int)scale_nb * 255) / 100);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
                 
