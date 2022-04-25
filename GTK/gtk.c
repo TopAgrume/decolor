@@ -208,8 +208,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
             case 5:
                 // Line call
                 shared_stack_push(before, img);                                    
-                shared_stack_empty(after);                                  
-                printf("%li\n", before->size);
+                shared_stack_empty(after);
                 drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
