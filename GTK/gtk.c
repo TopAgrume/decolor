@@ -21,6 +21,9 @@ GtkRadioButton* segment;
 GtkRadioButton* square;
 GtkRadioButton* triangle;
 GtkRadioButton* circle;
+GtkRadioButton* Text;
+GtkRadioButton* Crop;
+GtkRadioButton* Select;
 GtkWidget* toolsgrid;
 GtkWidget* previous;
 GtkWidget* next;
@@ -75,6 +78,10 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data);
 gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data);
 //GtkWidget* gtk_image_new_from_sdl_surface (SDL_Surface *surface);
 gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data);
+gboolean on_Text(GtkRadioButton *self, gpointer user_data);
+gboolean on_Select(GtkRadioButton *self, gpointer user_data);
+gboolean on_Crop(GtkRadioButton *self, gpointer user_data);
+
 
 int main(int argc, char *argv[])
 {
@@ -120,7 +127,9 @@ int main(int argc, char *argv[])
     scale = GTK_SCALE(gtk_builder_get_object(Builder, "Scale")); 
     filtres = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "Filtres"));
     apply = GTK_BUTTON(gtk_builder_get_object(Builder, "Appliquer"));
-    
+    Text = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Text"));
+    Select = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Select"));
+    Crop = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Crop"));
     // Previous and Next
     previous = GTK_WIDGET(gtk_builder_get_object(Builder, "previous"));
     next = GTK_WIDGET(gtk_builder_get_object(Builder, "next"));
@@ -138,6 +147,9 @@ int main(int argc, char *argv[])
     g_signal_connect(circle, "toggled", G_CALLBACK(on_circle), NULL);
     g_signal_connect(scale, "value_changed", G_CALLBACK(update_scale_val), NULL);
     g_signal_connect(apply, "clicked", G_CALLBACK(on_apply_clicked), NULL);
+    g_signal_connect(Text, "toggled", G_CALLBACK(on_Text), NULL);
+    g_signal_connect(Select, "toggled", G_CALLBACK(on_Select), NULL);
+    g_signal_connect(Crop, "toggled", G_CALLBACK(on_Crop), NULL); 
     
     g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
@@ -224,6 +236,27 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_empty(after);                                 
                 bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 4);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+            case 9:
+                // Text Call
+                shared_stack_push(before, img);
+                shared_stack_empty(after);
+                // FONCTION ICI !!!!
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+            case 10:
+                // Crop Call
+                shared_stack_push(before, img);
+                shared_stack_empty(after);
+                // FONCTION ICI !!!
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+            case 11:
+                // Select Call
+
                 break;
         }
     }
@@ -350,6 +383,36 @@ gboolean on_next(GtkButton* self, gpointer user_data)
         img = shared_stack_pop(after);
         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         /* SDL_FreeSurface(img); ?*/
+    }
+    return FALSE;
+}
+
+gboolean on_Text(GtkRadioButton *self, gpointer user_data)
+{
+    if (user_data == NULL &&
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 9;
+    }
+    return FALSE;
+}
+
+gboolean on_Crop(GtkRadioButton *self, gpointer user_data)
+{
+    if (user_data == NULL &&
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 10;
+    }
+    return FALSE;
+}
+
+gboolean on_Select(GtkRadioButton *self, gpointer user_data)
+{
+    if (user_data == NULL &&
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 11;
     }
     return FALSE;
 }
