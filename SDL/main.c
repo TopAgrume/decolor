@@ -9,7 +9,7 @@
 #include "DevTools/shared_stack.h"
 #include "shape.h"
 
-#define TEST_FILTER
+//#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
@@ -17,7 +17,7 @@
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
 //#define TEST_TRIANGLE
-//#define TEST_CIRCLE
+#define TEST_CIRCLE
 
 int main(int argc , char* argv[])
 {
@@ -57,15 +57,15 @@ int main(int argc , char* argv[])
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     
-    bresenham_circle(image_surface, 600, 600, 300, 300, color1, 10);
+    bresenham_fill_circle(image_surface, 600, 600, 300, 300, color1, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    bresenham_circle(image_surface, 300, 600, 600, 300, color2, 10);
+    bresenham_fill_circle(image_surface, 300, 600, 600, 300, color2, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    bresenham_circle(image_surface, 500, 200, 200, 600, color3, 10);
+    bresenham_fill_circle(image_surface, 500, 200, 200, 600, color3, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     
@@ -166,7 +166,7 @@ int main(int argc , char* argv[])
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     
-    make_empty_triangle(image_surface, 600, 50, 50, 600, color1, 10);
+    make_fill_triangle(image_surface, 600, 50, 50, 600, color1, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
@@ -174,7 +174,7 @@ int main(int argc , char* argv[])
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    make_empty_triangle(image_surface, 1100, 700, 200, 10, color3, 10);
+    make_fill_triangle(image_surface, 1100, 700, 200, 10, color3, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     
