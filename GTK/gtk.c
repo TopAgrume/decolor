@@ -572,15 +572,15 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     //image = gtk_image_new_from_sdl_surface(img);
     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
     
-    int w = 1260;
+    int w = 1310;
     int h = 903;
     if(img->w > 1080)
     {
-        w = img->w+180;
+        w = img->w+230;
         gtk_widget_set_margin_start(GTK_WIDGET(image), 0);
     }
     else
-        gtk_widget_set_margin_start(GTK_WIDGET(image), (w-180-img->w)/2);
+        gtk_widget_set_margin_start(GTK_WIDGET(image), (w-230-img->w)/2);
 
     if(img->h > 850)
     {
