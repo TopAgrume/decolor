@@ -1,0 +1,19 @@
+# Precompiled Headers
+*.o
+*.d
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Kernel Module Compile Results
+.vscode
+.vs
+.swp
+
+# Our Project
+decolor
