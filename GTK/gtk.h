@@ -9,7 +9,7 @@
 #include "SDL/SDL_image.h"
 #include <glib.h>
 
-void create_window(int argc, char* argv[]);
+int create_window_decolor(int argc, char* argv[]);
 
 /*typedef struct shared_stack
 {

@@ -1,24 +1,23 @@
-CPPFLAGS = -MMD
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c99 -O1 -g -fsanitize=address $(shell pkg-config --cflags gtk+-3.0 sdl2 SDL2_image) -D__NO_INLINE___
-LDFLAGS = 
-LDLIBS = -lm $(shell pkg-config --libs gtk+-3.0 sdl2 SDL2_image)
 
-SRC = SDL/main.c  SDL/pixel_operations.c SDL/SDLFunction.c GTK/gtk.c
-OBJ = ${SRC:.c=.o}
-DEP = ${SRC:.c=.d}
+CPPFLAGS = `pkg-config gtk+-3.0 --cflags sdl` -MMD
+CFLAGS = -Werror -Wextra -std=c99 -g
+LDLIBS = `pkg-config gtk+-3.0 --libs sdl` -lSDL_image -lSDL_gfx -lm
 
-all: main
+SRC = decolor.c GTK/gtk.c SDL/tools.c SDL/pixel_operations.c SDL/DevTools/queue.c SDL/DevTools/shared_queue.c SDL/shape.c SDL/DevTools/shared_stack.c SDL/DevTools/stack.c SDL/filter.c
 
-main: ${OBJ}
-	${CC} ${CFLAGS} $^ -o $@ ${LDLIBS}
+OBJ= $(SRC:.c=.o)
+DEP= $(SRC:.c=.d)
 
-.PHONY: clean
+all: decolor
+
+decolor: $(OBJ)
 
 clean:
 	${RM} ${OBJ}
 	${RM} ${DEP}
-	${RM} main
-
-
--include ${DEP}
+	${RM} decolor
+	${RM} ./*.o
+	${RM} ./GTK/*.o
+	${RM} ./SDL/*.o
+	${RM} ./SDL/DevTools/*.o

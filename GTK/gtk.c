@@ -83,15 +83,15 @@ gboolean on_Select(GtkRadioButton *self, gpointer user_data);
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data);
 
 
-int main(int argc, char *argv[])
+int create_window_decolor(int argc, char *argv[])
 {
     gtk_init (&argc, &argv);
 
-    GtkBuilder* Builder = gtk_builder_new_from_file("GUI.glade");
+    GtkBuilder* Builder = gtk_builder_new_from_file("./GTK/GUI.glade");
 
     //tools = g_slist_alloc();
-    img = load_image("blank.png");
-    img2 = load_image("blank.png");
+    img = load_image("./GTK/blank.png");
+    img2 = load_image("./GTK/blank.png");
     
     // tools previous / next image
     before = shared_stack_new();
@@ -175,10 +175,10 @@ int main(int argc, char *argv[])
 
 gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
 {
-    SDL_SaveBMP(img, "tmpfile.bmp");
+    SDL_SaveBMP(img, "./GTK/tmpfile.bmp");
     GdkPixbuf *pixbuf;
 
-    pixbuf = gdk_pixbuf_new_from_file("tmpfile.bmp", NULL);
+    pixbuf = gdk_pixbuf_new_from_file("./GTK/tmpfile.bmp", NULL);
     
 
     gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
