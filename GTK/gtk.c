@@ -548,7 +548,29 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     shared_stack_empty(before); 
     //image = gtk_image_new_from_sdl_surface(img);
     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+    
+    int w = 1260;
+    int h = 903;
+    if(img->w > 1080)
+    {
+        w = img->w+180;
+        gtk_widget_set_margin_start(GTK_WIDGET(image), 0);
+    }
+    else
+        gtk_widget_set_margin_start(GTK_WIDGET(image), (w-180-img->w)/2);
 
+    if(img->h > 850)
+    {
+        h = img->h+53;
+        gtk_widget_set_margin_top(GTK_WIDGET(image), 0);
+    }
+    else
+        gtk_widget_set_margin_top(GTK_WIDGET(image), (h-53-img->h)/2);
+
+
+
+    gtk_window_resize(GTK_WINDOW(window), w, h);
+        
     
     //pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
