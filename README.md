@@ -3,8 +3,8 @@ Decolor
 How to use Decolor ?
 
 - Use the command make without any argument.
-- Then type ./main.
-- An interface will now appear.
+- Then type ./decolor.
+- An interface will now appear and allow you to modify and create some images.
 
 
 
