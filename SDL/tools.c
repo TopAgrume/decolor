@@ -127,8 +127,8 @@ void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size)
 {
     if (surface == NULL)
         return;
-    if (x < 0 || y < 0 || x >= surface->w || y >= surface->h)
-        return;
+    //if (x < 0 || y < 0 || x >= surface->w || y >= surface->h)
+    //    return;
 
     int i = x-size;
     int j = y;

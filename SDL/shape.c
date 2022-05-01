@@ -3,13 +3,26 @@
 SDL_Surface* make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color)
 {
     if (img == NULL)
-        errx(EXIT_FAILURE, "Failure make_fill_square(): img == NULL");
-    if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
-         errx(EXIT_FAILURE, "Failure make_fill_square(): x out of bounds");
-    if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
-         errx(EXIT_FAILURE, "Failure make_fill_square(): y out of bounds");
-    int x, y;
+    {
+        printf("Failure make_fill_square(): img == NULL\n");
+        return img;
+    }
+    /*
 
+    if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
+    {
+        printf("Failure make_fill_square(): x out of bounds\n");
+        //return img;
+    }
+    if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
+    {
+        printf("Failure make_fill_square(): y out of bounds\n");
+        //return img;
+    }
+
+    */
+
+    int x, y;
     int tmp;
 
     if (x1 > x2)
@@ -40,8 +53,11 @@ SDL_Surface* make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, 
     {
         for (y = y1; y <= y2; y++)
         {
-            pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
-            put_pixel(img, x, y, pixel);
+            if (x >= 0 && x < img->w && y >= 0 && y < img->h)
+            {
+                pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+                put_pixel(img, x, y, pixel);
+            }
         }
     }
     return img;
@@ -49,8 +65,13 @@ SDL_Surface* make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, 
 
 void make_horizontal(SDL_Surface* img, int x1, int x2, int y, SDL_Color new_color)
 {
+    
     if (y < 0 || y >= img->h)
-        errx(EXIT_FAILURE, "Failure make_horizontal(): y out of bounds");
+    {
+        //printf("Failure make_horizontal(): y out of bounds\n");
+        return;
+    }
+
     if (x1 > x2)
     {
         int tmp = x1;
@@ -62,15 +83,22 @@ void make_horizontal(SDL_Surface* img, int x1, int x2, int y, SDL_Color new_colo
     Uint32 pixel;
     for (x = x1; x <= x2; x++)
     {
-        pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
-        put_pixel(img, x, y, pixel);
+        if (x >= 0 && x < img->w)
+        {
+            pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+            put_pixel(img, x, y, pixel);
+        }
     }
 }
 
 void make_vertical(SDL_Surface* img, int y1, int y2, int x, SDL_Color new_color)
 {
     if (x < 0 || x >= img->w)
-        errx(EXIT_FAILURE, "Failure make_vertical(): x out of bounds");
+    {
+        //printf("Failure make_vertical(): x out of bounds\n");
+        return;
+    }
+
     if (y1 > y2)
     {
         int tmp = y1;
@@ -82,19 +110,35 @@ void make_vertical(SDL_Surface* img, int y1, int y2, int x, SDL_Color new_color)
     Uint32 pixel;
     for (y = y1; y <= y2; y++)
     {
-        pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
-        put_pixel(img, x, y, pixel);
+        if (y >= 0 && y < img->h)
+        {
+            pixel = SDL_MapRGB(img->format, new_color.r, new_color.g, new_color.b);
+            put_pixel(img, x, y, pixel);
+        }
     }
 }
 
 SDL_Surface* make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
 {
     if (img == NULL)
-        errx(EXIT_FAILURE, "Failure make_empty_square(): img == NULL");
+    {
+        printf("Failure make_empty_square(): img == NULL\n");
+        return img;
+    }
+    /*
+
     if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
-         errx(EXIT_FAILURE, "Failure make_empty_square(): x out of bounds");
+    {
+        printf("Failure make_empty_square(): x out of bounds\n");
+        //return img;
+    }
     if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
-         errx(EXIT_FAILURE, "Failure make_empty_square(): y out of bounds");
+    {
+        printf("Failure make_empty_square(): y out of bounds\n");
+        //return img;
+    }
+
+    */
 
     int move_x1 = 0;
     int move_x2 = 0;
@@ -160,12 +204,25 @@ SDL_Surface* make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2,
 SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
 {
     if (img == NULL)
-        errx(EXIT_FAILURE, "Failure make_empty_triangle(): img == NULL");
+    {
+        printf("Failure make_empty_triangle(): img == NULL\n");
+        return img;
+    }
+    /*
+
     if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
-         errx(EXIT_FAILURE, "Failure make_empty_triangle(): x out of bounds");
+    {
+        printf("Failure make_empty_triangle(): x out of bounds\n");
+        return img;
+    }
     if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
-         errx(EXIT_FAILURE, "Failure make_empty_triangle(): y out of bounds");
-    
+    {
+        printf("Failure make_empty_triangle(): y out of bounds\n");
+        return img;
+    }
+
+    */
+
     int x3 = 0;
     if (x1 < x2)
     {
@@ -203,11 +260,24 @@ SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y
 SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
 {
     if (img == NULL)
-        errx(EXIT_FAILURE, "Failure bresenham_circle(): img == NULL");
+    {
+        printf("Failure bresenham_circle(): img == NULL\n");
+        return img;
+    }
+    /*
+    
     if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
-         errx(EXIT_FAILURE, "Failure bresenham_circle(): x out of bounds");
+    {
+        printf("Failure bresenham_circle(): x out of bounds\n");
+        //return img;
+    }
     if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
-         errx(EXIT_FAILURE, "Failure bresenham_circle(): y out of bounds");
+    {
+        printf("Failure bresenham_circle(): y out of bounds\n");
+        //return img;
+    }
+
+    */
 
 	int x = 0 , y = sqrt(pow(y2 - y1, 2) + pow(x2 - x1, 2)), d = 3 - 2 * y;
 	point(img, color, x1 + x, y1 + y, size);
