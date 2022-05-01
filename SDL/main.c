@@ -13,11 +13,11 @@
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
-#define TEST_CROP
+//#define TEST_CROP
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
 //#define TEST_TRIANGLE
-//#define TEST_CIRCLE
+#define TEST_CIRCLE
 
 int main(int argc , char* argv[])
 {
@@ -57,15 +57,15 @@ int main(int argc , char* argv[])
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     
-    bresenham_circle(image_surface, 600, 600, 300, 300, color1, 10);
+    bresenham_fill_circle(image_surface, 600, 600, 300, 300, color1, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    bresenham_circle(image_surface, 300, 600, 600, 300, color2, 10);
+    bresenham_fill_circle(image_surface, 300, 600, 600, 300, color2, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    bresenham_circle(image_surface, 500, 200, 200, 600, color3, 10);
+    bresenham_fill_circle(image_surface, 500, 200, 200, 600, color3, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     
@@ -76,7 +76,7 @@ int main(int argc , char* argv[])
 
 #ifdef TEST_FILTER
     SDL_Surface* image_surface;
-    SDL_Surface* reverse;
+    //SDL_Surface* reverse;
     SDL_Surface* screen_surface;
 
     init_sdl();
@@ -85,11 +85,14 @@ int main(int argc , char* argv[])
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
-    reverse = reversion(image_surface, 1, 1);
-    screen_surface = display_image(reverse);
+    //reverse = reversion(image_surface, 1, 1);
+  
+    color_filter(image_surface, 1, 0, 0, 255);
+    grayscale(image_surface);
+    screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
-    SDL_FreeSurface(reverse);
+    //SDL_FreeSurface(reverse);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 #endif
@@ -163,7 +166,7 @@ int main(int argc , char* argv[])
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     
-    make_empty_triangle(image_surface, 600, 50, 50, 600, color1, 10);
+    make_fill_triangle(image_surface, 600, 50, 50, 600, color1, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
@@ -171,7 +174,7 @@ int main(int argc , char* argv[])
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
 
-    make_empty_triangle(image_surface, 1100, 700, 200, 10, color3, 10);
+    make_fill_triangle(image_surface, 1100, 700, 200, 10, color3, 10);
     update_surface(screen_surface, image_surface);
     wait_for_keypressed();
     

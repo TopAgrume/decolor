@@ -257,6 +257,71 @@ SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y
     return img;
 }
 
+SDL_Surface* make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
+{
+    if (img == NULL)
+        errx(EXIT_FAILURE, "Failure make_empty_triangle(): img == NULL");
+    if (x1 < 0 || x2 < 0 || x1 >= img->w || x2 >= img->w)
+         errx(EXIT_FAILURE, "Failure make_empty_triangle(): x out of bounds");
+    if (y1 < 0 || y2 < 0 || y1 >= img->h || y2 >= img->h)
+         errx(EXIT_FAILURE, "Failure make_empty_triangle(): y out of bounds");
+
+    int x3 = 0;
+    int test;
+    if (x1 < x2)
+    {
+        if (y1 < y2)
+        {
+            x3 = x1 + ((x2 - x1) / 2);
+            //printf("1\n\n");
+        }
+        else
+        {
+            x3 = x1 + ((x2 - x1) / 2);
+            //printf("2\n\n");
+        }
+	test = 1;
+    }
+    else
+    {
+        if (y1 < y2)
+        {
+            x3 = x2 + ((x1 - x2) / 2);
+            //printf("3\n\n");
+        }
+        else
+        {
+            x3 = x2 + ((x1 - x2) / 2);
+            //printf("4\n\n");
+        }
+	test = 0;
+    }
+    //printf("x1:%i y1:%i x2:%i y2:%i x3:%i\n", x1, y1, x2, y2, x3);
+    
+    while((test && x1 < x2) || (!test && x1 > x2)){
+    	drawline(img, new_color, x1, y1, x2, y1, size);
+    	drawline(img, new_color, x2, y1, x3, y2, size);
+    	drawline(img, new_color, x3, y2, x1, y1, size);
+	if(test){
+		x1++;
+		x2--;
+	}
+	else{
+		x1--;
+		x2++;
+	}
+	if(y1 < y2){
+		y1++;
+		y2--;
+	}
+	else{
+		y1--;
+		y2++;
+	}
+    }
+    return img;
+}
+
 SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
 {
     if (img == NULL)
@@ -279,8 +344,8 @@ SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, 
 
     */
 
-	int x = 0 , y = sqrt(pow(y2 - y1, 2) + pow(x2 - x1, 2)), d = 3 - 2 * y;
-	point(img, color, x1 + x, y1 + y, size);
+    int x = 0 , y = sqrt(pow(y2 - y1, 2) + pow(x2 - x1, 2)), d = 3 - 2 * y;
+    point(img, color, x1 + x, y1 + y, size);
     point(img, color, x1 - x, y1 + y, size);
     point(img, color, x1 + x, y1 - y, size);
     point(img, color, x1 - x, y1 - y, size);
@@ -289,14 +354,14 @@ SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, 
     point(img, color, x1 + y, y1 - x, size);
     point(img, color, x1 - y, y1 - x, size);
 
-		while(y >= x){
-		    x++;
-		    if(d > 0){
-			    y--;
-			    d = d + 4*(x - y) + 10;
-		    }
-		    else
-			    d = d + 4*x + 6;
+    while(y >= x){
+	    x++;
+	    if(d > 0){
+		    y--;
+		    d = d + 4*(x - y) + 10;
+	    }
+	    else
+		    d = d + 4*x + 6;
         
             point(img, color, x1 + x, y1 + y, size);
             point(img, color, x1 - x, y1 + y, size);
@@ -310,3 +375,30 @@ SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, 
     return img;
 }
 
+SDL_Surface* bresenham_fill_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size){
+	int test = x1 < x2;
+	int test2 = y1 < y2;
+	while(((test && x1 < x2) || (!test && x1 > x2)) && ((test && x1 < x2) || (!test && x1 > x2))){
+		
+		img = bresenham_circle(img, x1, y1, x2, y2, color, size);
+
+		if(test){
+                	x1++;
+                	x2--;
+        	}
+        	else{
+                	x1--;
+                	x2++;
+        	}
+        	if(test2){
+                	y1++;
+                	y2--;
+        	}
+        	else{
+                	y1--;
+                	y2++;
+        	}
+	}
+
+	return img;
+}
