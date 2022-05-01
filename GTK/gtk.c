@@ -175,6 +175,11 @@ int create_window_decolor(int argc, char *argv[])
 
 gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
 {
+    //Unused parameters :
+    widget = widget;
+    data = data;
+
+    //Actual function :
     SDL_SaveBMP(img, "./GTK/tmpfile.bmp");
     GdkPixbuf *pixbuf;
 
@@ -193,6 +198,11 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
 
 gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
 {
+    //Unused parameters :
+    self = self;
+    event = event;
+
+    //Actual function :
     if(user_data == NULL)
     {
         is_pressed = FALSE;
@@ -264,6 +274,11 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
 
 gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
 {
+    //Unused parameters :
+    self = self;
+    event = event;
+
+    //Actual function :
     if(user_data == NULL)
     {
         is_pressed = TRUE;
@@ -292,6 +307,10 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
 
 gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data) 
 {
+    //Unused parameters :
+    widget = widget;
+
+    //Actual function :
     if (event->type==GDK_MOTION_NOTIFY && user_data == NULL) 
     {
         GdkEventMotion* e =(GdkEventMotion*)event;
@@ -511,6 +530,10 @@ void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
 
 gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 {
+    //Unused parameters :
+    user_data = user_data;
+
+    //Actual function :
     dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action, 
     "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
 
@@ -567,10 +590,7 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     else
         gtk_widget_set_margin_top(GTK_WIDGET(image), (h-53-img->h)/2);
 
-
-
-    gtk_window_resize(GTK_WINDOW(window), w, h);
-        
+    gtk_window_resize(GTK_WINDOW(window), w, h);     
     
     //pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
@@ -603,6 +623,10 @@ gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
 
 gboolean update_scale_val(GtkScale *self, gpointer user_data)
 {
+    //Unused parameters :
+    user_data = user_data;
+
+    //Actual function :
     scale_nb = gtk_range_get_value(&(self->range));
     //printf("Scale number : %i\n", scale_nb);
     
