@@ -151,7 +151,6 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="tooltip_text" translatable="yes">Séléction de la couleur</property>
-                    <property name="show_editor">True</property>
                   </object>
                   <packing>
                     <property name="x">10</property>

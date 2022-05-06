@@ -17,6 +17,8 @@ typedef struct shared_stack
     stack* stack;
 } shared_stack;
 
+SDL_Surface* copy_image(SDL_Surface* img);
+
 // Allocates and initializes a new shared stack.
 // Returns a pointer to the new shared stack.
 shared_stack* shared_stack_new();

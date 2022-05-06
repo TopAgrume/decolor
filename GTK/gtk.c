@@ -32,6 +32,7 @@ GtkButton *SaveButton;
 GtkWidget *dialog;
 SDL_Surface* img;
 SDL_Surface* img2;
+SDL_Surface* pre_img;
 shared_stack* before;
 shared_stack* after;
 GtkWidget *image;
@@ -54,8 +55,8 @@ gboolean is_pressed = FALSE;
 gboolean save_draw = TRUE;
 GtkComboBoxText* theme;
 
-int tool_value = -1;
-
+int tool_value = 1;
+gboolean pre_show = FALSE;
 
 //functions
 gboolean on_Color_set(GtkColorChooser *self, gpointer user_data);
@@ -95,6 +96,7 @@ int create_window_decolor(int argc, char *argv[])
     //tools = g_slist_alloc();
     img = load_image("./GTK/blank.png");
     img2 = load_image("./GTK/blank.png");
+    pre_img = load_image("./GTK/blank.png");
     load_css("CSS/light-theme.css");
     
     // tools previous / next image
@@ -119,6 +121,7 @@ int create_window_decolor(int argc, char *argv[])
     
     // Tools buttons
     brush = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "brush"));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(brush), TRUE);
     //gtk_radio_button_set_group (brush ,tools);
     bucket = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "bucket")); 
     eraser = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "eraser"));
@@ -187,7 +190,10 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
     data = data;
 
     //Actual function :
-    SDL_SaveBMP(img, "./GTK/tmpfile.bmp");
+    if (pre_show == TRUE)
+        SDL_SaveBMP(pre_img, "./GTK/tmpfile.bmp");
+    else
+        SDL_SaveBMP(img, "./GTK/tmpfile.bmp");
     GdkPixbuf *pixbuf;
 
     pixbuf = gdk_pixbuf_new_from_file("./GTK/tmpfile.bmp", NULL);
@@ -235,6 +241,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
                 make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 2);
+                pre_show = FALSE;
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -243,6 +250,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);                                    
                 make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
+                pre_show = FALSE;
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -251,6 +259,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);                                 
                 bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
+                pre_show = FALSE;
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -342,32 +351,77 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
             drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
         }
-        if (tool_value == 3 && is_pressed)
+        else
         {
-            if (save_draw)
+            if (tool_value == 3 && is_pressed)
             {
-                save_draw = FALSE;
-                shared_stack_push(before, img);
-                shared_stack_empty(after);  
-            }
+                if (save_draw)
+                {
+                    save_draw = FALSE;
+                    shared_stack_push(before, img);
+                    shared_stack_empty(after);
+                }
 
-            //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
-            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-        }
-        
-        if (tool_value == 4 && is_pressed)
-        {
-            if (save_draw)
+                //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
+                drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+            }
+            else
             {
-                save_draw = FALSE;
-                shared_stack_push(before, img);
-                shared_stack_empty(after);  
-            }
+                if (tool_value == 4 && is_pressed)
+                {
+                    if (save_draw)
+                    {
+                        save_draw = FALSE;
+                        shared_stack_push(before, img);
+                        shared_stack_empty(after);
+                    }
 
-            //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-            drawline_image(img, img2, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
-            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                    //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
+                    drawline_image(img, img2, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
+                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                }
+                else
+                {
+                    if (tool_value == 5 && is_pressed)
+                    {
+                        pre_show = TRUE;
+                        pre_img = copy_image(img);
+                        drawline(pre_img, sdl_color, start_x, start_y, pos_x, pos_y, (int)scale_nb / 3);
+                        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                    }
+                    else
+                    {
+                        if (tool_value == 6 && is_pressed)
+                        {
+                            pre_show = TRUE;
+                            pre_img = copy_image(img);
+                            make_empty_square(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 2);
+                            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                        }
+                        else
+                        {
+                            if (tool_value == 7 && is_pressed)
+                            {
+                                pre_show = TRUE;
+                                pre_img = copy_image(img);
+                                make_empty_triangle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3);
+                                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                            }
+                            else
+                            {
+                                if (tool_value == 8 && is_pressed)
+                                {
+                                    pre_show = TRUE;
+                                    pre_img = copy_image(img);
+                                    bresenham_circle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3);
+                                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         if (!is_pressed)
         {
