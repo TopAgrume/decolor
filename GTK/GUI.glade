@@ -27,6 +27,7 @@
     <property name="draw_indicator">True</property>
   </object>
   <object class="GtkWindow" id="MyWindow">
+    <property name="name">int</property>
     <property name="width_request">1280</property>
     <property name="height_request">903</property>
     <property name="can_focus">False</property>
@@ -45,53 +46,59 @@
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
-          <object class="GtkInfoBar">
-            <property name="height_request">10</property>
+          <object class="GtkBox">
+            <property name="width_request">100</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <child internal-child="action_area">
-              <object class="GtkButtonBox">
+            <child>
+              <object class="GtkLabel">
+                <property name="name">int</property>
+                <property name="height_request">10</property>
+                <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="spacing">6</property>
-                <property name="layout_style">end</property>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
+                <property name="margin_left">870</property>
+                <property name="label" translatable="yes">Thème :</property>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child internal-child="content_area">
-              <object class="GtkBox">
-                <property name="can_focus">False</property>
-                <property name="spacing">16</property>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkComboBoxText" id="theme">
+                <property name="name">int</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="tooltip_text" translatable="yes">Couleur du thème de l'application</property>
+                <property name="active">4</property>
+                <property name="active_id">0</property>
+                <items>
+                  <item id="0" translatable="yes">Clair</item>
+                  <item id="1" translatable="yes">Sombre</item>
+                  <item id="2" translatable="yes">Contrasté (clair)</item>
+                  <item id="3" translatable="yes">Contrasté (sombre)</item>
+                  <item id="4" translatable="yes">Couleur personnalisable</item>
+                </items>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkColorButton">
+                <property name="height_request">10</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -114,6 +121,7 @@
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkScale" id="Scale">
+                    <property name="name">int</property>
                     <property name="width_request">170</property>
                     <property name="height_request">40</property>
                     <property name="visible">True</property>
@@ -123,24 +131,27 @@
                     <property name="lower_stepper_sensitivity">off</property>
                     <property name="upper_stepper_sensitivity">off</property>
                     <property name="show_fill_level">True</property>
+                    <property name="restrict_to_fill_level">False</property>
                     <property name="fill_level">100</property>
                     <property name="round_digits">1</property>
                     <property name="digits">0</property>
-                    <property name="value_pos">left</property>
+                    <property name="value_pos">right</property>
                   </object>
                   <packing>
-                    <property name="x">5</property>
+                    <property name="x">-3</property>
                     <property name="y">310</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkColorButton" id="Color">
+                    <property name="name">int</property>
                     <property name="width_request">160</property>
                     <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="tooltip_text" translatable="yes">Séléction de la couleur</property>
+                    <property name="show_editor">True</property>
                   </object>
                   <packing>
                     <property name="x">10</property>
@@ -157,6 +168,7 @@
                     <property name="column_spacing">6</property>
                     <child>
                       <object class="GtkFileChooserButton" id="FileChooser">
+                        <property name="name">int</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Charger une image</property>
@@ -170,6 +182,7 @@
                     <child>
                       <object class="GtkButton" id="Save">
                         <property name="label" translatable="yes">Save</property>
+                        <property name="name">int</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -196,6 +209,7 @@
                     <property name="column_spacing">40</property>
                     <child>
                       <object class="GtkButton" id="previous">
+                        <property name="name">int</property>
                         <property name="width_request">60</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -213,6 +227,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="next">
+                        <property name="name">int</property>
                         <property name="width_request">60</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -246,6 +261,7 @@
                     <property name="column_spacing">9</property>
                     <child>
                       <object class="GtkRadioButton" id="Crop">
+                        <property name="name">int</property>
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
@@ -270,6 +286,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="Select">
+                        <property name="name">int</property>
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
@@ -294,6 +311,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="Text">
+                        <property name="name">int</property>
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
@@ -332,6 +350,7 @@
                     <property name="column_spacing">4</property>
                     <child>
                       <object class="GtkRadioButton" id="brush">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -355,6 +374,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="bucket">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -378,6 +398,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="eraser">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">45</property>
                         <property name="visible">True</property>
@@ -401,6 +422,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="bigeraser">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -424,6 +446,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="segment">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -447,6 +470,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="square">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -470,6 +494,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="triangle">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">45</property>
                         <property name="visible">True</property>
@@ -493,6 +518,7 @@
                     </child>
                     <child>
                       <object class="GtkRadioButton" id="circle">
+                        <property name="name">int</property>
                         <property name="width_request">40</property>
                         <property name="height_request">40</property>
                         <property name="visible">True</property>
@@ -529,6 +555,7 @@
                     <property name="spacing">5</property>
                     <child>
                       <object class="GtkComboBoxText" id="Filtres">
+                        <property name="name">int</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Séléction du filtre</property>
@@ -554,6 +581,7 @@
                     <child>
                       <object class="GtkButton" id="Appliquer">
                         <property name="label" translatable="yes">Appliquer</property>
+                        <property name="name">int</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -574,6 +602,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
+                    <property name="name">int</property>
                     <property name="width_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -586,6 +615,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
+                    <property name="name">int</property>
                     <property name="width_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -599,6 +629,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
+                    <property name="name">int</property>
                     <property name="width_request">160</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -611,6 +642,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel">
+                    <property name="name">int</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">%</property>
@@ -621,7 +653,7 @@
                     </attributes>
                   </object>
                   <packing>
-                    <property name="x">28</property>
+                    <property name="x">165</property>
                     <property name="y">321</property>
                   </packing>
                 </child>
@@ -634,6 +666,24 @@
                   <packing>
                     <property name="x">7</property>
                     <property name="y">615</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="name">int</property>
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">DECOLOR</property>
+                    <attributes>
+                      <attribute name="font-desc" value="Noto Sans Mono CJK JP 28"/>
+                      <attribute name="weight" value="medium"/>
+                      <attribute name="stretch" value="expanded"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="x">25</property>
+                    <property name="y">790</property>
                   </packing>
                 </child>
               </object>

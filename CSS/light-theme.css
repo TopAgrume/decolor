@@ -1,0 +1,73 @@
+label#int, button
+{
+    color: #3D3D3D;
+    text-shadow: #D0D0D0 0px 0px 0px;
+}
+
+window
+{
+    background: linear-gradient(90deg, #F7F7F7, #E7E7E7, #F0F0F0);
+}
+
+.entry#int{background-color: #FCFCFC;}
+
+
+button, button.file, button.color, button.radio, button.toggle,
+combobox box.linked button.combo
+{
+    background: #FCFCFC;
+    border-color: #C4C4C4;
+    box-shadow: #C0C0C0 0px 1px 1px;
+}
+
+button:hover, button.file:hover, button.color:hover,
+button.radio:hover, button.toggle:hover,
+combobox box.linked button.combo:hover
+{
+    background: #FFFFFF;
+    box-shadow: #BABABA 0px 1px 1px;
+}
+
+button:active, button.file:active, button.color:active,
+button.radio:active, button.toggle:active,
+combobox box.linked button.combo:active
+{
+    background: #D3D3D3;
+    border-color: #C4C4C4;
+}
+
+button.file:checked, button.color:checked,
+button.radio:checked, button.toggle:checked,
+combobox box.linked button.combo:checked
+{
+    background: #D3D3D3;
+    border-color: #C4C4C4;
+}
+
+scale value
+{
+    color: #3D3D3D;
+    text-shadow: #D0D0D0 0px 0px 0px;
+}
+scale contents trough fill
+{
+    border-width: 0px;
+    background: #D3D3D3;
+    box-shadow: #C0C0C0 0px 1px 1px;
+}
+scale contents trough highlight
+{
+    border-width: 0px;
+    background: linear-gradient(90deg, #aa2626, #aa2626, #2626aa, #2626aa);
+}
+scale contents trough slider
+{
+    border-color: #B3B3B3;
+    background: #FFFFFF;
+    box-shadow: #3D3D3D 0px 0px 1px;
+}
+scale contents trough slider:hover
+{
+    border-color: #2626aa;
+    background: #FFFFFF;
+}
