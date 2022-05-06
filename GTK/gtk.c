@@ -232,6 +232,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Line call
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);
+                pre_show = FALSE;
                 drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
@@ -240,26 +241,26 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Square call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
-                make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 2);
                 pre_show = FALSE;
+                make_empty_square(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 2);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
             case 7:
-                // Traingle call
+                // Triangle call
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);                                    
-                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
                 pre_show = FALSE;
+                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
             case 8:
                 // Circle call
                 shared_stack_push(before, img);                                    
-                shared_stack_empty(after);                                 
-                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
+                shared_stack_empty(after);
                 pre_show = FALSE;
+                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
