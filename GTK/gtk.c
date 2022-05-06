@@ -52,6 +52,7 @@ int end_x = 0;
 int end_y = 0;
 gboolean is_pressed = FALSE;
 gboolean save_draw = TRUE;
+GtkComboBoxText* theme;
 
 int tool_value = -1;
 
@@ -81,6 +82,8 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data);
 gboolean on_Text(GtkRadioButton *self, gpointer user_data);
 gboolean on_Select(GtkRadioButton *self, gpointer user_data);
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data);
+static void load_css(const char path[]);
+gboolean theme_changed();
 
 
 int create_window_decolor(int argc, char *argv[])
@@ -92,6 +95,7 @@ int create_window_decolor(int argc, char *argv[])
     //tools = g_slist_alloc();
     img = load_image("./GTK/blank.png");
     img2 = load_image("./GTK/blank.png");
+    load_css("CSS/light-theme.css");
     
     // tools previous / next image
     before = shared_stack_new();
@@ -130,6 +134,8 @@ int create_window_decolor(int argc, char *argv[])
     Text = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Text"));
     Select = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Select"));
     Crop = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Crop"));
+    theme = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "theme"));
+
     // Previous and Next
     previous = GTK_WIDGET(gtk_builder_get_object(Builder, "previous"));
     next = GTK_WIDGET(gtk_builder_get_object(Builder, "next"));
@@ -149,7 +155,8 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(apply, "clicked", G_CALLBACK(on_apply_clicked), NULL);
     g_signal_connect(Text, "toggled", G_CALLBACK(on_Text), NULL);
     g_signal_connect(Select, "toggled", G_CALLBACK(on_Select), NULL);
-    g_signal_connect(Crop, "toggled", G_CALLBACK(on_Crop), NULL); 
+    g_signal_connect(Crop, "toggled", G_CALLBACK(on_Crop), NULL);
+    g_signal_connect(theme, "changed", G_CALLBACK(theme_changed), NULL);
     
     g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
@@ -726,47 +733,67 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
     free(fil);
     return FALSE;
 }
-/*
-GtkWidget * gtk_image_new_from_sdl_surface (SDL_Surface *surface)
+
+static void load_css(const char path[])
 {
-    Uint32 src_format;
-    Uint32 dst_format;
+  GtkCssProvider* provider;
+  GdkDisplay* display;
+  GdkScreen* screen;
 
-    GdkPixbuf *pixbuf;
-    gboolean has_alpha;
-    int rowstride;
-    guchar *pixels;
+  //const char* css_style_file = path;
+  GFile* css_fp = g_file_new_for_path(path);
+  GError* err = 0;
 
-    GtkWidget *image;
+  provider = gtk_css_provider_new();
+  display = gdk_display_get_default();
+  screen = gdk_display_get_default_screen(display);
 
-    // select format
-    src_format = surface->format->format;
-    has_alpha = SDL_ISPIXELFORMAT_ALPHA(src_format);
-    if (has_alpha) {
-        dst_format = SDL_PIXELFORMAT_RGBA8888;
+  gtk_style_context_add_provider_for_screen(screen,
+    GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  gtk_css_provider_load_from_file(provider, css_fp, &err);
+
+  if(err)
+    errx(EXIT_FAILURE, "Load css... failed");
+
+  g_object_unref(provider);
+}
+
+gboolean theme_changed(void)
+{
+    char* th = gtk_combo_box_text_get_active_text(theme);
+    char* path = calloc(sizeof(char), 19);
+
+    switch(th[2])
+    {
+        case 'a':
+        {
+            path = "CSS/light-theme.css";
+            break;
+        }
+
+        case 'm':
+        {
+            path = "CSS/dark-theme.css";
+            break;
+        }
+
+        case 'u':
+        {
+            path = "CSS/color-theme.css";
+            break;
+        }
+
+        default :
+        {
+            if(th[12] == 'c')
+                path = "CSS/light-hc-theme.css";
+
+            else
+                path = "CSS/dark-hc-theme.css";
+        }
     }
-    else {
-        dst_format = SDL_PIXELFORMAT_RGB24;
-    }
 
-    // create pixbuf
-    pixbuf = gdk_pixbuf_new (GDK_COLORSPACE_RGB, has_alpha, 8,
-                             surface->w, surface->h);
-    rowstride = gdk_pixbuf_get_rowstride (pixbuf);
-    pixels = gdk_pixbuf_get_pixels (pixbuf);
-
-    // copy pixels
-    SDL_LockSurface(surface);
-    SDL_ConvertPixels (surface->w, surface->h, src_format,
-               surface->pixels, surface->pitch,
-               dst_format, pixels, rowstride);
-    SDL_UnlockSurface(surface);
-
-    // create GtkImage from pixbuf
-    image = gtk_image_new_from_pixbuf (pixbuf);
-
-    // release our reference to the pixbuf
-    g_object_unref (pixbuf);
-
-    return image;
-}*/
+    load_css(path);
+    free(th);
+    return FALSE;
+}
