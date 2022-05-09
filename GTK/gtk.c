@@ -6,6 +6,7 @@
 #include "../SDL/shape.h"
 #include "../SDL/filter.h"
 #include "../SDL/DevTools/shared_stack.h"
+#include "../CSS/css.h"
 
 const GdkRGBA black = {.red = 0, .green = 0, .blue = 0, .alpha = 1};
 GdkRGBA color = {.red = 0, .green = 0, .blue = 0, .alpha = 1};
@@ -53,7 +54,10 @@ int end_x = 0;
 int end_y = 0;
 gboolean is_pressed = FALSE;
 gboolean save_draw = TRUE;
-GtkComboBoxText* theme;
+GtkComboBoxText* Theme;
+GtkColorChooser* ThemeColor;
+char personnal_theme_activate = 0;
+char* path_perso_theme = "CSS/color-theme-light.css";
 
 int tool_value = 1;
 gboolean pre_show = FALSE;
@@ -85,6 +89,7 @@ gboolean on_Select(GtkRadioButton *self, gpointer user_data);
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data);
 static void load_css(const char path[]);
 gboolean theme_changed();
+void CSS_rewrite();
 
 
 int create_window_decolor(int argc, char *argv[])
@@ -137,7 +142,8 @@ int create_window_decolor(int argc, char *argv[])
     Text = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Text"));
     Select = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Select"));
     Crop = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Crop"));
-    theme = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "theme"));
+    Theme = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "theme"));
+    ThemeColor = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "ThemeColor"));
 
     // Previous and Next
     previous = GTK_WIDGET(gtk_builder_get_object(Builder, "previous"));
@@ -159,8 +165,8 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(Text, "toggled", G_CALLBACK(on_Text), NULL);
     g_signal_connect(Select, "toggled", G_CALLBACK(on_Select), NULL);
     g_signal_connect(Crop, "toggled", G_CALLBACK(on_Crop), NULL);
-    g_signal_connect(theme, "changed", G_CALLBACK(theme_changed), NULL);
-    
+    g_signal_connect(Theme, "changed", G_CALLBACK(theme_changed), NULL);
+    g_signal_connect(ThemeColor, "color-set", G_CALLBACK(CSS_rewrite), NULL);
     g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
     //replace NULL by the stack containing the modifications.
@@ -815,31 +821,35 @@ static void load_css(const char path[])
 
 gboolean theme_changed(void)
 {
-    char* th = gtk_combo_box_text_get_active_text(theme);
+    char* th = gtk_combo_box_text_get_active_text(Theme);
     char* path = calloc(sizeof(char), 19);
 
     switch(th[2])
     {
         case 'a':
         {
+            personnal_theme_activate = 0;
             path = "CSS/light-theme.css";
             break;
         }
 
         case 'm':
         {
+            personnal_theme_activate = 0;
             path = "CSS/dark-theme.css";
             break;
         }
 
         case 'u':
         {
-            path = "CSS/color-theme.css";
+            personnal_theme_activate = 1;
+            path = path_perso_theme;
             break;
         }
 
         default :
         {
+            personnal_theme_activate = 0;
             if(th[12] == 'c')
                 path = "CSS/light-hc-theme.css";
 
@@ -851,4 +861,41 @@ gboolean theme_changed(void)
     load_css(path);
     free(th);
     return FALSE;
+}
+
+
+void CSS_rewrite()
+{
+    //Get initial color
+    GdkRGBA col;
+    gtk_color_chooser_get_rgba(ThemeColor,&col);
+    char* hex;
+    char color[] = "FFFFFF";
+    int light_or_dark = 76*col.red + 150*col.green + 28*col.blue;
+
+    hex = ints_to_hexas((int) (255*col.red));
+    color[0] = hex[0]; color[1] = hex[1];
+
+    hex = ints_to_hexas((int) (255*col.green));
+    color[2] = hex[0]; color[3] = hex[1];
+
+    hex = ints_to_hexas((int) (255*col.blue));
+    color[4] = hex[0]; color[5] = hex[1];
+    
+    free(hex);
+
+    if(light_or_dark>90)
+    {
+        CSS_rewrite_light(color);
+        path_perso_theme = "CSS/color-theme-light.css";
+    }
+
+    else
+    {
+        CSS_rewrite_dark(color);
+        path_perso_theme = "CSS/color-theme-dark.css\0";
+    }
+    
+    if (personnal_theme_activate)
+        load_css(path_perso_theme);
 }

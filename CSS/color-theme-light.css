@@ -1,0 +1,80 @@
+@define-color bg_color #D96464;
+@define-color fg_color #F87878;
+@define-color dark_bg_color  #AD5050;
+@define-color dark_fg_color  #C35A5A;
+@define-color bf_last_color #A24B4B;
+@define-color text_color #171717;
+
+label#int, button
+{
+   color: @text_color;
+   text-shadow: @dark_fg_color 0px 0px 0px;
+}
+
+window
+{
+    background: linear-gradient(90deg, @bg_color, @fg_color, @bg_color);
+}
+
+.entry#int{background-color: @fg_color;}
+
+
+button, button.file, button.color, button.radio, button.toggle,
+combobox box.linked button.combo
+{
+    background: @fg_color;
+    border-color: @dark_bg_color;
+    box-shadow: @dark_bg_color 0px 1px 1px;
+}
+
+button:hover, button.file:hover, button.color:hover,
+button.radio:hover, button.toggle:hover,
+combobox box.linked button.combo:hover
+{
+    background: @fg_color;
+    box-shadow: @bf_last_color 0px 1px 1px;
+}
+
+button:active, button.file:active, button.color:active,
+button.radio:active, button.toggle:active,
+combobox box.linked button.combo:active
+{
+    background: @dark_fg_color;
+    border-color: @dark_bg_color;
+}
+
+button.file:checked, button.color:checked,
+button.radio:checked, button.toggle:checked,
+combobox box.linked button.combo:checked
+{
+    background: @dark_fg_color;
+    border-color: @dark_bg_color;
+}
+
+scale value
+{
+    color: @text_color;
+    text-shadow: @dark_fg_color 0px 0px 0px;
+}
+scale contents trough fill
+{
+    border-width: 0px;
+    background: @dark_fg_color;
+    box-shadow: @dark_bg_color 0px 1px 1px;
+}
+scale contents trough highlight
+{
+    border-width: 0px;
+    background: linear-gradient(90deg, #aa2626, #aa2626, #2626aa, #2626aa);
+}
+scale contents trough slider
+{
+    border-color: @bf_last_color;
+    background: @fg_color;
+    box-shadow: @text_color 0px 0px 1px;
+}
+scale contents trough slider:hover
+{
+    border-color: #2626aa;
+    background: @fg_color;
+}

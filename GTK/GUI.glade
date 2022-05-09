@@ -71,7 +71,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Couleur du thème de l'application</property>
-                <property name="active">4</property>
+                <property name="active">0</property>
                 <property name="active_id">0</property>
                 <items>
                   <item id="0" translatable="yes">Clair</item>
@@ -88,11 +88,14 @@
               </packing>
             </child>
             <child>
-              <object class="GtkColorButton">
+              <object class="GtkColorButton" id="ThemeColor">
                 <property name="height_request">10</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="title" translatable="yes">Choisissez une couleur pour le tème personnalisé</property>
+                <property name="rgba">rgb(0,0,0)</property>
+                <property name="show_editor">True</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -151,6 +154,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="tooltip_text" translatable="yes">Séléction de la couleur</property>
+                    <property name="rgba">rgb(0,0,0)</property>
                   </object>
                   <packing>
                     <property name="x">10</property>
