@@ -11,7 +11,9 @@
 const GdkRGBA black = {.red = 0, .green = 0, .blue = 0, .alpha = 1};
 GdkRGBA color = {.red = 0, .green = 0, .blue = 0, .alpha = 1};
 SDL_Color sdl_color = {.r = 0, .g = 0, .b = 0};
+SDL_Color grey = {.r = 127, .g = 127, .b = 127};
 SDL_Color white = {.r = 255, .g = 255, .b = 255};
+int crop_color = 0;
 GtkColorChooser* ColorButton;
 GtkWidget *window;
 GtkRadioButton* brush;
@@ -282,7 +284,8 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Crop Call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
-                // FONCTION ICI !!!
+                pre_show = FALSE;
+                img = crop(img, start_x, start_y, end_x, end_y);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -423,6 +426,16 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                     pre_img = copy_image(img);
                                     bresenham_circle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3);
                                     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                                }
+                                else
+                                {
+                                    if (tool_value == 10 && is_pressed)
+                                    {
+                                        pre_show = TRUE;
+                                        pre_img = copy_image(img); 
+                                        make_empty_square(pre_img, start_x, start_y, pos_x, pos_y, grey, 4);
+                                        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                                    }
                                 }
                             }
                         }
