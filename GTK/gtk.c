@@ -276,7 +276,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Text Call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
-                // FONCTION ICI !!!!!
+                // FONCTION ICI !!!!
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
