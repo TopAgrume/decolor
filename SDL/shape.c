@@ -322,7 +322,8 @@ SDL_Surface* make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2
     return img;
 }
 
-SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
+// Bresenham Circle
+SDL_Surface* bresenham_circle_save(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
 {
     if (img == NULL)
     {
@@ -372,6 +373,54 @@ SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, 
             point(img, color, x1 + y, y1 - x, size);
             point(img, color, x1 - y, y1 - x, size);
         }
+    return img;
+}
+
+// Andres Circle
+SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
+{
+    if (img == NULL)
+    {
+        printf("Failure bresenham_circle(): img == NULL\n");
+        return img;
+    }
+
+    int x = 0;
+    int r = sqrt((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+    int y = r;
+    int d = r - 1;
+    while (y >= x)
+    {
+        point(img, color, x1 + x, y1 + y, size);
+        point(img, color, x1 - x, y1 + y, size);
+        point(img, color, x1 + x, y1 - y, size);
+        point(img, color, x1 - x, y1 - y, size);
+        point(img, color, x1 + y, y1 + x, size);
+        point(img, color, x1 - y, y1 + x, size);
+        point(img, color, x1 + y, y1 - x, size);
+        point(img, color, x1 - y, y1 - x, size);
+
+        if (d >= 2 * x)
+        {
+            d = d - 2 * x - 1;
+            x += 1;
+        }
+        else
+        {
+            if (d < 2 * (r - y))
+            {
+                d = d + 2 * y - 1;
+                y -= 1;
+            }
+            else
+            {
+                d = d + 2 * (y - x - 1);
+                y -= 1;
+                x += 1;
+            }
+        }
+    }
+
     return img;
 }
 
