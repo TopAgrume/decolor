@@ -123,7 +123,7 @@ SDL_Color pipette(SDL_Surface* img, int x, int y)
 // -> 'color' the color of the point (the color can be transparent to be a rubber)
 // -> 'x' and 'y' coordinates where the point shall be
 // -> 'size' the size of the cross
-void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size)
+void point_save(SDL_Surface* surface, SDL_Color color, int x, int y, int size)
 {
     if (surface == NULL)
         return;
@@ -153,6 +153,44 @@ void point(SDL_Surface* surface, SDL_Color color, int x, int y, int size)
             nb --;
             j = y - nb;
     }
+}
+
+void ligneHorizontale(SDL_Surface* surface, int x, int y, int w, SDL_Color coul)
+{
+  Uint32 test = (Uint32)((coul.r << 16) + (coul.g << 8) + (coul.b << 0));
+  SDL_Rect r;
+ 
+  r.x = x;
+  r.y = y;
+  r.w = w;
+  r.h = 1;
+ 
+  SDL_FillRect(surface, &r, test);
+}
+
+void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon)
+{
+  int d, y, x;
+ 
+  d = 3 - (2 * rayon);
+  x = 0;
+  y = rayon;
+ 
+  while (y >= x) {
+    ligneHorizontale(surface, cx - x, cy - y, 2 * x + 1, coul);
+    ligneHorizontale(surface, cx - x, cy + y, 2 * x + 1, coul);
+    ligneHorizontale(surface, cx - y, cy - x, 2 * y + 1, coul);
+    ligneHorizontale(surface, cx - y, cy + x, 2 * y + 1, coul);
+ 
+    if (d < 0)
+      d = d + (4 * x) + 6;
+    else {
+      d = d + 4 * (x - y) + 10;
+      y--;
+    }
+ 
+    x++;
+  }
 }
 
 //Draw a line of point() between the two coordinates

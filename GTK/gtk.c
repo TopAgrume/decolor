@@ -103,13 +103,12 @@ int create_window_decolor(int argc, char *argv[])
     //tools = g_slist_alloc();
     img = load_image("./GTK/blank.png");
     img2 = load_image("./GTK/blank.png");
-    pre_img = load_image("./GTK/blank.png");
     load_css("CSS/light-theme.css");
     
     // tools previous / next image
     before = shared_stack_new();
     after = shared_stack_new();
-
+    
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
     ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
@@ -321,6 +320,13 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
         {
             case -1:
                 break;
+            case 1:
+                // point call
+                shared_stack_push(before, img);
+                shared_stack_empty(after);                                        
+                point(img, sdl_color, start_x, start_y, (int)scale_nb / 3);   
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
 
              case 2:
                 // bucket call
@@ -404,6 +410,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                         pre_img = copy_image(img);
                         drawline(pre_img, sdl_color, start_x, start_y, pos_x, pos_y, (int)scale_nb / 3);
                         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                        //SDL_FreeSurface(pre_img);
                     }
                     else
                     {
@@ -413,6 +420,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                             pre_img = copy_image(img);
                             make_empty_square(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 2);
                             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                            //SDL_FreeSurface(pre_img);
                         }
                         else
                         {
@@ -422,6 +430,8 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                 pre_img = copy_image(img);
                                 make_empty_triangle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3);
                                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                                //SDL_FreeSurface(pre_img);
+                                //pre_img = NULL;
                             }
                             else
                             {
@@ -431,6 +441,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                     pre_img = copy_image(img);
                                     bresenham_circle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3);
                                     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                                    //SDL_FreeSurface(pre_img);
                                 }
                                 else
                                 {
@@ -440,6 +451,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                         pre_img = copy_image(img); 
                                         make_empty_square(pre_img, start_x, start_y, pos_x, pos_y, grey, 2);
                                         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                                        //SDL_FreeSurface(pre_img);
                                     }
                                 }
                             }
@@ -465,9 +477,17 @@ gboolean on_previous(GtkButton* self, gpointer user_data)
     if (before->size > 0)
     {
         //printf("%li\n", before->size);
+        int oldh = img->h;
+        int oldw = img->w;
+
         shared_stack_push(after, img);
         img = shared_stack_pop(before);
-        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+        if (img->h > oldh)
+            oldh = img->h;
+        if (img->w > oldw)
+            oldw = img->w;
+
+        gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
         /* SDL_FreeSurface(img); ?*/
     }
 
@@ -483,9 +503,16 @@ gboolean on_next(GtkButton* self, gpointer user_data)
     if (after->size > 0)
     {
         //printf("%li\n", after->size);
+        int oldh = img->h;
+        int oldw = img->w;
         shared_stack_push(before, img);
         img = shared_stack_pop(after);
-        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+        if (img->h > oldh)
+            oldh = img->h;
+        if (img->w > oldw)
+            oldw = img->w;
+
+        gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
         /* SDL_FreeSurface(img); ?*/
     }
     return FALSE;
@@ -649,15 +676,26 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     //GdkPixbuf *pixbuf;
     GtkWidget* image = user_data;
     char *filename;
+    int oldh = 0;
+    int oldw = 0;
+
 
     filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(f));
-     
+    oldh = img->h;
+    oldw = img->w;
+    shared_stack_push(before, img);
+    shared_stack_empty(after);
+
     img = load_image(filename);
     img2 = load_image(filename);
+    
     //shared_stack_empty(before); 
     //image = gtk_image_new_from_sdl_surface(img);
-    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
     
+    //oldh = img->h;
+    //oldw = img->w;
+    gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
+
     int w = 1310;
     int h = 903;
     if(img->w > 1080)
