@@ -654,7 +654,7 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
      
     img = load_image(filename);
     img2 = load_image(filename);
-    shared_stack_empty(before); 
+    //shared_stack_empty(before); 
     //image = gtk_image_new_from_sdl_surface(img);
     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
     
