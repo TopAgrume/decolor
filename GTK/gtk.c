@@ -224,6 +224,9 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
     event = event;
 
     //Actual function :
+    int oldh = 0;
+    int oldw = 0;
+
     if(user_data == NULL)
     {
         is_pressed = FALSE;
@@ -285,8 +288,10 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
                 pre_show = FALSE;
+                oldh = img->h;
+                oldw = img->w;
                 img = crop(img, start_x, start_y, end_x, end_y);
-                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
                 break;
 
             case 11:
