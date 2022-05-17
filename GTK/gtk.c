@@ -433,7 +433,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                     {
                                         pre_show = TRUE;
                                         pre_img = copy_image(img); 
-                                        make_empty_square(pre_img, start_x, start_y, pos_x, pos_y, grey, 4);
+                                        make_empty_square(pre_img, start_x, start_y, pos_x, pos_y, grey, 2);
                                         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                                     }
                                 }
