@@ -304,12 +304,22 @@ void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2,
 SDL_Surface* crop(SDL_Surface* surface, int x, int y, int width, int height){
     if (x < 0)
         x = 0;
+    if (x >= surface->w)
+        x = surface->w - 1;
     if (y < 0)
         y = 0;
+    if (y >= surface->h)
+        y = surface->h - 1;
+    
+    if (width < 0)
+        width = 0;
     if (width >= surface->w)
         width = surface->w - 1;
     if (height >= surface->h)
         height = surface->h - 1;
+    if (height < 0)
+        height = 0;
+
 
     SDL_Surface* crop;    
     Uint8 r, g, b;
