@@ -1,11 +1,11 @@
 #include "shape.h"
 
-SDL_Surface* make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color)
+void make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color)
 {
     if (img == NULL)
     {
         printf("Failure make_fill_square(): img == NULL\n");
-        return img;
+        return;
     }
     /*
 
@@ -60,7 +60,6 @@ SDL_Surface* make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, 
             }
         }
     }
-    return img;
 }
 
 void make_horizontal(SDL_Surface* img, int x1, int x2, int y, SDL_Color new_color)
@@ -118,12 +117,13 @@ void make_vertical(SDL_Surface* img, int y1, int y2, int x, SDL_Color new_color)
     }
 }
 
-SDL_Surface* make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
+
+void make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
 {
     if (img == NULL)
     {
         printf("Failure make_empty_square(): img == NULL\n");
-        return img;
+        return;
     }
     /*
 
@@ -197,16 +197,15 @@ SDL_Surface* make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2,
         make_horizontal(img, x1, x2, y, new_color);
     //printf("new y: %i\n", y);
     //printf("\n");
-    return img;
 }
 
 
-SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
+void make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
 {
     if (img == NULL)
     {
         printf("Failure make_empty_triangle(): img == NULL\n");
-        return img;
+        return;
     }
     /*
 
@@ -254,10 +253,9 @@ SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y
     drawline(img, new_color, x1, y1, x2, y1, size);
     drawline(img, new_color, x2, y1, x3, y2, size);
     drawline(img, new_color, x3, y2, x1, y1, size);
-    return img;
 }
 
-SDL_Surface* make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
+void make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size)
 {
     if (img == NULL)
         errx(EXIT_FAILURE, "Failure make_empty_triangle(): img == NULL");
@@ -319,16 +317,15 @@ SDL_Surface* make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2
 		y2++;
 	}
     }
-    return img;
 }
 
 // Bresenham Circle
-SDL_Surface* bresenham_circle_test(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
+void bresenham_circle_test(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
 {
     if (img == NULL)
     {
         printf("Failure bresenham_circle(): img == NULL\n");
-        return img;
+        return;
     }
     /*
     
@@ -373,16 +370,15 @@ SDL_Surface* bresenham_circle_test(SDL_Surface* img, int x1, int y1, int x2, int
             point(img, color, x1 + y, y1 - x, size);
             point(img, color, x1 - y, y1 - x, size);
         }
-    return img;
 }
 
 // Andres Circle
-SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
+void bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size)
 {
     if (img == NULL)
     {
         printf("Failure bresenham_circle(): img == NULL\n");
-        return img;
+        return;
     }
 
     int x = 0;
@@ -420,16 +416,14 @@ SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, 
             }
         }
     }
-
-    return img;
 }
 
-SDL_Surface* bresenham_fill_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size){
+void bresenham_fill_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size){
 	int test = x1 < x2;
 	int test2 = y1 < y2;
 	while(((test && x1 < x2) || (!test && x1 > x2)) && ((test && x1 < x2) || (!test && x1 > x2))){
 		
-		img = bresenham_circle(img, x1, y1, x2, y2, color, size);
+		bresenham_circle(img, x1, y1, x2, y2, color, size);
 
 		if(test){
                 	x1++;
@@ -448,6 +442,4 @@ SDL_Surface* bresenham_fill_circle(SDL_Surface* img, int x1, int y1, int x2, int
                 	y2++;
         	}
 	}
-
-	return img;
 }

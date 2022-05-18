@@ -10,13 +10,13 @@
 #include "tools.h"
 #include <math.h>
 
-SDL_Surface* make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color);
+void make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color);
 void make_horizontal(SDL_Surface* img, int x1, int x2, int y, SDL_Color new_color);
 void make_vetical(SDL_Surface* img, int y1, int y2, int x, SDL_Color new_color);
-SDL_Surface* make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
-SDL_Surface* make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
-SDL_Surface* make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
-SDL_Surface* bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size);
-SDL_Surface* bresenham_fill_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size);
+void make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
+void make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
+void make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
+void bresenham_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size);
+void bresenham_fill_circle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color color, int size);
 
 #endif

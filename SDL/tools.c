@@ -369,7 +369,7 @@ SDL_Surface* crop(SDL_Surface* surface, int x, int y, int width, int height){
             }
         }
     }
-
+    SDL_FreeSurface(surface);
     return crop;
 }
 
