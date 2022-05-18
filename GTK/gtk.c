@@ -198,8 +198,16 @@ void decolor_free(gpointer user_data)
 {
     if (user_data == NULL)
     {
-        printf("free tout ici");
+        printf("MMH\n");
     }
+    shared_stack_destroy(before);
+    shared_stack_destroy(after);
+    if (pre_img != NULL)
+        SDL_FreeSurface(pre_img);
+    SDL_FreeSurface(img);
+    SDL_FreeSurface(img2);
+    //cairo_destroy (cr);
+    
     printf("free tout ici");
     gtk_main_quit();
 }
