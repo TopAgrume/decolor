@@ -510,10 +510,9 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 }
             }
         }
+        
         if (!is_pressed)
-        {
             save_draw = TRUE;
-        }
     }
     return TRUE;
 }
@@ -737,9 +736,15 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     shared_stack_empty(after);
     
     if (img != NULL)
+    {
         SDL_FreeSurface(img);
+        img = NULL;
+    }
     if (img2 != NULL)
+    {
         SDL_FreeSurface(img2);
+        img2 = NULL;
+    }
 
     img = load_image(filename);
     img2 = load_image(filename);
