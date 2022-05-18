@@ -89,6 +89,7 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data);
 gboolean on_Text(GtkRadioButton *self, gpointer user_data);
 gboolean on_Select(GtkRadioButton *self, gpointer user_data);
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data);
+gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 static void load_css(const char path[]);
 gboolean theme_changed();
 void CSS_rewrite();
@@ -173,6 +174,7 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
     //replace NULL by the stack containing the modifications.
 
+    g_signal_connect (G_OBJECT (window), "key_press_event", G_CALLBACK (on_key_press), NULL);
     g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), image);
     g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
@@ -230,6 +232,36 @@ void update_gtk(int x, int y, int a, int b)
 {
     gtk_widget_queue_draw_area(image,start_x, start_y, pos_x, pos_y);
 }*/
+
+gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
+{
+
+  if (widget == NULL && user_data != NULL)
+      return FALSE;
+
+  switch (event->keyval)
+  {
+    case GDK_KEY_z:
+      if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
+      {
+        printf("key pressed: %s\n", "ctrl + z");
+        on_previous(NULL, NULL);
+      }
+      break;
+    case GDK_KEY_y:
+      if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
+      {
+        printf("key pressed: %s\n", "ctrl + y");
+        on_next(NULL, NULL);
+      }
+      break;
+
+    default:
+      return FALSE;
+  }
+
+  return FALSE;
+}
 
 gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
 {
