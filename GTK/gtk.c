@@ -89,6 +89,7 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data);
 gboolean on_Text(GtkRadioButton *self, gpointer user_data);
 gboolean on_Select(GtkRadioButton *self, gpointer user_data);
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data);
+void decolor_free(gpointer user_data);
 gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data);
 static void load_css(const char path[]);
 gboolean theme_changed();
@@ -177,7 +178,7 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect (G_OBJECT (window), "key_press_event", G_CALLBACK (on_key_press), NULL);
     g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), image);
     g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
-    g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    g_signal_connect(window, "destroy", G_CALLBACK(decolor_free), NULL);
     
     g_signal_connect (image, "motion-notify-event", G_CALLBACK(mouse_moved), NULL);
     g_signal_connect (image, "button-press-event", G_CALLBACK(mouse_press), NULL);
@@ -191,6 +192,16 @@ int create_window_decolor(int argc, char *argv[])
     gtk_main();
 
     return EXIT_SUCCESS;
+}
+
+void decolor_free(gpointer user_data)
+{
+    if (user_data == NULL)
+    {
+        printf("free tout ici");
+    }
+    printf("free tout ici");
+    gtk_main_quit();
 }
 
 gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
