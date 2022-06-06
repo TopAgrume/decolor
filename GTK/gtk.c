@@ -907,7 +907,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             printf("Contraste\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
-            contrast(img, 2);
+            contrast(img, (scale_nb * 3) / 100);
             grayscale(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre de Contraste
@@ -918,7 +918,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             printf("Luminosité\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
-            brightness(img, 50);
+            brightness(img, (scale_nb * 2) - 100);
             grayscale(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre de Luminosité
