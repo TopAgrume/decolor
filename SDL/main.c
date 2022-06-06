@@ -9,7 +9,7 @@
 #include "DevTools/shared_stack.h"
 #include "shape.h"
 
-//#define TEST_FILTER
+#define TEST_FILTER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
@@ -17,7 +17,7 @@
 //#define TEST_TRANSFORM
 //#define TEST_SHAPE
 //#define TEST_TRIANGLE
-#define TEST_CIRCLE
+//#define TEST_CIRCLE
 
 int main(int argc , char* argv[])
 {
@@ -87,8 +87,7 @@ int main(int argc , char* argv[])
 
     //reverse = reversion(image_surface, 1, 1);
   
-    color_filter(image_surface, 1, 0, 0, 255);
-    grayscale(image_surface);
+    contrast(image_surface, 5);
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
