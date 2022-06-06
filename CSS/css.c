@@ -154,7 +154,7 @@ void CSS_rewrite_dark(char color[])
     fprintf(file, "@define-color bf_last_color #%s;\n", color_changed);
 
     color_update(color, color_changed);
-    color_calculator(color_changed, 4, 90, 1);
+    color_calculator(color_changed, 3.5, 140, 1);
     fprintf(file, "@define-color text_color #%s;\n\n", color_changed);
  
     fclose(file);

@@ -58,7 +58,6 @@ gboolean is_pressed = FALSE;
 gboolean save_draw = TRUE;
 GtkComboBoxText* Theme;
 GtkColorChooser* ThemeColor;
-char personnal_theme_activate = 0;
 char* path_perso_theme = "CSS/color-theme-light.css";
 
 int tool_value = 1;
@@ -992,28 +991,24 @@ gboolean theme_changed(void)
     {
         case 'a':
         {
-            personnal_theme_activate = 0;
             path = "CSS/light-theme.css";
             break;
         }
 
         case 'm':
         {
-            personnal_theme_activate = 0;
             path = "CSS/dark-theme.css";
             break;
         }
 
         case 'u':
         {
-            personnal_theme_activate = 1;
             path = path_perso_theme;
             break;
         }
 
         default :
         {
-            personnal_theme_activate = 0;
             if(th[12] == 'c')
                 path = "CSS/light-hc-theme.css";
 
@@ -1026,7 +1021,6 @@ gboolean theme_changed(void)
     free(th);
     return FALSE;
 }
-
 
 void CSS_rewrite()
 {
@@ -1048,7 +1042,7 @@ void CSS_rewrite()
     
     free(hex);
 
-    if(light_or_dark>90)
+    if(light_or_dark>85)
     {
         CSS_rewrite_light(color);
         path_perso_theme = "CSS/color-theme-light.css";
@@ -1060,6 +1054,6 @@ void CSS_rewrite()
         path_perso_theme = "CSS/color-theme-dark.css\0";
     }
     
-    if (personnal_theme_activate)
-        load_css(path_perso_theme);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(Theme), 4);
+    load_css(path_perso_theme);
 }
