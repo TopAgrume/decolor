@@ -8,8 +8,10 @@
 #include "tools.h"
 #include "DevTools/shared_stack.h"
 #include "shape.h"
+#include "layer.h"
 
-#define TEST_FILTER
+//#define TEST_FILTER
+#define TEST_LAYER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
@@ -92,6 +94,34 @@ int main(int argc , char* argv[])
     wait_for_keypressed();
 
     //SDL_FreeSurface(reverse);
+    SDL_FreeSurface(image_surface);
+    SDL_FreeSurface(screen_surface);
+#endif
+
+#ifdef TEST_LAYER
+    SDL_Surface* image_surface;
+    SDL_Surface* screen_surface;
+
+    init_sdl();
+
+    image_surface = load_image(path);
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+   
+    SDL_Surface* surface = SDL_CreateRGBSurface(0,image_surface->w,image_surface->h,32,0,0,0,0); 
+    struct layer* test = malloc(sizeof(struct layer));
+    test->next = NULL;
+    test->number = 0;
+    test->surface = NULL;
+    layer_push(test, image_surface);
+    layer_push(test, surface);
+    layer_merge(test, 2);
+    printf("%i\n", layer_length(test));
+    screen_surface = display_image(image_surface);
+    wait_for_keypressed();
+
+    layer_free(test);
+    SDL_FreeSurface(surface);
     SDL_FreeSurface(image_surface);
     SDL_FreeSurface(screen_surface);
 #endif
