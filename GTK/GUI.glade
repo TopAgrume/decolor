@@ -67,17 +67,20 @@
         <property name="spacing">5</property>
         <child>
           <object class="GtkBox">
-            <property name="width_request">100</property>
+            <property name="width_request">350</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">end</property>
             <child>
               <object class="GtkLabel">
                 <property name="name">int</property>
                 <property name="height_request">10</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">center</property>
                 <property name="margin_left">870</property>
                 <property name="label" translatable="yes">Thème :</property>
+                <property name="xalign">0.98000001907348633</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -91,6 +94,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="tooltip_text" translatable="yes">Couleur du thème de l'application</property>
+                <property name="halign">start</property>
                 <property name="active">0</property>
                 <property name="active_id">0</property>
                 <items>
@@ -142,6 +146,8 @@
                 <property name="height_request">850</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
                 <child>
                   <object class="GtkScale" id="Scale">
                     <property name="name">int</property>
@@ -395,7 +401,7 @@
                 </child>
                 <child>
                   <object class="GtkGrid" id="toolsgrid">
-                    <property name="width_request">100</property>
+                    <property name="width_request">173</property>
                     <property name="height_request">80</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -742,7 +748,7 @@
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>

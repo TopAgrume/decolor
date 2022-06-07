@@ -1,8 +1,8 @@
-@define-color bg_color #B82626;
-@define-color fg_color #FF6E6E;
-@define-color dark_bg_color  #931E1E;
-@define-color dark_fg_color  #FC5B5B;
-@define-color bf_last_color #FF9090;
+@define-color bg_color #B51111;
+@define-color fg_color #FF3939;
+@define-color dark_bg_color  #900D0D;
+@define-color dark_fg_color  #F94444;
+@define-color bf_last_color #FF5151;
 @define-color text_color #FFFFFF;
 
 label#int, button

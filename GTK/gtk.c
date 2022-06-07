@@ -93,6 +93,7 @@ gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data
 static void load_css(const char path[]);
 gboolean theme_changed();
 void CSS_rewrite();
+void image_resize();
 
 
 int create_window_decolor(int argc, char *argv[])
@@ -264,6 +265,7 @@ gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data
       {
         printf("key pressed: %s\n", "ctrl + z");
         on_previous(NULL, NULL);
+        image_resize();
       }
       break;
     case GDK_KEY_y:
@@ -271,6 +273,7 @@ gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data
       {
         printf("key pressed: %s\n", "ctrl + y");
         on_next(NULL, NULL);
+        image_resize();
       }
       break;
 
@@ -391,6 +394,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 oldw = img->w;
                 img = crop(img, start_x, start_y, end_x, end_y);
                 gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
+                image_resize();
                 break;
 
             case 11:
@@ -552,6 +556,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                         pre_img = copy_image(img); 
                                         make_empty_square(pre_img, start_x, start_y, pos_x, pos_y, grey, 1);
                                         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                                        //gtk_widget_set_size_request(image, img->w, img->h);
                                     }
                                 }
                             }
@@ -588,6 +593,7 @@ gboolean on_previous(GtkButton* self, gpointer user_data)
             oldw = img->w;
 
         gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
+        image_resize();
     }
 
     return FALSE;
@@ -613,6 +619,7 @@ gboolean on_next(GtkButton* self, gpointer user_data)
             oldw = img->w;
 
         gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
+        image_resize();
     }
     return FALSE;
 }
@@ -803,39 +810,8 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     
     gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
 
-    /*GtkRequisition* min = gtk_requisition_new();
-    min->width = 1; min->height = 1;
-    GtkRequisition* img_size = gtk_requisition_new();
-    img_size->width = img->w;
-    img_size->height = img->h;
-    gtk_widget_get_preferred_size (image, img_size, img_size);
-    gtk_requisition_free(img_size);
-    gtk_requisition_free(min);*/
+    image_resize();
 
-    gtk_widget_set_size_request(image, img->w, img->h);
-
-/*
-    int w = 1480;
-    int h = 903;
-    if(img->w > 1250)
-    {
-        w = img->w+230;
-        gtk_widget_set_margin_start(GTK_WIDGET(image), 0);
-    }
-    else
-        gtk_widget_set_margin_start(GTK_WIDGET(image), (w-230-img->w)/2);
-
-    if(img->h > 850)
-    {
-        h = img->h+53;
-        gtk_widget_set_margin_top(GTK_WIDGET(image), 0);
-    }
-    else
-        gtk_widget_set_margin_top(GTK_WIDGET(image), (h-53-img->h)/2);
-
-    gtk_window_resize(GTK_WINDOW(window), w, h);
-    */
-    
     //pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 
     g_free(filename);
@@ -848,6 +824,8 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
 
     return FALSE;
 }
+
+void image_resize() {gtk_widget_set_size_request(image, img->w, img->h);}
 
 gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
 {
