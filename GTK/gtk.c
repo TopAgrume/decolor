@@ -803,9 +803,21 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     
     gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
 
-    int w = 1310;
+    /*GtkRequisition* min = gtk_requisition_new();
+    min->width = 1; min->height = 1;
+    GtkRequisition* img_size = gtk_requisition_new();
+    img_size->width = img->w;
+    img_size->height = img->h;
+    gtk_widget_get_preferred_size (image, img_size, img_size);
+    gtk_requisition_free(img_size);
+    gtk_requisition_free(min);*/
+
+    gtk_widget_set_size_request(image, img->w, img->h);
+
+/*
+    int w = 1480;
     int h = 903;
-    if(img->w > 1080)
+    if(img->w > 1250)
     {
         w = img->w+230;
         gtk_widget_set_margin_start(GTK_WIDGET(image), 0);
@@ -821,7 +833,8 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     else
         gtk_widget_set_margin_top(GTK_WIDGET(image), (h-53-img->h)/2);
 
-    gtk_window_resize(GTK_WINDOW(window), w, h);     
+    gtk_window_resize(GTK_WINDOW(window), w, h);
+    */
     
     //pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
 

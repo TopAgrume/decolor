@@ -18,6 +18,26 @@
     <property name="can_focus">False</property>
     <property name="pixbuf">Interface tools/Symbol/Fleche_avant.png</property>
   </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">Interface tools/Symbol/Retourner_Verticalement.png</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">Interface tools/Symbol/Retourner_Horizontalment.png</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">Interface tools/Symbol/Fleche_rotation_droite.png</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">Interface tools/Symbol/Fleche_rotation_gauche.png</property>
+  </object>
   <object class="GtkRadioButton" id="radiobutton1">
     <property name="label" translatable="yes">radiobutton</property>
     <property name="visible">True</property>
@@ -28,11 +48,11 @@
   </object>
   <object class="GtkWindow" id="MyWindow">
     <property name="name">int</property>
-    <property name="width_request">1280</property>
+    <property name="width_request">1480</property>
     <property name="height_request">903</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">On est là !</property>
-    <property name="default_width">1460</property>
+    <property name="default_width">1480</property>
     <property name="default_height">903</property>
     <signal name="destroy" handler="exit_app" swapped="no"/>
     <child type="titlebar">
@@ -142,7 +162,7 @@
                   </object>
                   <packing>
                     <property name="x">-3</property>
-                    <property name="y">310</property>
+                    <property name="y">360</property>
                   </packing>
                 </child>
                 <child>
@@ -158,7 +178,7 @@
                   </object>
                   <packing>
                     <property name="x">10</property>
-                    <property name="y">390</property>
+                    <property name="y">440</property>
                   </packing>
                 </child>
                 <child>
@@ -249,12 +269,12 @@
                   </object>
                   <packing>
                     <property name="x">10</property>
-                    <property name="y">55</property>
+                    <property name="y">50</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkGrid">
-                    <property name="width_request">175</property>
+                    <property name="width_request">170</property>
                     <property name="height_request">55</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -288,15 +308,14 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton" id="Select">
+                      <object class="GtkRadioButton" id="Crop1">
                         <property name="name">int</property>
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Zone de séléction</property>
-                        <property name="active">True</property>
+                        <property name="tooltip_text" translatable="yes">Rogner</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
                         <child>
@@ -308,39 +327,70 @@
                         </child>
                       </object>
                       <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="width_request">50</property>
+                        <property name="height_request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">image4</property>
+                      </object>
+                      <packing>
                         <property name="left_attach">1</property>
                         <property name="top_attach">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton" id="Text">
-                        <property name="name">int</property>
+                      <object class="GtkButton">
                         <property name="width_request">50</property>
                         <property name="height_request">50</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="focus_on_click">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Zone de texte</property>
-                        <property name="draw_indicator">False</property>
-                        <property name="group">radiobutton1</property>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="pixbuf">Interface tools/Symbol/Texte.png</property>
-                          </object>
-                        </child>
+                        <property name="receives_default">True</property>
+                        <property name="image">image3</property>
                       </object>
                       <packing>
                         <property name="left_attach">2</property>
                         <property name="top_attach">0</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="width_request">50</property>
+                        <property name="height_request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">image5</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">2</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="width_request">50</property>
+                        <property name="height_request">50</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="image">image6</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="x">5</property>
-                    <property name="y">110</property>
+                    <property name="y">100</property>
                   </packing>
                 </child>
                 <child>
@@ -546,7 +596,7 @@
                   </object>
                   <packing>
                     <property name="x">4</property>
-                    <property name="y">205</property>
+                    <property name="y">255</property>
                   </packing>
                 </child>
                 <child>
@@ -600,7 +650,7 @@
                   </object>
                   <packing>
                     <property name="x">10</property>
-                    <property name="y">515</property>
+                    <property name="y">565</property>
                   </packing>
                 </child>
                 <child>
@@ -613,7 +663,7 @@
                   </object>
                   <packing>
                     <property name="x">10</property>
-                    <property name="y">490</property>
+                    <property name="y">540</property>
                   </packing>
                 </child>
                 <child>
@@ -627,7 +677,7 @@
                   </object>
                   <packing>
                     <property name="x">10</property>
-                    <property name="y">180</property>
+                    <property name="y">230</property>
                   </packing>
                 </child>
                 <child>
@@ -640,7 +690,7 @@
                   </object>
                   <packing>
                     <property name="x">10</property>
-                    <property name="y">365</property>
+                    <property name="y">415</property>
                   </packing>
                 </child>
                 <child>
@@ -657,7 +707,7 @@
                   </object>
                   <packing>
                     <property name="x">165</property>
-                    <property name="y">321</property>
+                    <property name="y">371</property>
                   </packing>
                 </child>
                 <child>
@@ -668,7 +718,7 @@
                   </object>
                   <packing>
                     <property name="x">7</property>
-                    <property name="y">615</property>
+                    <property name="y">665</property>
                   </packing>
                 </child>
                 <child>
@@ -686,7 +736,7 @@
                   </object>
                   <packing>
                     <property name="x">25</property>
-                    <property name="y">790</property>
+                    <property name="y">710</property>
                   </packing>
                 </child>
               </object>
@@ -698,8 +748,12 @@
             </child>
             <child>
               <object class="GtkDrawingArea" id="image">
+                <property name="width_request">1280</property>
+                <property name="height_request">850</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
               </object>
               <packing>
                 <property name="expand">True</property>
