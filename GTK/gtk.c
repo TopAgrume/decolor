@@ -24,7 +24,10 @@ GtkRadioButton* segment;
 GtkRadioButton* square;
 GtkRadioButton* triangle;
 GtkRadioButton* circle;
-GtkRadioButton* Text;
+GtkButton* reverse1;
+GtkButton* reverse2;
+GtkButton* turn1;
+GtkButton* turn2;
 GtkRadioButton* Crop;
 GtkRadioButton* Select;
 GtkWidget* toolsgrid;
@@ -95,6 +98,12 @@ gboolean theme_changed();
 void CSS_rewrite();
 void image_resize();
 
+gboolean on_turn_1(gpointer user_data);
+gboolean on_turn_2(gpointer user_data);
+gboolean on_reverse_1(gpointer user_data);
+gboolean on_reverse_2(gpointer user_data);
+
+
 
 int create_window_decolor(int argc, char *argv[])
 {
@@ -143,8 +152,12 @@ int create_window_decolor(int argc, char *argv[])
     scale = GTK_SCALE(gtk_builder_get_object(Builder, "Scale")); 
     filtres = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "Filtres"));
     apply = GTK_BUTTON(gtk_builder_get_object(Builder, "Appliquer"));
-    Text = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Text"));
+    reverse1 = GTK_BUTTON(gtk_builder_get_object(Builder, "Reverse_1"));
     Select = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Select"));
+    turn1 = GTK_BUTTON(gtk_builder_get_object(Builder, "turn_1"));
+    turn2 = GTK_BUTTON(gtk_builder_get_object(Builder, "turn_2"));
+    reverse2 = GTK_BUTTON(gtk_builder_get_object(Builder, "Reverse_2"));
+
     Crop = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Crop"));
     Theme = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "theme"));
     ThemeColor = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "ThemeColor"));
@@ -166,13 +179,17 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(circle, "toggled", G_CALLBACK(on_circle), NULL);
     g_signal_connect(scale, "value_changed", G_CALLBACK(update_scale_val), NULL);
     g_signal_connect(apply, "clicked", G_CALLBACK(on_apply_clicked), NULL);
-    g_signal_connect(Text, "toggled", G_CALLBACK(on_Text), NULL);
     g_signal_connect(Select, "toggled", G_CALLBACK(on_Select), NULL);
     g_signal_connect(Crop, "toggled", G_CALLBACK(on_Crop), NULL);
     g_signal_connect(Theme, "changed", G_CALLBACK(theme_changed), NULL);
     g_signal_connect(ThemeColor, "color-set", G_CALLBACK(CSS_rewrite), NULL);
     g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
+
+    g_signal_connect(reverse1, "clicked", G_CALLBACK(on_reverse_1), NULL);
+    g_signal_connect(reverse2, "clicked", G_CALLBACK(on_reverse_2), NULL);
+    g_signal_connect(turn1, "clicked", G_CALLBACK(on_turn_1), NULL);
+    g_signal_connect(turn2, "clicked", G_CALLBACK(on_turn_2), NULL);
     //replace NULL by the stack containing the modifications.
 
     g_signal_connect (G_OBJECT (window), "key_press_event", G_CALLBACK (on_key_press), NULL);
@@ -208,7 +225,7 @@ void decolor_free(gpointer user_data)
     SDL_FreeSurface(img2);
     //cairo_destroy (cr);
     
-    printf("free tout ici");
+    //printf("free tout ici");
     gtk_main_quit();
 }
 
@@ -624,15 +641,72 @@ gboolean on_next(GtkButton* self, gpointer user_data)
     return FALSE;
 }
 
-gboolean on_Text(GtkRadioButton *self, gpointer user_data)
+gboolean on_turn_1(gpointer user_data)
 {
-    if (user_data == NULL &&
-        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    if (user_data != NULL)
     {
-        tool_value = 9;
+        int oldh = img->h;
+        int oldw = img->w;
+        shared_stack_push(before, img);
+        shared_stack_empty(after);
+        img = rotate(img, 0);
+
+        if (img->h > oldh)
+            oldh = img->h;
+        if (img->w > oldw)
+            oldw = img->w;
+
+        gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
+        image_resize();
     }
     return FALSE;
 }
+
+gboolean on_turn_2(gpointer user_data)
+{
+    if (user_data != NULL)
+    {
+        int oldh = img->h;
+        int oldw = img->w;
+        shared_stack_push(before, img);
+        shared_stack_empty(after);
+        img = rotate(img, 1);
+        
+        if (img->h > oldh)
+            oldh = img->h;
+        if (img->w > oldw)
+            oldw = img->w;
+
+        gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
+        image_resize();
+    }
+    return FALSE;
+}
+
+gboolean on_reverse_1(gpointer user_data)
+{
+    if (user_data != NULL)
+    {
+        shared_stack_push(before, img);
+        shared_stack_empty(after);
+        img = reversion(img, 1, 0);
+        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+    }
+    return FALSE;
+}
+
+gboolean on_reverse_2(gpointer user_data)
+{
+    if (user_data != NULL)
+    {
+        shared_stack_push(before, img);
+        shared_stack_empty(after);
+        img = reversion(img, 0, 1);
+        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+    }
+    return FALSE;
+}
+
 
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data)
 {
@@ -875,7 +949,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
     {
         case 'N':
         {
-            printf("Noir et Blanc\n");
+            //printf("Noir et Blanc\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
 	        grayscale(img);
@@ -885,7 +959,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
 
         case 'I':
         {
-            printf("Inversion\n");
+            //printf("Inversion\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
             negative(img);
@@ -895,7 +969,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
 
         case 'C':
         {
-            printf("Contraste\n");
+            //printf("Contraste\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
             contrast(img, (scale_nb * 3) / 100);
@@ -906,7 +980,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
 
         case 'L':
         {
-            printf("Luminosité\n");
+            //printf("Luminosité\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
             brightness(img, (scale_nb * 2) - 100);
@@ -919,7 +993,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
         {
             if(fil[3] == 'p') // 'é'= two chars
             {
-                printf("Sépia\n");
+                //printf("Sépia\n");
 		        shared_stack_push(before, img);
                 shared_stack_empty(after);
                 color_filter(img, 1, 0, 0, 0);
@@ -929,7 +1003,7 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
 
             else
             {
-                printf("Saturation\n");
+                //printf("Saturation\n");
 		        shared_stack_push(before, img);
                 shared_stack_empty(after);
                 color_filter(img, 1, 0, 0, 255);

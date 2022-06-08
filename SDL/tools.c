@@ -383,6 +383,41 @@ SDL_Surface* crop(SDL_Surface* surface, int x, int y, int width, int height){
     return crop;
 }
 
+SDL_Surface* rotate(SDL_Surface* surface, int sens)
+{
+    SDL_Surface* turn = SDL_CreateRGBSurface(SDL_HWSURFACE, surface->h, surface->w, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+
+    Uint8 r, g, b;
+    Uint32 pixel;
+
+    if (sens)
+    {
+        for(int i = 0; i < surface->w; i++){
+            for(int j = 0; j < surface->h; j++){
+                pixel = get_pixel(surface, i, j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                pixel = SDL_MapRGB(surface->format, r, g, b);
+                put_pixel(turn, turn->w - j - 1, i, pixel);
+            }
+        }
+    }
+    else
+    {
+        for(int i = 0; i < surface->w; i++){
+            for(int j = 0; j < surface->h; j++){
+                pixel = get_pixel(surface, i, j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                pixel = SDL_MapRGB(surface->format, r, g, b);
+                put_pixel(turn, j, turn->h - i - 1, pixel);
+            }
+        }
+
+    }
+
+    SDL_FreeSurface(surface);
+    return turn;
+}
+
 //This function returns the image but reversed on the x axe or y axe
 // -> 'surface' the pointer on SDL_Surface
 // -> 'horizontal and 'vertical' are booleans to know the axes
@@ -424,7 +459,7 @@ SDL_Surface* reversion(SDL_Surface* surface, int horizontal, int vertical){
             }
     }
 
-
+    SDL_FreeSurface(surface);
     return reverse;
 }
 
