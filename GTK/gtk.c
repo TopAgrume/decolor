@@ -724,40 +724,58 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     user_data = user_data;
     self = self;
 
-    int newh;
-    int neww;
+    int newh, neww;
 
-    GtkWidget *dialog, *h_entry, *w_entry;
+    GtkWidget *dialog, *h_entry, *w_entry, *fix, *labh, *labw;
     GtkBox *content_area;
     GtkDialogFlags flags;
 
     // Create the widgets
-    flags = GTK_DIALOG_DESTROY_WITH_PARENT;
-    dialog = gtk_dialog_new_with_buttons("Entrez les nouvelles dimensions",
-                                        NULL,
+    flags = GTK_DIALOG_DESTROY_WITH_PARENT; 
+    //Ajouter GTK_DIALOG_MODAL; ? (permet d'empecher l'interaction avec la fenêtre principale)
+    
+    dialog = gtk_dialog_new_with_buttons("Redimension",
+                                        GTK_WINDOW(window),
                                         flags,
-                                        "_OK",
-                                        GTK_RESPONSE_ACCEPT,
-                                        "_Cancel",
+                                        "_Annuler",
                                         GTK_RESPONSE_REJECT,
+                                        "_Valider",
+                                        GTK_RESPONSE_ACCEPT,
                                         NULL);
-    content_area = GTK_BOX(gtk_dialog_get_content_area (GTK_DIALOG (dialog)));
+    content_area = GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog)));
+    
+    //GtkFixed container
+    fix = gtk_fixed_new();
+    gtk_widget_set_size_request(fix, 250, 150);
 
-    h_entry = gtk_entry_new();
-    w_entry = gtk_entry_new();
+    //Add Fixed in content_area box
+    gtk_box_pack_start(content_area, fix, TRUE, TRUE, 0);
 
-    gtk_box_pack_start(content_area, h_entry, TRUE, TRUE, 0);
-    gtk_box_pack_start(content_area, w_entry, TRUE, TRUE, 20);
+    //Init Entries and Labels
+    h_entry = GTK_WIDGET(gtk_spin_button_new_with_range(0.0, 3000.0, 1.0));
+    w_entry = GTK_WIDGET(gtk_spin_button_new_with_range(0.0, 3000.0, 1.0));
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(h_entry), (gdouble)img->h);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w_entry), (gdouble)img->w);
+    labh = GTK_WIDGET(gtk_label_new("Hauteur :"));
+    labw = GTK_WIDGET(gtk_label_new("Largeur :"));
 
+    //Put Entries and Labels in the Fixed
+    gtk_fixed_put(GTK_FIXED(fix), h_entry, 110, 30);
+    gtk_fixed_put(GTK_FIXED(fix), w_entry, 110, 90);
+    gtk_fixed_put(GTK_FIXED(fix), labh, 20, 37);
+    gtk_fixed_put(GTK_FIXED(fix), labw, 20, 97);
+    
+
+    //Show
     gtk_widget_show_all(GTK_WIDGET(content_area));
     int result = gtk_dialog_run (GTK_DIALOG (dialog));
     switch (result)
     {
         case GTK_RESPONSE_ACCEPT:
-            newh = atoi(gtk_entry_get_text(GTK_ENTRY(h_entry)));
-            neww = atoi(gtk_entry_get_text(GTK_ENTRY(w_entry)));
+            newh = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(h_entry));
+            neww = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_entry));
 
-            printf("h: %i w: %i",newh, neww); 
+            printf("h: %i w: %i\n",newh, neww); 
             if (newh == 0 || neww == 0)
             {
                 break;
