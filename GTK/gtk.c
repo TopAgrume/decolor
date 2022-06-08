@@ -727,12 +727,13 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     int newh;
     int neww;
 
-    GtkWidget *dialog, *h_entry, *w_entry, *content_area;
+    GtkWidget *dialog, *h_entry, *w_entry;
+    GtkBox *content_area;
     GtkDialogFlags flags;
 
     // Create the widgets
     flags = GTK_DIALOG_DESTROY_WITH_PARENT;
-    dialog = gtk_dialog_new_with_buttons("My dialog",
+    dialog = gtk_dialog_new_with_buttons("Entrez les nouvelles dimensions",
                                         NULL,
                                         flags,
                                         "_OK",
@@ -740,14 +741,15 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
                                         "_Cancel",
                                         GTK_RESPONSE_REJECT,
                                         NULL);
-    content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+    content_area = GTK_BOX(gtk_dialog_get_content_area (GTK_DIALOG (dialog)));
 
     h_entry = gtk_entry_new();
     w_entry = gtk_entry_new();
 
-    gtk_container_add (GTK_CONTAINER (content_area), h_entry);
-   // gtk_container_add (GTK_CONTAINER (content_area), w_entry);
+    gtk_box_pack_start(content_area, h_entry, TRUE, TRUE, 0);
+    gtk_box_pack_start(content_area, w_entry, TRUE, TRUE, 20);
 
+    gtk_widget_show_all(GTK_WIDGET(content_area));
     int result = gtk_dialog_run (GTK_DIALOG (dialog));
     switch (result)
     {
