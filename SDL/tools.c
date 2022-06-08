@@ -157,7 +157,7 @@ void point_save(SDL_Surface* surface, SDL_Color color, int x, int y, int size)
 
 void ligneHorizontale(SDL_Surface* surface, int x, int y, int w, SDL_Color coul)
 {
-  Uint32 test = (Uint32)((coul.r << 16) + (coul.g << 8) + (coul.b << 0));
+  Uint32 test = SDL_MapRGB(surface->format, coul.r, coul.g, coul.b);
   SDL_Rect r;
  
   r.x = x;
