@@ -29,7 +29,7 @@ GtkButton* reverse2;
 GtkButton* turn1;
 GtkButton* turn2;
 GtkRadioButton* Crop;
-GtkRadioButton* Select;
+GtkButton* Resize;
 GtkWidget* toolsgrid;
 GtkWidget* previous;
 GtkWidget* next;
@@ -98,6 +98,7 @@ gboolean theme_changed();
 void CSS_rewrite();
 void image_resize();
 
+gboolean on_Resize(GtkButton *self, gpointer user_data);
 gboolean on_turn_1(gpointer user_data);
 gboolean on_turn_2(gpointer user_data);
 gboolean on_reverse_1(gpointer user_data);
@@ -153,7 +154,7 @@ int create_window_decolor(int argc, char *argv[])
     filtres = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "Filtres"));
     apply = GTK_BUTTON(gtk_builder_get_object(Builder, "Appliquer"));
     reverse1 = GTK_BUTTON(gtk_builder_get_object(Builder, "Reverse_1"));
-    Select = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Select"));
+    Resize = GTK_BUTTON(gtk_builder_get_object(Builder, "Resize"));
     turn1 = GTK_BUTTON(gtk_builder_get_object(Builder, "turn_1"));
     turn2 = GTK_BUTTON(gtk_builder_get_object(Builder, "turn_2"));
     reverse2 = GTK_BUTTON(gtk_builder_get_object(Builder, "Reverse_2"));
@@ -179,13 +180,13 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(circle, "toggled", G_CALLBACK(on_circle), NULL);
     g_signal_connect(scale, "value_changed", G_CALLBACK(update_scale_val), NULL);
     g_signal_connect(apply, "clicked", G_CALLBACK(on_apply_clicked), NULL);
-    g_signal_connect(Select, "toggled", G_CALLBACK(on_Select), NULL);
     g_signal_connect(Crop, "toggled", G_CALLBACK(on_Crop), NULL);
     g_signal_connect(Theme, "changed", G_CALLBACK(theme_changed), NULL);
     g_signal_connect(ThemeColor, "color-set", G_CALLBACK(CSS_rewrite), NULL);
     g_signal_connect(previous, "clicked", G_CALLBACK(on_previous), NULL);
     g_signal_connect(next, "clicked", G_CALLBACK(on_next), NULL);
 
+    g_signal_connect(Resize, "clicked", G_CALLBACK(on_Resize), NULL);
     g_signal_connect(reverse1, "clicked", G_CALLBACK(on_reverse_1), NULL);
     g_signal_connect(reverse2, "clicked", G_CALLBACK(on_reverse_2), NULL);
     g_signal_connect(turn1, "clicked", G_CALLBACK(on_turn_1), NULL);
@@ -718,13 +719,55 @@ gboolean on_Crop(GtkRadioButton *self, gpointer user_data)
     return FALSE;
 }
 
-gboolean on_Select(GtkRadioButton *self, gpointer user_data)
+gboolean on_Resize(GtkButton *self, gpointer user_data)
 {
-    if (user_data == NULL &&
-        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    user_data = user_data;
+    self = self;
+
+    int newh;
+    int neww;
+
+    GtkWidget *dialog, *h_entry, *w_entry, *content_area;
+    GtkDialogFlags flags;
+
+    // Create the widgets
+    flags = GTK_DIALOG_DESTROY_WITH_PARENT;
+    dialog = gtk_dialog_new_with_buttons("My dialog",
+                                        NULL,
+                                        flags,
+                                        "_OK",
+                                        GTK_RESPONSE_ACCEPT,
+                                        "_Cancel",
+                                        GTK_RESPONSE_REJECT,
+                                        NULL);
+    content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+
+    h_entry = gtk_entry_new();
+    w_entry = gtk_entry_new();
+
+    gtk_container_add (GTK_CONTAINER (content_area), h_entry);
+   // gtk_container_add (GTK_CONTAINER (content_area), w_entry);
+
+    int result = gtk_dialog_run (GTK_DIALOG (dialog));
+    switch (result)
     {
-        tool_value = 11;
+        case GTK_RESPONSE_ACCEPT:
+            newh = atoi(gtk_entry_get_text(GTK_ENTRY(h_entry)));
+            neww = atoi(gtk_entry_get_text(GTK_ENTRY(w_entry)));
+
+            printf("h: %i w: %i",newh, neww); 
+            if (newh == 0 || neww == 0)
+            {
+                break;
+            }
+            // normalement ici les nouvelles valeurs on été choisies;
+            break;
+        default:
+            // do_nothing_since_dialog_was_cancelled ();
+            break;
     }
+    gtk_widget_destroy (dialog);
+
     return FALSE;
 }
 
