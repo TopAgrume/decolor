@@ -580,14 +580,14 @@ SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
     else
     {
         borne1_x = (x - surface->w) / 2;
-        borne2_x = x - borne1_x - (x % 2);
+        borne2_x = x - borne1_x - 1; //(x % 2);
     }
     if (y < surface->h)
         start_y = (surface->h - y) / 2;
     else
     {
         borne1_y = (y - surface->h) / 2;
-        borne2_y = y - borne1_y - (y % 2);
+        borne2_y = y - borne1_y - 1; //(y % 2);
     }
 
     SDL_Rect rec;
