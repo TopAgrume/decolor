@@ -23,5 +23,6 @@ SDL_Surface* reversion(SDL_Surface* surface, int horizontal, int vertical);
 SDL_Surface* rotate(SDL_Surface* surface, int sens);
 void point_image(SDL_Surface* surface, SDL_Surface* img,  int x, int y, int size);
 void drawline_image(SDL_Surface* img, SDL_Surface* img2, int x1, int y1, int x2, int y2, int size);
+SDL_Surface* resize_image(SDL_Surface* surface, int x, int y);
 
 #endif

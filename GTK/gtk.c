@@ -752,8 +752,8 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     gtk_box_pack_start(content_area, fix, TRUE, TRUE, 0);
 
     //Init Entries and Labels
-    h_entry = GTK_WIDGET(gtk_spin_button_new_with_range(0.0, 3000.0, 1.0));
-    w_entry = GTK_WIDGET(gtk_spin_button_new_with_range(0.0, 3000.0, 1.0));
+    h_entry = GTK_WIDGET(gtk_spin_button_new_with_range(1.0, 3000.0, 1.0));
+    w_entry = GTK_WIDGET(gtk_spin_button_new_with_range(1.0, 3000.0, 1.0));
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(h_entry), (gdouble)img->h);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w_entry), (gdouble)img->w);
     labh = GTK_WIDGET(gtk_label_new("Hauteur :"));
@@ -780,7 +780,13 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
             {
                 break;
             }
-            // normalement ici les nouvelles valeurs on été choisies;
+            
+            shared_stack_push(before, img);
+            shared_stack_empty(after);
+            img = resize_image(img, neww, newh);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+            image_resize();
+
             break;
         default:
             // do_nothing_since_dialog_was_cancelled ();

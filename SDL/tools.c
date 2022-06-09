@@ -40,7 +40,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
     color2.r = 0;
     color2.g = 0;
     color2.b = 0;
-   
+
 
     // BFS of a color on the image
     int dequeue_x = 0;
@@ -53,7 +53,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
         color2.r = 0;
         color2.g = 0;
         color2.b = 0;
-        
+
         pixel = shared_queue_pop(seal_queue, &dequeue_x, &dequeue_y);
         for (move = -1; move < 2; move += 2)
         {
@@ -73,7 +73,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
                     }
                 }
                 //else
-                    //printf("Rejet\n");
+                //printf("Rejet\n");
             }
             if (0 <= neighbour_y && neighbour_y < img->h)
             {
@@ -89,7 +89,7 @@ SDL_Surface* filling_seal(SDL_Surface* img, int x, int y, SDL_Color new_color, i
                     }
                 }
                 //else
-                    //printf("Rejet\n");
+                //printf("Rejet\n");
             }
         }
 
@@ -134,63 +134,63 @@ void point_save(SDL_Surface* surface, SDL_Color color, int x, int y, int size)
     int j = y;
     int nb = 0;
     while(i < x){
-	    while(j < y+nb){
+        while(j < y+nb){
             if (i >= 0 && j >= 0 && i < surface->w && j < surface->h)
-		        put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-		    j++;
-	    }
-	    i++;
-	    nb++;
-	    j = y - nb;
+                put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+            j++;
+        }
+        i++;
+        nb++;
+        j = y - nb;
     }
     while(i <= x+size){
-            while(j < y+nb){
-                if (i >= 0 && j >= 0 && i < surface->w && j < surface->h)
-                    put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-                j++;
-            }
-            i++;
-            nb --;
-            j = y - nb;
+        while(j < y+nb){
+            if (i >= 0 && j >= 0 && i < surface->w && j < surface->h)
+                put_pixel(surface, i, j, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+            j++;
+        }
+        i++;
+        nb --;
+        j = y - nb;
     }
 }
 
 void ligneHorizontale(SDL_Surface* surface, int x, int y, int w, SDL_Color coul)
 {
-  Uint32 test = SDL_MapRGB(surface->format, coul.r, coul.g, coul.b);
-  SDL_Rect r;
- 
-  r.x = x;
-  r.y = y;
-  r.w = w;
-  r.h = 1;
- 
-  SDL_FillRect(surface, &r, test);
+    Uint32 test = SDL_MapRGB(surface->format, coul.r, coul.g, coul.b);
+    SDL_Rect r;
+
+    r.x = x;
+    r.y = y;
+    r.w = w;
+    r.h = 1;
+
+    SDL_FillRect(surface, &r, test);
 }
 
 void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon)
 {
-  int d, y, x;
- 
-  d = 3 - (2 * rayon);
-  x = 0;
-  y = rayon;
- 
-  while (y >= x) {
-    ligneHorizontale(surface, cx - x, cy - y, 2 * x + 1, coul);
-    ligneHorizontale(surface, cx - x, cy + y, 2 * x + 1, coul);
-    ligneHorizontale(surface, cx - y, cy - x, 2 * y + 1, coul);
-    ligneHorizontale(surface, cx - y, cy + x, 2 * y + 1, coul);
- 
-    if (d < 0)
-      d = d + (4 * x) + 6;
-    else {
-      d = d + 4 * (x - y) + 10;
-      y--;
+    int d, y, x;
+
+    d = 3 - (2 * rayon);
+    x = 0;
+    y = rayon;
+
+    while (y >= x) {
+        ligneHorizontale(surface, cx - x, cy - y, 2 * x + 1, coul);
+        ligneHorizontale(surface, cx - x, cy + y, 2 * x + 1, coul);
+        ligneHorizontale(surface, cx - y, cy - x, 2 * y + 1, coul);
+        ligneHorizontale(surface, cx - y, cy + x, 2 * y + 1, coul);
+
+        if (d < 0)
+            d = d + (4 * x) + 6;
+        else {
+            d = d + 4 * (x - y) + 10;
+            y--;
+        }
+
+        x++;
     }
- 
-    x++;
-  }
 }
 
 //Draw a line of point() between the two coordinates
@@ -254,48 +254,48 @@ void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2,
 }
 
 /*
-void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size){
-    int a;
-    if(x2 - x1 > y2 - y1){
-	    int i = x1;
-	    if(x2 - x1 == 0)
-		    a = 0;
-	    else
-		    a = (y2 - y1) / (x2 - x1);
-	    int b = y1 - a * x1;
-	    printf("%i\n",size);
-	    while(i < x2){
-		    point(surface, color, i, a * i + b, size);
-		    //put_pixel(surface, i, a * i + b, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-		    i++;
-	    }
-    }
-    else{
-	    int i = y1;
-	    if(y2 - y1 == 0)
-                    a = 0;
-            else
-                    a = (x2 - x1) / (y2 - y1);
-            int b = x1 - a * y1;
-            printf("%i\n",size);
-            while(i < y2){
-                    point(surface, color, i, a * i + b, size);
-                    //put_pixel(surface, a * i + b, i, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-                    i++;
-            }
-    }
+   void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size){
+   int a;
+   if(x2 - x1 > y2 - y1){
+   int i = x1;
+   if(x2 - x1 == 0)
+   a = 0;
+   else
+   a = (y2 - y1) / (x2 - x1);
+   int b = y1 - a * x1;
+   printf("%i\n",size);
+   while(i < x2){
+   point(surface, color, i, a * i + b, size);
+//put_pixel(surface, i, a * i + b, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+i++;
+}
+}
+else{
+int i = y1;
+if(y2 - y1 == 0)
+a = 0;
+else
+a = (x2 - x1) / (y2 - y1);
+int b = x1 - a * y1;
+printf("%i\n",size);
+while(i < y2){
+point(surface, color, i, a * i + b, size);
+//put_pixel(surface, a * i + b, i, SDL_MapRGB(surface->format, color.r, color.g, color.b));
+i++;
+}
+}
 }*/
 
 //This function create a surface and put a line between each event of left click
 // -> 'color' the color of the brush
 /*void brush(SDL_Color color){
-	SDL_Surface* surface;
-	int loop = 1;
+  SDL_Surface* surface;
+  int loop = 1;
 
-	while(loop){
+  while(loop){
 
-	}
-}*/
+  }
+  }*/
 
 //This function returns a new surface which is the surface cropped
 // -> 'surface' the pointer on SDL_Surface
@@ -310,7 +310,7 @@ SDL_Surface* crop(SDL_Surface* surface, int x, int y, int width, int height){
         y = 0;
     if (y >= surface->h)
         y = surface->h - 1;
-    
+
     if (width < 0)
         width = 0;
     if (width >= surface->w)
@@ -427,36 +427,36 @@ SDL_Surface* reversion(SDL_Surface* surface, int horizontal, int vertical){
     Uint32 pixel;
 
     if(horizontal && !vertical){
-    	    for(int i = 0; i < surface->w; i++){
-            	    for(int j = 0; j < surface->h; j++){
-                    	    pixel = get_pixel(surface, i, j);
-                    	    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-                    	    pixel = SDL_MapRGB(surface->format, r, g, b);
-                    	    put_pixel(reverse, surface->w - i -1, j, pixel);
-            	    }
-    	    }
+        for(int i = 0; i < surface->w; i++){
+            for(int j = 0; j < surface->h; j++){
+                pixel = get_pixel(surface, i, j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                pixel = SDL_MapRGB(surface->format, r, g, b);
+                put_pixel(reverse, surface->w - i -1, j, pixel);
+            }
+        }
     }
 
     if(!horizontal && vertical){
-	    for(int i = 0; i < surface->w; i++){
-		    for(int j = 0; j < surface->h; j++){
-                      	    pixel = get_pixel(surface, i, j);
-                    	    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-                    	    pixel = SDL_MapRGB(surface->format, r, g, b);
-                    	    put_pixel(reverse, i, surface->h - j - 1, pixel);
-            	   }
-    	   }
+        for(int i = 0; i < surface->w; i++){
+            for(int j = 0; j < surface->h; j++){
+                pixel = get_pixel(surface, i, j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                pixel = SDL_MapRGB(surface->format, r, g, b);
+                put_pixel(reverse, i, surface->h - j - 1, pixel);
+            }
+        }
     }
 
     if(horizontal && vertical){
-            for(int i = 0; i < surface->w; i++){
-                    for(int j = 0; j < surface->h; j++){
-                            pixel = get_pixel(surface, i, j);
-                            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-                            pixel = SDL_MapRGB(surface->format, r, g, b);
-                            put_pixel(reverse, surface->w - i -1, surface->h - j - 1, pixel);
-                    }
+        for(int i = 0; i < surface->w; i++){
+            for(int j = 0; j < surface->h; j++){
+                pixel = get_pixel(surface, i, j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                pixel = SDL_MapRGB(surface->format, r, g, b);
+                put_pixel(reverse, surface->w - i -1, surface->h - j - 1, pixel);
             }
+        }
     }
 
     SDL_FreeSurface(surface);
@@ -478,30 +478,30 @@ void point_image(SDL_Surface* surface, SDL_Surface* img, int x, int y, int size)
     Uint8 r,g,b;
     Uint32 pixel;
     while(i < x){
-            while(j < y+nb){
-		    if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
-			    pixel = get_pixel(img, i,j);
-			    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-			    put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
-		    }
-                    j++;
+        while(j < y+nb){
+            if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
+                pixel = get_pixel(img, i,j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
             }
-            i++;
-            nb++;
-            j = y - nb;
+            j++;
+        }
+        i++;
+        nb++;
+        j = y - nb;
     }
     while(i <= x+size){
-            while(j < y+nb){
-                if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
-			pixel = get_pixel(img, i,j);
-                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-                        put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
-		}
-                j++;
+        while(j < y+nb){
+            if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
+                pixel = get_pixel(img, i,j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
             }
-            i++;
-            nb --;
-            j = y - nb;
+            j++;
+        }
+        i++;
+        nb --;
+        j = y - nb;
     }
 }
 
@@ -554,9 +554,66 @@ void drawline_image(SDL_Surface* img, SDL_Surface* img2,  int x1, int y1, int x2
                 x += xincr;
             }
             point_image(img, img2, x, y, size);
-	}
+        }
     }
     point_image(img, img2, x1, y1, size);
     point_image(img, img2, x2, y2, size);
 }
 
+
+SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
+{
+    if (x == surface->w && y == surface->h)
+        return surface;
+
+    SDL_Surface* img = SDL_CreateRGBSurface(SDL_HWSURFACE, x, y, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+
+    int start_x = 0;
+    int start_y = 0;
+    int borne1_x = 0;
+    int borne2_x = x;
+    int borne1_y = 0;
+    int borne2_y = y;
+    
+    if (x < surface->w)
+        start_x = (surface->w - x) / 2;
+    else
+    {
+        borne1_x = (x - surface->w) / 2;
+        borne2_x = x - borne1_x - (x % 2);
+    }
+    if (y < surface->h)
+        start_y = (surface->h - y) / 2;
+    else
+    {
+        borne1_y = (y - surface->h) / 2;
+        borne2_y = y - borne1_y - (y % 2);
+    }
+
+    SDL_Rect rec;
+    rec.x = 0;
+    rec.y = 0;
+    rec.w = x;
+    rec.h = y;
+    Uint32 bg = SDL_MapRGB(surface->format, 255, 255, 255);
+    SDL_FillRect(img, &rec, bg);
+ 
+    Uint32 pixel;
+    Uint8 r,g,b;
+
+    for(int i = borne1_x; i < borne2_x; i++)
+    {
+        for(int j = borne1_y; j < borne2_y; j++)
+        {
+            //printf("%i, %i\n", start_x + i - borne1_x, start_y + j - borne1_y);
+
+            pixel = get_pixel(surface, start_x + i - borne1_x, start_y + j - borne1_y);
+            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+            pixel = SDL_MapRGB(surface->format, r, g, b);
+            put_pixel(img, i, j, pixel);
+        }
+    }
+
+    SDL_FreeSurface(surface);
+    return img;
+}
