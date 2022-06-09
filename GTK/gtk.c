@@ -41,6 +41,8 @@ SDL_Surface* img2;
 SDL_Surface* pre_img;
 shared_stack* before;
 shared_stack* after;
+shared_stack* b2;
+shared_stack* a2;
 GtkWidget *image;
 GtkFileChooser *FileChooser;
 GtkFileChooser *chooser;
@@ -121,6 +123,9 @@ int create_window_decolor(int argc, char *argv[])
     // tools previous / next image
     before = shared_stack_new();
     after = shared_stack_new();
+    b2 = shared_stack_new();
+    a2 = shared_stack_new();
+
     
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
@@ -220,6 +225,9 @@ void decolor_free(gpointer user_data)
     }
     shared_stack_destroy(before);
     shared_stack_destroy(after);
+    shared_stack_destroy(b2);
+    shared_stack_destroy(a2);
+
     if (pre_img != NULL)
         SDL_FreeSurface(pre_img);
     SDL_FreeSurface(img);
@@ -243,7 +251,7 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
         SDL_FreeSurface(pre_img);
         pre_img = NULL;
         if (pre_img != NULL)
-            printf("free = caca\n");
+            printf("free\n");
     }
     else
     {
@@ -264,11 +272,6 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
     return FALSE;
 }
 
-/*
-void update_gtk(int x, int y, int a, int b)
-{
-    gtk_widget_queue_draw_area(image,start_x, start_y, pos_x, pos_y);
-}*/
 
 gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
@@ -281,7 +284,7 @@ gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data
     case GDK_KEY_z:
       if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
       {
-        printf("key pressed: %s\n", "ctrl + z");
+        //printf("key pressed: %s\n", "ctrl + z");
         on_previous(NULL, NULL);
         image_resize();
       }
@@ -289,7 +292,7 @@ gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data
     case GDK_KEY_y:
       if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
       {
-        printf("key pressed: %s\n", "ctrl + y");
+        //printf("key pressed: %s\n", "ctrl + y");
         on_next(NULL, NULL);
         image_resize();
       }
@@ -328,6 +331,9 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Line call
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 pre_show = FALSE;
 
                 // Block img is isn't free
@@ -344,6 +350,9 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Square call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 pre_show = FALSE;
 
                 // Block img is isn't free
@@ -359,7 +368,10 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
             case 7:
                 // Triangle call
                 shared_stack_push(before, img);                                    
-                shared_stack_empty(after);                                    
+                shared_stack_empty(after);     
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 pre_show = FALSE;
                 
                 // Block img is isn't free
@@ -376,6 +388,9 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 // Circle call
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 pre_show = FALSE;
                 
                 // Block img is isn't free
@@ -388,18 +403,13 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
-            case 9:
-                // Text Call
-                shared_stack_push(before, img);
-                shared_stack_empty(after);
-                // FONCTION ICI !!!!
-                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-                break;
-
             case 10:
                 // Crop Call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 pre_show = FALSE;
                 
                 // Block img is isn't free
@@ -410,6 +420,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
 
                 oldh = img->h;
                 oldw = img->w;
+                img2 = crop(img2, start_x, start_y, end_x, end_y);
                 img = crop(img, start_x, start_y, end_x, end_y);
                 gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
                 image_resize();
@@ -445,7 +456,10 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
             case 1:
                 // point call
                 shared_stack_push(before, img);
-                shared_stack_empty(after);                                        
+                shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 point(img, sdl_color, start_x, start_y, (int)scale_nb / 3);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
@@ -453,7 +467,10 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
              case 2:
                 // bucket call
                 shared_stack_push(before, img);
-                shared_stack_empty(after);                                        
+                shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 filling_seal(img, start_x, start_y, sdl_color, ((int)scale_nb * 255) / 100);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
@@ -490,15 +507,13 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             }
             // Preview POINT
-            /*
-            else
+            /*else
             {
                 pre_show = TRUE;
                 pre_img = copy_image(img);
                 bresenham_circle(pre_img, pos_x, pos_y, pos_x + (int)(scale_nb / 4), pos_y + (int)(scale_nb / 4), grey, 1);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            }
-            */
+            }*/
         }
         else
         {
@@ -509,6 +524,8 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                     save_draw = FALSE;
                     shared_stack_push(before, img);
                     shared_stack_empty(after);
+                    shared_stack_push(b2, img2);                                    
+                    shared_stack_empty(a2);
                 }
 
                 //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
@@ -524,6 +541,8 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                         save_draw = FALSE;
                         shared_stack_push(before, img);
                         shared_stack_empty(after);
+                        shared_stack_push(b2, img2);                                    
+                        shared_stack_empty(a2);
                     }
 
                     //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
@@ -605,6 +624,10 @@ gboolean on_previous(GtkButton* self, gpointer user_data)
         shared_stack_push(after, img);
         SDL_FreeSurface(img);
         img = shared_stack_pop(before);
+        shared_stack_push(a2, img2);
+        SDL_FreeSurface(img2);
+        img2 = shared_stack_pop(b2);
+
         if (img->h > oldh)
             oldh = img->h;
         if (img->w > oldw)
@@ -631,6 +654,10 @@ gboolean on_next(GtkButton* self, gpointer user_data)
         shared_stack_push(before, img);
         SDL_FreeSurface(img);
         img = shared_stack_pop(after);
+        shared_stack_push(b2, img2);
+        SDL_FreeSurface(img2);
+        img2 = shared_stack_pop(a2);
+
         if (img->h > oldh)
             oldh = img->h;
         if (img->w > oldw)
@@ -650,7 +677,11 @@ gboolean on_turn_1(gpointer user_data)
         int oldw = img->w;
         shared_stack_push(before, img);
         shared_stack_empty(after);
+        shared_stack_push(b2, img2);                                    
+        shared_stack_empty(a2);
+
         img = rotate(img, 0);
+        img2 = rotate(img2, 0);
 
         if (img->h > oldh)
             oldh = img->h;
@@ -671,7 +702,11 @@ gboolean on_turn_2(gpointer user_data)
         int oldw = img->w;
         shared_stack_push(before, img);
         shared_stack_empty(after);
+        shared_stack_push(b2, img2);                                    
+        shared_stack_empty(a2);
+
         img = rotate(img, 1);
+        img2 = rotate(img2, 1);
         
         if (img->h > oldh)
             oldh = img->h;
@@ -690,7 +725,12 @@ gboolean on_reverse_1(gpointer user_data)
     {
         shared_stack_push(before, img);
         shared_stack_empty(after);
+        shared_stack_push(b2, img2);                                    
+        shared_stack_empty(a2);
+
         img = reversion(img, 1, 0);
+        img2 = reversion(img2, 1, 0);
+
         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
     }
     return FALSE;
@@ -702,7 +742,12 @@ gboolean on_reverse_2(gpointer user_data)
     {
         shared_stack_push(before, img);
         shared_stack_empty(after);
+        shared_stack_push(b2, img2);                                    
+        shared_stack_empty(a2);
+
         img = reversion(img, 0, 1);
+        img2 = reversion(img2, 0, 1);
+
         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
     }
     return FALSE;
@@ -783,7 +828,12 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
             
             shared_stack_push(before, img);
             shared_stack_empty(after);
+            shared_stack_push(b2, img2);                                    
+            shared_stack_empty(a2);
+
             img = resize_image(img, neww, newh);
+            img2 = resize_image(img2, neww, newh);
+
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             image_resize();
 
@@ -934,6 +984,9 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     oldw = img->w;
     shared_stack_push(before, img);
     shared_stack_empty(after);
+    shared_stack_push(b2, img2);                                    
+    shared_stack_empty(a2);
+
     
     if (img != NULL)
     {
@@ -1021,6 +1074,9 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             //printf("Noir et Blanc\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
+            shared_stack_push(b2, img2);                                    
+            shared_stack_empty(a2);
+
 	        grayscale(img);
 	        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre noir et blanc
@@ -1031,6 +1087,9 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             //printf("Inversion\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
+            shared_stack_push(b2, img2);                                    
+            shared_stack_empty(a2);
+
             negative(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre d'inversion de couleur
@@ -1041,6 +1100,9 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             //printf("Contraste\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
+            shared_stack_push(b2, img2);                                    
+            shared_stack_empty(a2);
+
             contrast(img, (scale_nb * 3) / 100);
             grayscale(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
@@ -1052,6 +1114,9 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             //printf("Luminosité\n");
 	        shared_stack_push(before, img);
             shared_stack_empty(after);
+            shared_stack_push(b2, img2);                                    
+            shared_stack_empty(a2);
+
             brightness(img, (scale_nb * 2) - 100);
             grayscale(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
@@ -1065,6 +1130,9 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
                 //printf("Sépia\n");
 		        shared_stack_push(before, img);
                 shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 color_filter(img, 1, 0, 0, 0);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 return FALSE; //Filtre Sépia
@@ -1075,6 +1143,9 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
                 //printf("Saturation\n");
 		        shared_stack_push(before, img);
                 shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
                 color_filter(img, 1, 0, 0, 255);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 return FALSE; //Filtre Saturation
