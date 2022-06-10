@@ -617,3 +617,170 @@ SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
     SDL_FreeSurface(surface);
     return img;
 }
+
+//This function returns a new surface which is the surface cropped
+// -> 'surface' the pointer on SDL_Surface
+// -> 'x' and 'y' coordinates of the begin of the square
+// -> 'width' and 'height' the width/height of the square
+SDL_Surface* copy_selection(SDL_Surface* surface, int x, int y, int width, int height){
+    if (x < 0)
+        x = 0;
+    if (x >= surface->w)
+        x = surface->w - 1;
+    if (y < 0)
+        y = 0;
+    if (y >= surface->h)
+        y = surface->h - 1;
+
+    if (width < 0)
+        width = 0;
+    if (width >= surface->w)
+        width = surface->w - 1;
+    if (height >= surface->h)
+        height = surface->h - 1;
+    if (height < 0)
+        height = 0;
+
+
+    SDL_Surface* crop;    
+    Uint8 r, g, b;
+    Uint32 pixel;
+
+    if (x < width && y < height)
+    {
+        crop = SDL_CreateRGBSurface(SDL_HWSURFACE, width - x, height - y, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+        for(int i = 0; i < width - x; i++){
+            for(int j = 0; j < height - y; j++){
+                pixel = get_pixel(surface, i + x, j + y);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                pixel = SDL_MapRGB(surface->format, r, g, b);
+                put_pixel(crop, i, j, pixel);
+            }
+        }   
+    }
+    else
+    { 
+        if (x < width && y >= height)
+        {
+            crop = SDL_CreateRGBSurface(SDL_HWSURFACE, width - x, y - height, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+            for(int i = 0; i < width - x; i++){
+                for(int j = 0; j < y - height; j++){
+                    pixel = get_pixel(surface, i + x, j + height);
+                    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                    pixel = SDL_MapRGB(surface->format, r, g, b);
+                    put_pixel(crop, i, j, pixel);
+                }
+            }   
+        }
+        else
+        {
+            if (x >= width && y < height)
+            {
+                crop = SDL_CreateRGBSurface(SDL_HWSURFACE, x - width, height - y, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+                for(int i = 0; i < x - width; i++){
+                    for(int j = 0; j < height - y; j++){
+                        pixel = get_pixel(surface, i + width, j + y);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(crop, i, j, pixel);
+                    }   
+                }   
+            }
+            else
+            {
+                crop = SDL_CreateRGBSurface(SDL_HWSURFACE, x - width, y - height, surface->format->BitsPerPixel, surface->format->Rmask, surface->format->Gmask, surface->format->Bmask, surface->format->Amask);
+                for(int i = 0; i < x - width; i++){
+                    for(int j = 0; j < y - height; j++){
+                        pixel = get_pixel(surface, i + width, j + height);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(crop, i, j, pixel);
+                    }
+                }   
+            }
+        }
+    }
+    return crop;
+}
+
+void past_selection(SDL_Surface* img, SDL_Surface* surface, int x, int y)
+{
+    if (surface == NULL)
+        return;
+    
+    Uint8 r, g, b;
+    Uint32 pixel;
+
+    for(int i = x; i < img->w && i < x + surface->w; i++){
+        for(int j = y; j < img->h && j < y + surface->h; j++){
+            pixel = get_pixel(surface, i - x, j - y);
+            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+            pixel = SDL_MapRGB(surface->format, r, g, b);
+            put_pixel(img, i, j, pixel);
+        }
+    }  
+}
+
+void erase_selection(SDL_Surface* surface, int x, int y, int width, int height){
+    if (x < 0)
+        x = 0;
+    if (x >= surface->w)
+        x = surface->w - 1;
+    if (y < 0)
+        y = 0;
+    if (y >= surface->h)
+        y = surface->h - 1;
+
+    if (width < 0)
+        width = 0;
+    if (width >= surface->w)
+        width = surface->w - 1;
+    if (height >= surface->h)
+        height = surface->h - 1;
+    if (height < 0)
+        height = 0;
+
+    SDL_Rect rec;
+    Uint32 bg = SDL_MapRGB(surface->format, 255, 255, 255);
+
+    if (x < width && y < height)
+    { 
+        rec.x = x;
+        rec.y = y;
+        rec.w = width - x;
+        rec.h = height - y;
+    }
+    else
+    { 
+        if (x < width && y >= height)
+        {
+            rec.x = x;
+            rec.y = height;
+            rec.w = width - x;
+            rec.h = y - height;
+        }
+        else
+        {
+            if (x >= width && y < height)
+            {
+                rec.x = width;
+                rec.y = y;
+                rec.w = x - width;
+                rec.h = height - y;
+
+            }
+            else
+            {
+                rec.x = width;
+                rec.y = height;
+                rec.w = x - width;
+                rec.h = y - height;
+
+            }
+        }
+    }
+
+    SDL_FillRect(surface, &rec, bg);
+}
+
+

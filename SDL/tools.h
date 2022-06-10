@@ -25,4 +25,9 @@ void point_image(SDL_Surface* surface, SDL_Surface* img,  int x, int y, int size
 void drawline_image(SDL_Surface* img, SDL_Surface* img2, int x1, int y1, int x2, int y2, int size);
 SDL_Surface* resize_image(SDL_Surface* surface, int x, int y);
 
+// Copy Paste
+void past_selection(SDL_Surface* img, SDL_Surface* surface, int x, int y);
+SDL_Surface* copy_selection(SDL_Surface* surface, int x, int y, int width, int height);
+void erase_selection(SDL_Surface* surface, int x, int y, int width, int height);
+
 #endif

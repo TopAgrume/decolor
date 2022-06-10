@@ -24,6 +24,7 @@ GtkRadioButton* segment;
 GtkRadioButton* square;
 GtkRadioButton* triangle;
 GtkRadioButton* circle;
+GtkRadioButton* cpy_img;
 GtkButton* reverse1;
 GtkButton* reverse2;
 GtkButton* turn1;
@@ -39,6 +40,7 @@ GtkWidget *dialog;
 SDL_Surface* img;
 SDL_Surface* img2;
 SDL_Surface* pre_img;
+SDL_Surface* copy_crop_img;
 shared_stack* before;
 shared_stack* after;
 shared_stack* b2;
@@ -64,7 +66,7 @@ gboolean save_draw = TRUE;
 GtkComboBoxText* Theme;
 GtkColorChooser* ThemeColor;
 char* path_perso_theme = "CSS/color-theme-light.css";
-
+int erase_bool = 0;
 int tool_value = 1;
 gboolean pre_show = FALSE;
 
@@ -105,6 +107,8 @@ gboolean on_turn_1(gpointer user_data);
 gboolean on_turn_2(gpointer user_data);
 gboolean on_reverse_1(gpointer user_data);
 gboolean on_reverse_2(gpointer user_data);
+gboolean on_cpy_img(GtkRadioButton *self, gpointer user_data);
+
 
 
 
@@ -118,6 +122,7 @@ int create_window_decolor(int argc, char *argv[])
     img = load_image("./GTK/blank.png");
     img2 = load_image("./GTK/blank.png");
     pre_img = NULL;
+    copy_crop_img = NULL;
     load_css("CSS/light-theme.css");
     
     // tools previous / next image
@@ -154,6 +159,8 @@ int create_window_decolor(int argc, char *argv[])
     square = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "square"));
     triangle = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "triangle"));
     circle = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "circle"));
+    cpy_img = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "cpy_img"));
+
     //set_tools_group(toolsgrid, brush);
     scale = GTK_SCALE(gtk_builder_get_object(Builder, "Scale")); 
     filtres = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "Filtres"));
@@ -196,6 +203,8 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(reverse2, "clicked", G_CALLBACK(on_reverse_2), NULL);
     g_signal_connect(turn1, "clicked", G_CALLBACK(on_turn_1), NULL);
     g_signal_connect(turn2, "clicked", G_CALLBACK(on_turn_2), NULL);
+    g_signal_connect(cpy_img, "toggled", G_CALLBACK(on_cpy_img), NULL);
+
     //replace NULL by the stack containing the modifications.
 
     g_signal_connect (G_OBJECT (window), "key_press_event", G_CALLBACK (on_key_press), NULL);
@@ -230,6 +239,9 @@ void decolor_free(gpointer user_data)
 
     if (pre_img != NULL)
         SDL_FreeSurface(pre_img);
+    if (copy_crop_img != NULL)
+        SDL_FreeSurface(copy_crop_img);
+
     SDL_FreeSurface(img);
     SDL_FreeSurface(img2);
     //cairo_destroy (cr);
@@ -297,7 +309,32 @@ gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data
         image_resize();
       }
       break;
+    case GDK_KEY_v:
+      if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
+      {
+        printf("key pressed: %s\n", "ctrl + v");
+        shared_stack_push(before, img);                                    
+        shared_stack_empty(after);
+        shared_stack_push(b2, img2);                                    
+        shared_stack_empty(a2);
 
+        past_selection(img, copy_crop_img, pos_x, pos_y);
+        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+      }
+      break;
+    case GDK_KEY_BackSpace:
+      if (event->type == GDK_KEY_PRESS && tool_value == 15 && erase_bool)
+      {
+        shared_stack_push(before, img);                                    
+        shared_stack_empty(after);
+        shared_stack_push(b2, img2);                                    
+        shared_stack_empty(a2);
+        erase_bool = 0;
+        
+        erase_selection(img, start_x, start_y, end_x, end_y);
+        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+      }
+      break;
     default:
       return FALSE;
   }
@@ -426,9 +463,23 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 image_resize();
                 break;
 
-            case 11:
-                // Select Call
+            case 15:// Change Case
+                // Select + Copy Call
+                pre_show = FALSE;
+                erase_bool = 1;
+                // Block img is isn't free
+                if (pre_img != NULL){
+                    SDL_FreeSurface(pre_img);
+                    pre_img = NULL;
+                }
+                if (copy_crop_img != NULL)
+                    SDL_FreeSurface(copy_crop_img);
+                
+                copy_crop_img = copy_selection(img, start_x, start_y, end_x, end_y);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
 
+            default:
                 break;
         }
     }
@@ -506,7 +557,6 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             }
-            // Preview POINT
             /*else
             {
                 pre_show = TRUE;
@@ -587,7 +637,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                 }
                                 else
                                 {
-                                    if (tool_value == 10 && is_pressed)
+                                    if ((tool_value == 10 || tool_value == 15) && is_pressed)
                                     {
                                         pre_show = TRUE;
                                         pre_img = copy_image(img); 
@@ -844,6 +894,16 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     }
     gtk_widget_destroy (dialog);
 
+    return FALSE;
+}
+
+gboolean on_cpy_img(GtkRadioButton *self, gpointer user_data)
+{
+    if (user_data == NULL &&
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 15;
+    }
     return FALSE;
 }
 
