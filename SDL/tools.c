@@ -168,28 +168,35 @@ void ligneHorizontale(SDL_Surface* surface, int x, int y, int w, SDL_Color coul)
     SDL_FillRect(surface, &r, test);
 }
 
-void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon)
+void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon, int crayon)
 {
-    int d, y, x;
+    if (crayon == 0)
+    {
+        int d, y, x;
 
-    d = 3 - (2 * rayon);
-    x = 0;
-    y = rayon;
+        d = 3 - (2 * rayon);
+        x = 0;
+        y = rayon;
 
-    while (y >= x) {
-        ligneHorizontale(surface, cx - x, cy - y, 2 * x + 1, coul);
-        ligneHorizontale(surface, cx - x, cy + y, 2 * x + 1, coul);
-        ligneHorizontale(surface, cx - y, cy - x, 2 * y + 1, coul);
-        ligneHorizontale(surface, cx - y, cy + x, 2 * y + 1, coul);
+        while (y >= x) {
+            ligneHorizontale(surface, cx - x, cy - y, 2 * x + 1, coul);
+            ligneHorizontale(surface, cx - x, cy + y, 2 * x + 1, coul);
+            ligneHorizontale(surface, cx - y, cy - x, 2 * y + 1, coul);
+            ligneHorizontale(surface, cx - y, cy + x, 2 * y + 1, coul);
 
-        if (d < 0)
-            d = d + (4 * x) + 6;
-        else {
-            d = d + 4 * (x - y) + 10;
-            y--;
+            if (d < 0)
+                d = d + (4 * x) + 6;
+            else {
+                d = d + 4 * (x - y) + 10;
+                y--;
+            }
+
+            x++;
         }
-
-        x++;
+    }
+    else if (crayon == 1)
+    {
+        point_save(surface, coul, cx, cy, rayon);
     }
 }
 
@@ -198,7 +205,7 @@ void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon)
 // -> 'x1' and 'y1' coordinates of the begin
 // -> 'x2' and 'y2' coordinates of the end
 // -> 'size' the size of each points
-void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2, int size)
+void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2, int size, int crayon)
 {
     int x,y;
     int Dx,Dy;
@@ -231,7 +238,7 @@ void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2,
                 erreur -= Dx;
                 y += yincr;
             }
-            point(img, color, x, y, size);
+            point(img, color, x, y, size, crayon);
         }
     }
     else
@@ -246,11 +253,11 @@ void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2,
                 erreur -= Dy;
                 x += xincr;
             }
-            point(img, color, x, y, size);
+            point(img, color, x, y, size, crayon);
         }
     }
-    point(img, color, x1, y1, size);
-    point(img, color, x2, y2, size);
+    point(img, color, x1, y1, size, crayon);
+    point(img, color, x2, y2, size, crayon);
 }
 
 /*
@@ -574,7 +581,7 @@ SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
     int borne2_x = x;
     int borne1_y = 0;
     int borne2_y = y;
-    
+
     if (x < surface->w)
         start_x = (surface->w - x) / 2;
     else
@@ -597,7 +604,7 @@ SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
     rec.h = y;
     Uint32 bg = SDL_MapRGB(surface->format, 255, 255, 255);
     SDL_FillRect(img, &rec, bg);
- 
+
     Uint32 pixel;
     Uint8 r,g,b;
 
@@ -707,7 +714,7 @@ void past_selection(SDL_Surface* img, SDL_Surface* surface, int x, int y)
 {
     if (surface == NULL)
         return;
-    
+
     Uint8 r, g, b;
     Uint32 pixel;
 

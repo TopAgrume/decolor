@@ -68,6 +68,7 @@ GtkColorChooser* ThemeColor;
 char* path_perso_theme = "CSS/color-theme-light.css";
 int erase_bool = 0;
 int tool_value = 1;
+int brush_value = 0;
 gboolean pre_show = FALSE;
 
 //functions
@@ -379,7 +380,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                     pre_img = NULL;
                 }
 
-                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 3);
+                drawline(img, sdl_color, start_x, start_y, end_x, end_y, (int)scale_nb / 3, brush_value);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -417,7 +418,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                     pre_img = NULL;
                 }
 
-                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
+                make_empty_triangle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3, brush_value);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -436,7 +437,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                     pre_img = NULL;
                 }
 
-                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3);
+                bresenham_circle(img, start_x, start_y, end_x, end_y, sdl_color, (int)scale_nb / 3, brush_value);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -511,7 +512,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_push(b2, img2);                                    
                 shared_stack_empty(a2);
 
-                point(img, sdl_color, start_x, start_y, (int)scale_nb / 3);   
+                point(img, sdl_color, start_x, start_y, (int)scale_nb / 3, brush_value);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -554,7 +555,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
             if (is_pressed)
             {
                 //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-                drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
+                drawline(img, sdl_color, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3, brush_value);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             }
             /*else
@@ -579,7 +580,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 }
 
                 //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-                drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
+                drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3, brush_value);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             }
             else
@@ -605,7 +606,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                     {
                         pre_show = TRUE;
                         pre_img = copy_image(img);
-                        drawline(pre_img, sdl_color, start_x, start_y, pos_x, pos_y, (int)scale_nb / 3);
+                        drawline(pre_img, sdl_color, start_x, start_y, pos_x, pos_y, (int)scale_nb / 3, brush_value);
                         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                     }
                     else
@@ -623,7 +624,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                             {
                                 pre_show = TRUE;
                                 pre_img = copy_image(img);
-                                make_empty_triangle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3);
+                                make_empty_triangle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3, brush_value);
                                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                             }
                             else
@@ -632,7 +633,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                 {
                                     pre_show = TRUE;
                                     pre_img = copy_image(img);
-                                    bresenham_circle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3);
+                                    bresenham_circle(pre_img, start_x, start_y, pos_x, pos_y, sdl_color, (int)scale_nb / 3, brush_value);
                                     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                                 }
                                 else
