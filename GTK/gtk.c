@@ -837,6 +837,7 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
                                         "_Valider",
                                         GTK_RESPONSE_ACCEPT,
                                         NULL);
+    gtk_widget_set_name(dialog, "pop");
     content_area = GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog)));
     
     //GtkFixed container
@@ -853,6 +854,8 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w_entry), (gdouble)img->w);
     labh = GTK_WIDGET(gtk_label_new("Hauteur :"));
     labw = GTK_WIDGET(gtk_label_new("Largeur :"));
+    gtk_widget_set_name(labh, "int");
+    gtk_widget_set_name(labw, "int");
 
     //Put Entries and Labels in the Fixed
     gtk_fixed_put(GTK_FIXED(fix), h_entry, 110, 30);
@@ -1062,26 +1065,19 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     img = load_image(filename);
     img2 = load_image(filename);
     
-    //image = gtk_image_new_from_sdl_surface(img);
-    
     gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
-
-    image_resize();
-
-    //pixbuf = gdk_pixbuf_new_from_file(filename, NULL);
-
     g_free(filename);
-    /*
-    gtk_image_set_from_pixbuf(GTK_IMAGE(image), pixbuf);
-    if (pixbuf)
-        g_object_unref(pixbuf);
-
-    gtk_widget_show(image);*/
+    image_resize();
 
     return FALSE;
 }
 
-void image_resize() {gtk_widget_set_size_request(image, img->w, img->h);}
+void image_resize()
+{
+    gtk_widget_set_size_request(image, img->w, img->h);
+    if (!gtk_window_is_maximized(GTK_WINDOW(window)))
+        gtk_window_resize(GTK_WINDOW(window), img->w + 200, img->h + 53);
+}
 
 gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
 {

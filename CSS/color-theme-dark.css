@@ -1,9 +1,9 @@
-@define-color bg_color #B51111;
-@define-color fg_color #FF3939;
-@define-color dark_bg_color  #900D0D;
-@define-color dark_fg_color  #F94444;
-@define-color bf_last_color #FF5151;
-@define-color text_color #FFFFFF;
+@define-color bg_color #141111;
+@define-color fg_color #413939;
+@define-color dark_bg_color  #100D0D;
+@define-color dark_fg_color  #484444;
+@define-color bf_last_color #5A5151;
+@define-color text_color #CACACA;
 
 label#int, button
 {
@@ -11,7 +11,7 @@ label#int, button
     text-shadow: black 1px 1px 2px;
 }
 
-window
+window, #pop
 {
     background: linear-gradient(90deg, @bg_color, @dark_bg_color, @bg_color);
 }

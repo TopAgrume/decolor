@@ -4,7 +4,7 @@ label#int, button
     text-shadow: #D0D0D0 0px 0px 0px;
 }
 
-window
+window, #pop
 {
     background: linear-gradient(90deg, #F7F7F7, #E7E7E7, #F0F0F0);
 }
