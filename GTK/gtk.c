@@ -70,6 +70,13 @@ int erase_bool = 0;
 int tool_value = 1;
 int brush_value = 0;
 gboolean pre_show = FALSE;
+GtkWidget* brushes;
+GtkRadioButton* brush1;
+GtkRadioButton* brush2;
+GtkRadioButton* brush3;
+GtkRadioButton* brush4;
+GtkRadioButton* brush5;
+
 
 //functions
 gboolean on_Color_set(GtkColorChooser *self, gpointer user_data);
@@ -110,6 +117,11 @@ gboolean on_reverse_1(gpointer user_data);
 gboolean on_reverse_2(gpointer user_data);
 gboolean on_cpy_img(GtkRadioButton *self, gpointer user_data);
 
+gboolean on_brush1(GtkRadioButton *self, gpointer user_data);
+gboolean on_brush2(GtkRadioButton *self, gpointer user_data);
+gboolean on_brush3(GtkRadioButton *self, gpointer user_data);
+gboolean on_brush4(GtkRadioButton *self, gpointer user_data);
+gboolean on_brush5(GtkRadioButton *self, gpointer user_data);
 
 
 
@@ -135,6 +147,7 @@ int create_window_decolor(int argc, char *argv[])
     
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
+    brushes = GTK_WIDGET(gtk_builder_get_object(Builder, "Brushes"));
     ColorButton = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "Color"));
     gtk_color_chooser_set_rgba(ColorButton,&black);
     image = GTK_WIDGET(gtk_builder_get_object(Builder, "image"));
@@ -176,6 +189,14 @@ int create_window_decolor(int argc, char *argv[])
     Theme = GTK_COMBO_BOX_TEXT(gtk_builder_get_object(Builder, "theme"));
     ThemeColor = GTK_COLOR_CHOOSER(gtk_builder_get_object(Builder, "ThemeColor"));
 
+    brush1 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush1"));
+    brush2 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush2"));
+    brush3 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush3"));
+    brush4 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush4"));
+    brush5 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush5"));
+
+
+
     // Previous and Next
     previous = GTK_WIDGET(gtk_builder_get_object(Builder, "previous"));
     next = GTK_WIDGET(gtk_builder_get_object(Builder, "next"));
@@ -206,6 +227,12 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(turn2, "clicked", G_CALLBACK(on_turn_2), NULL);
     g_signal_connect(cpy_img, "toggled", G_CALLBACK(on_cpy_img), NULL);
 
+    g_signal_connect(brush1, "toggled", G_CALLBACK(on_brush1), NULL);
+    g_signal_connect(brush2, "toggled", G_CALLBACK(on_brush2), NULL);
+    g_signal_connect(brush3, "toggled", G_CALLBACK(on_brush3), NULL);
+    g_signal_connect(brush4, "toggled", G_CALLBACK(on_brush4), NULL);
+    g_signal_connect(brush5, "toggled", G_CALLBACK(on_brush5), NULL);
+    
     //replace NULL by the stack containing the modifications.
 
     g_signal_connect (G_OBJECT (window), "key_press_event", G_CALLBACK (on_key_press), NULL);
@@ -221,6 +248,7 @@ int create_window_decolor(int argc, char *argv[])
 
     gtk_widget_set_app_paintable(image, TRUE);
     gtk_widget_show_all(window);
+    gtk_widget_show_all(brushes);
 
     gtk_main();
 
@@ -1003,6 +1031,42 @@ void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
         }
     }
 }
+
+gboolean on_brush1(GtkRadioButton *self, gpointer user_data)
+{
+    if (!user_data && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+        brush_value = 0;
+    return FALSE;
+}
+
+gboolean on_brush2(GtkRadioButton *self, gpointer user_data)
+{
+    if (!user_data && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+        brush_value = 1;
+    return FALSE;
+}
+
+gboolean on_brush3(GtkRadioButton *self, gpointer user_data)
+{
+    if (!user_data && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+        brush_value = 2;
+    return FALSE;
+}
+
+gboolean on_brush4(GtkRadioButton *self, gpointer user_data)
+{
+    if (!user_data && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+        brush_value = 3;
+    return FALSE;
+}
+
+gboolean on_brush5(GtkRadioButton *self, gpointer user_data)
+{
+    if (!user_data && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+        brush_value = 4;
+    return FALSE;
+}
+
 
 gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 {

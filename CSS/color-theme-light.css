@@ -1,9 +1,9 @@
-@define-color bg_color #F94848;
-@define-color fg_color #FF5959;
-@define-color dark_bg_color  #C73939;
-@define-color dark_fg_color  #E04040;
-@define-color bf_last_color #BA3636;
-@define-color text_color #151515;
+@define-color bg_color #CF2B2B;
+@define-color fg_color #ED3939;
+@define-color dark_bg_color  #A52222;
+@define-color dark_fg_color  #BA2626;
+@define-color bf_last_color #9B2020;
+@define-color text_color #0C0C0C;
 
 label#int, button
 {
