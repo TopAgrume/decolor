@@ -113,3 +113,40 @@ void color_filter(SDL_Surface* surface, Uint8 rcons, Uint8 gcons, Uint8 bcons, U
     }
 }
 
+void blur(SDL_Surface* surface){
+	Uint32 moyenne(SDL_Surface *surface, int i, int j, int n)
+	{
+		const int initial_h = SDL_max(i - n, 0);
+	    	const int initial_w = SDL_max(j - n, 0);
+	    	const int final_h = SDL_min(i + n, surface->h - 1);
+	    	const int final_w = SDL_min(j + n, surface->w - 1);
+	    	const int nb_pixel = ((final_h - initial_h) * (final_w - initial_w));
+	    	const Uint32 *p = surface->pixels;
+	    
+		Uint32 sum_r = 0, sum_g = 0, sum_b = 0;
+	    	SDL_Color color;
+	    
+		for (i = initial_h; i < final_h; i++)
+			for(j = initial_w; j < final_w; j++)
+			{
+		    		SDL_GetRGB(p[i * surface->w + j], surface->format, &color.r, &color.g, &color.b);
+		    		sum_r += color.r;
+		    		sum_g += color.g;
+		    		sum_b += color.b;
+			}
+	    
+		return SDL_MapRGB(surface->format, sum_r / nb_pixel, sum_g / nb_pixel, sum_b / nb_pixel);
+	}
+
+	//const Uint32 *pixels = surface->pixels;
+	Uint32 pixel;
+	int n = 1;
+
+	for(int i = 0; i < surface->w; i++){
+            for(int j = 0; j < surface->h; j++){
+		    //pixels[i * surface->w + j] = moyenne(surface, i, j, 1);
+                    pixel = moyenne(surface, i, j, n);
+		    put_pixel(surface, i, j, pixel);
+	    }
+	}
+}

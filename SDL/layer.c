@@ -20,11 +20,11 @@ void layer_push(layer* list, SDL_Surface* new_surface){
 	loop->next = new;
 }
 
-void layer_new(layer* list, int width, int height){
+//void layer_new(layer* list, int width, int height){
 	//new_surface = une nouvelle surface transparente;
 	//layer_push(list, new_surface);
 	//TODO
-}
+//}
 
 void layer_pop(layer* list, int number){
 	struct layer* loop = list;

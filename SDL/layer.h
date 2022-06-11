@@ -15,7 +15,7 @@ typedef struct layer
 void layer_push(struct layer* list, SDL_Surface* new_surface);
 
 //ajoute un calque transparent à la fin de la liste avec les dimensions données
-void layer_new(struct layer* list, int width, int height);
+//void layer_new(struct layer* list, int width, int height);
 
 //supprime le calque du numéro donné
 void layer_pop(struct layer* list, int number);

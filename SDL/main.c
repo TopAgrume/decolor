@@ -10,8 +10,8 @@
 #include "shape.h"
 #include "layer.h"
 
-//#define TEST_FILTER
-#define TEST_LAYER
+#define TEST_FILTER
+//#define TEST_LAYER
 //#define TEST_SEAL_PIPETTE
 //#define TEST_STACK
 //#define TEST_BRUSH
@@ -89,7 +89,7 @@ int main(int argc , char* argv[])
 
     //reverse = reversion(image_surface, 1, 1);
   
-    contrast(image_surface, 5);
+    blur(image_surface);
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 
