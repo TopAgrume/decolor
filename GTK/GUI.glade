@@ -7,7 +7,7 @@
     <property name="width_request">100</property>
     <property name="height_request">200</property>
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Pinceau</property>
+    <property name="title" translatable="yes">Pinceaux</property>
     <property name="resizable">False</property>
     <property name="default_width">100</property>
     <property name="default_height">200</property>
@@ -97,6 +97,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Pinceau en losange</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">Brush1</property>
                         <child>
@@ -121,11 +122,12 @@
                             </child>
                             <child>
                               <object class="GtkImage">
-                                <property name="width_request">50</property>
+                                <property name="width_request">40</property>
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="stock">gtk-missing-image</property>
+                                <property name="margin_left">4</property>
+                                <property name="pixbuf">Interface tools/Symbol/Losange.png</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -195,12 +197,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Pinceau rond</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">False</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="spacing">5</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="name">int</property>
@@ -223,7 +227,7 @@
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="stock">gtk-missing-image</property>
+                                <property name="pixbuf">Interface tools/Symbol/Rond.png</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -244,12 +248,14 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip_text" translatable="yes">Pinceau carré</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">Brush1</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="spacing">5</property>
                             <child>
                               <object class="GtkLabel">
                                 <property name="name">int</property>
@@ -272,7 +278,7 @@
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="stock">gtk-missing-image</property>
+                                <property name="pixbuf">Interface tools/Symbol/Carre.png</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -311,6 +317,7 @@
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
+    <property name="tooltip_text" translatable="yes">Retourner verticalement</property>
     <property name="pixbuf">Interface tools/Symbol/Retourner_Verticalement.png</property>
   </object>
   <object class="GtkImage" id="image4">
@@ -350,6 +357,7 @@
     <property name="default_width">1480</property>
     <property name="default_height">903</property>
     <property name="hide_titlebar_when_maximized">True</property>
+    <property name="icon">Interface tools/logo_gris.png</property>
     <signal name="destroy" handler="exit_app" swapped="no"/>
     <child type="titlebar">
       <placeholder/>
@@ -415,6 +423,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Couleur du thème personnalisé</property>
                     <property name="halign">end</property>
                     <property name="title" translatable="yes">Choisissez une couleur pour le tème personnalisé</property>
                     <property name="rgba">rgb(0,0,0)</property>
@@ -631,6 +640,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Retourner horizontalement</property>
                         <property name="image">image4</property>
                       </object>
                       <packing>
@@ -659,6 +669,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Rotation de +90°</property>
                         <property name="image">image5</property>
                       </object>
                       <packing>
@@ -673,6 +684,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Rotation de -90°</property>
                         <property name="image">image6</property>
                       </object>
                       <packing>
@@ -706,7 +718,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Rogner</property>
+                        <property name="tooltip_text" translatable="yes">Copier</property>
                         <property name="margin_top">10</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
@@ -731,7 +743,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Rogner</property>
+                        <property name="tooltip_text" translatable="yes">Couper</property>
                         <property name="margin_top">10</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
@@ -756,7 +768,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Rogner</property>
+                        <property name="tooltip_text" translatable="yes">Coller</property>
                         <property name="margin_top">10</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
@@ -867,7 +879,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Gomme large</property>
+                        <property name="tooltip_text" translatable="yes">Gomme de restoration</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
                         <child>

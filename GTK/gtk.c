@@ -872,15 +872,16 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     user_data = user_data;
     self = self;
 
-    int newh, neww;
+    int newh, neww, position;
 
-    GtkWidget *dialog, *h_entry, *w_entry, *fix, *labh, *labw;
+    GtkWidget *dialog, *h_entry, *w_entry, *fix, *labh, *labw, *pos;
     GtkBox *content_area;
     GtkDialogFlags flags;
+    GtkGrid* grid;
+    GtkRadioButton *NO, *N, *NE, *O, *C, *E, *SO, *S, *SE;
 
     // Create the widgets
     flags = GTK_DIALOG_DESTROY_WITH_PARENT; 
-    //Ajouter GTK_DIALOG_MODAL; ? (permet d'empecher l'interaction avec la fenêtre principale)
     
     dialog = gtk_dialog_new_with_buttons("Redimension",
                                         GTK_WINDOW(window),
@@ -895,16 +896,51 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     
     //GtkFixed container
     fix = gtk_fixed_new();
-    gtk_widget_set_size_request(fix, 250, 150);
+    gtk_widget_set_size_request(fix, 400, 150);
 
     //Add Fixed in content_area box
     gtk_box_pack_start(content_area, fix, TRUE, TRUE, 0);
+
+    //GtkRadioButton
+    C = GTK_RADIO_BUTTON(gtk_radio_button_new(NULL));
+    NO = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+    N  = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+    NE = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+    O  = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+    E  = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+    SO = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+    S  = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+    SE = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
+
+    //GtkGrid
+    grid = GTK_GRID(gtk_grid_new());
+    gtk_grid_insert_column(grid, 0);
+    gtk_grid_insert_column(grid, 0);
+    gtk_grid_insert_column(grid, 0);
+    gtk_grid_insert_row(grid, 0);
+    gtk_grid_insert_row(grid, 0);
+    gtk_grid_insert_row(grid, 0);
+    gtk_grid_set_row_spacing(grid, 20);
+    gtk_grid_set_column_spacing(grid, 20);
+
+    //Adding buttons
+    gtk_grid_attach(grid, GTK_WIDGET(NO), 0, 0, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(N),  1, 0, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(NE), 2, 0, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(O),  0, 1, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(C),  1, 1, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(E),  2, 1, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(SO), 0, 2, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(S),  1, 2, 1, 1);
+    gtk_grid_attach(grid, GTK_WIDGET(SE), 2, 2, 1, 1);
+
 
     //Init Entries and Labels
     h_entry = GTK_WIDGET(gtk_spin_button_new_with_range(1.0, 3000.0, 1.0));
     w_entry = GTK_WIDGET(gtk_spin_button_new_with_range(1.0, 3000.0, 1.0));
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(h_entry), (gdouble)img->h);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w_entry), (gdouble)img->w);
+    pos = GTK_WIDGET(gtk_label_new("Postion :"));
     labh = GTK_WIDGET(gtk_label_new("Hauteur :"));
     labw = GTK_WIDGET(gtk_label_new("Largeur :"));
     gtk_widget_set_name(labh, "int");
@@ -915,7 +951,9 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     gtk_fixed_put(GTK_FIXED(fix), w_entry, 110, 90);
     gtk_fixed_put(GTK_FIXED(fix), labh, 20, 37);
     gtk_fixed_put(GTK_FIXED(fix), labw, 20, 97);
-    
+    gtk_fixed_put(GTK_FIXED(fix), pos, 290, 5);
+    gtk_fixed_put(GTK_FIXED(fix), GTK_WIDGET(grid), 270, 35);
+ 
 
     //Show
     gtk_widget_show_all(GTK_WIDGET(content_area));
@@ -926,7 +964,26 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
             newh = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(h_entry));
             neww = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w_entry));
 
-            printf("h: %i w: %i\n",newh, neww); 
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NO)))
+                position = 1;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(N)))
+                position = 2;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(NE)))
+                position = 3;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(O)))
+                position = 4;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(C)))
+                position = 5;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(E)))
+                position = 6;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(SO)))
+                position = 7;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(S)))
+                position = 8;
+            if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(SE)))
+                position = 9;
+
+            printf("h: %i w: %i\n pos: %i\n",newh, neww, position); 
             if (newh == 0 || neww == 0)
             {
                 break;
@@ -937,8 +994,8 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
             shared_stack_push(b2, img2);                                    
             shared_stack_empty(a2);
 
-            img = resize_image(img, neww, newh);
-            img2 = resize_image(img2, neww, newh);
+            img = resize_image(img, neww, newh, position);
+            img2 = resize_image(img2, neww, newh, position);
 
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             image_resize();
