@@ -83,6 +83,7 @@ GtkRadioButton* brush7;
 GtkFixed* Outils;
 GtkButton* outils_show;
 int outils_shown = 1;
+GtkToggleButton* brushes_activate;
 
 
 //functions
@@ -135,6 +136,15 @@ gboolean on_brush7(GtkRadioButton *self, gpointer user_data);
 
 gboolean on_outils_show(gpointer user_data);
 
+void brushes_to_bushes(gpointer user_data)
+{
+    if (!user_data)
+        return;
+    if(!gtk_toggle_button_get_active(brushes_activate))
+        gtk_widget_hide(GTK_WIDGET(brushes));
+    else
+        gtk_widget_show_all(GTK_WIDGET(brushes));
+}
 
 int create_window_decolor(int argc, char *argv[])
 {
@@ -213,6 +223,7 @@ int create_window_decolor(int argc, char *argv[])
 
     Outils = GTK_FIXED(gtk_builder_get_object(Builder, "Outils"));
     outils_show = GTK_BUTTON(gtk_builder_get_object(Builder, "Outils Show"));
+    brushes_activate = GTK_TOGGLE_BUTTON(gtk_builder_get_object(Builder, "Brush activate"));
 
 
 
@@ -258,6 +269,7 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(brush7, "toggled", G_CALLBACK(on_brush7), NULL);
 
     g_signal_connect(outils_show, "clicked", G_CALLBACK(on_outils_show), NULL);
+    g_signal_connect(brushes_activate, "toggled", G_CALLBACK(brushes_to_bushes), NULL);
 
     //replace NULL by the stack containing the modifications.
 
@@ -1355,7 +1367,7 @@ void image_resize()
 {
     gtk_widget_set_size_request(image, img->w, img->h);
     if (!gtk_window_is_maximized(GTK_WINDOW(window)))
-        gtk_window_resize(GTK_WINDOW(window), img->w + 200, img->h + 53);
+        gtk_window_resize(GTK_WINDOW(window), img->w + 230, img->h + 53);
 }
 
 gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
