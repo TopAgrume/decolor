@@ -568,7 +568,7 @@ void drawline_image(SDL_Surface* img, SDL_Surface* img2,  int x1, int y1, int x2
 }
 
 
-SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
+SDL_Surface* resize_image(SDL_Surface* surface, int x, int y, int position)
 {
     if (x == surface->w && y == surface->h)
         return surface;
@@ -581,6 +581,7 @@ SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
     int borne2_x = x;
     int borne1_y = 0;
     int borne2_y = y;
+    int thresh_x, thresh_y;
 
     if (x < surface->w)
         start_x = (surface->w - x) / 2;
@@ -607,18 +608,150 @@ SDL_Surface* resize_image(SDL_Surface* surface, int x, int y)
 
     Uint32 pixel;
     Uint8 r,g,b;
-
-    for(int i = borne1_x; i < borne2_x; i++)
+    switch(position)
     {
-        for(int j = borne1_y; j < borne2_y; j++)
-        {
-            //printf("%i, %i\n", start_x + i - borne1_x, start_y + j - borne1_y);
+        case 1: //GOOD
+            {
+                thresh_x = SDL_min(x, surface->w);
+                thresh_y = SDL_min(y, surface->h);
+                for(int i = 0; i < thresh_x; i++)
+                {
+                    for(int j = 0; j < thresh_y; j++)
+                    {
+                        pixel = get_pixel(surface, i, j);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, i, j, pixel);
+                    }
+                }
+                break;
+            }
+        case 2: //GOOD
+            {
+                thresh_y = SDL_min(y, surface->h);
+                for(int i = borne1_x; i < borne2_x; i++)
+                {
+                    for(int j = 0; j < thresh_y; j++)
+                    {
+                        pixel = get_pixel(surface, start_x + i - borne1_x, j);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, i, j, pixel);
+                    }
+                }
+                break;
+            }
+        case 3: //GOOD
+            {
+                thresh_x = surface->w - SDL_min(x, surface->w);
+                thresh_y = SDL_min(y, surface->h);
 
-            pixel = get_pixel(surface, start_x + i - borne1_x, start_y + j - borne1_y);
-            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-            pixel = SDL_MapRGB(surface->format, r, g, b);
-            put_pixel(img, i, j, pixel);
-        }
+                for(int i = surface->w - 1; i >= thresh_x; i--)
+                {
+                    for(int j = 0; j < thresh_y; j++)
+                    {
+                        pixel = get_pixel(surface, i , j);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, img->w + (i - surface->w), j, pixel);
+                    }
+                }
+                break;
+            }
+        case 4: //GOOD
+            {
+                thresh_x = SDL_min(x, surface->w);
+                for(int i = 0; i < thresh_x; i++)
+                {
+                    for(int j = borne1_y; j < borne2_y; j++)
+                    {
+                        pixel = get_pixel(surface, i, start_y + j - borne1_y);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, i, j, pixel);
+                    }
+                }
+                break;
+            }
+        case 5: //GOOD
+            {
+                for(int i = borne1_x; i < borne2_x; i++)
+                {
+                    for(int j = borne1_y; j < borne2_y; j++)
+                    {
+                        pixel = get_pixel(surface, start_x + i - borne1_x, start_y + j - borne1_y);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, i, j, pixel);
+                    }
+                }
+                break;
+            }
+        case 6: //GOOD
+            {
+                thresh_x = surface->w - SDL_min(x, surface->w);
+                for(int i = surface->w - 1; i >= thresh_x; i--)
+                {
+                    for(int j = borne1_y; j < borne2_y; j++)
+                    {
+                        pixel = get_pixel(surface, i, start_y + j - borne1_y);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, img->w + (i - surface->w ), j, pixel);
+                    }
+                }
+                break;
+            }
+        case 7: //GOOD
+            {
+                thresh_x = SDL_min(x, surface->w);
+                thresh_y = surface->h - SDL_min(y, surface->h);
+                for(int i = 0; i < thresh_x; i++)
+                {
+                    for(int j = surface->h - 1; j >= thresh_y; j--)
+                    {
+                        pixel = get_pixel(surface, i, j);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, i, img->h + (j - surface->h), pixel);
+                    }
+                }
+                break;
+            }
+        case 8: //GOOD
+            {
+                thresh_y = surface->h - SDL_min(y, surface->h);
+                for(int i = borne1_x; i < borne2_x; i++)
+                {
+                    for(int j = surface->h - 1; j >= thresh_y; j--)
+                    {
+                        pixel = get_pixel(surface, start_x + i - borne1_x, j);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, i, img->h + (j - surface->h), pixel);
+                    }
+                }
+                break;
+            }
+        case 9: //GOOD
+            {
+                thresh_x = surface->w - SDL_min(x, surface->w);
+                thresh_y = surface->h - SDL_min(y, surface->h);
+                for(int i = surface->w - 1; i >= thresh_x; i--)
+                {
+                    for(int j = surface->h - 1; j >= thresh_y; j--)
+                    {
+                        pixel = get_pixel(surface, i, j);
+                        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                        pixel = SDL_MapRGB(surface->format, r, g, b);
+                        put_pixel(img, i, img->h + (j - surface->h), pixel);
+                    }
+                }
+                break;
+            }
+        default:
+            printf("Default: Resize function\n");
+            return surface;
     }
 
     SDL_FreeSurface(surface);
