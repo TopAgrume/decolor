@@ -77,6 +77,9 @@ GtkRadioButton* brush2;
 GtkRadioButton* brush3;
 GtkRadioButton* brush4;
 GtkRadioButton* brush5;
+GtkRadioButton* brush6;
+GtkRadioButton* brush7;
+
 GtkFixed* Outils;
 GtkButton* outils_show;
 int outils_shown = 1;
@@ -127,6 +130,9 @@ gboolean on_brush2(GtkRadioButton *self, gpointer user_data);
 gboolean on_brush3(GtkRadioButton *self, gpointer user_data);
 gboolean on_brush4(GtkRadioButton *self, gpointer user_data);
 gboolean on_brush5(GtkRadioButton *self, gpointer user_data);
+gboolean on_brush6(GtkRadioButton *self, gpointer user_data);
+gboolean on_brush7(GtkRadioButton *self, gpointer user_data);
+
 gboolean on_outils_show(gpointer user_data);
 
 
@@ -142,14 +148,14 @@ int create_window_decolor(int argc, char *argv[])
     pre_img = NULL;
     copy_crop_img = NULL;
     load_css("CSS/light-theme.css");
-    
+
     // tools previous / next image
     before = shared_stack_new();
     after = shared_stack_new();
     b2 = shared_stack_new();
     a2 = shared_stack_new();
 
-    
+
     // Getting objects
     window = GTK_WIDGET(gtk_builder_get_object(Builder, "MyWindow"));
     brushes = GTK_WIDGET(gtk_builder_get_object(Builder, "Brushes"));
@@ -166,7 +172,7 @@ int create_window_decolor(int argc, char *argv[])
     FileChooser = GTK_FILE_CHOOSER(gtk_builder_get_object(Builder, "FileChooser"));
     eventbox = gtk_event_box_new ();
     //gtk_container_add(GTK_CONTAINER (eventbox), image);
-    
+
     // Tools buttons
     brush = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "brush"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(brush), TRUE);
@@ -202,6 +208,9 @@ int create_window_decolor(int argc, char *argv[])
     brush3 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush3"));
     brush4 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush4"));
     brush5 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush5"));
+    brush6 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush6"));
+    brush7 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush7"));
+
     Outils = GTK_FIXED(gtk_builder_get_object(Builder, "Outils"));
     outils_show = GTK_BUTTON(gtk_builder_get_object(Builder, "Outils Show"));
 
@@ -245,15 +254,18 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(brush3, "toggled", G_CALLBACK(on_brush3), NULL);
     g_signal_connect(brush4, "toggled", G_CALLBACK(on_brush4), NULL);
     g_signal_connect(brush5, "toggled", G_CALLBACK(on_brush5), NULL);
+    g_signal_connect(brush6, "toggled", G_CALLBACK(on_brush6), NULL);
+    g_signal_connect(brush7, "toggled", G_CALLBACK(on_brush7), NULL);
+
     g_signal_connect(outils_show, "clicked", G_CALLBACK(on_outils_show), NULL);
-    
+
     //replace NULL by the stack containing the modifications.
 
     g_signal_connect (G_OBJECT (window), "key_press_event", G_CALLBACK (on_key_press), NULL);
     g_signal_connect(SaveButton, "clicked", G_CALLBACK(on_SaveButton_clicked), image);
     g_signal_connect(FileChooser, "file-set", G_CALLBACK(on_FileChoosing_file_set), image);
     g_signal_connect(window, "destroy", G_CALLBACK(decolor_free), NULL);
-    
+
     g_signal_connect (image, "motion-notify-event", G_CALLBACK(mouse_moved), NULL);
     g_signal_connect (image, "button-press-event", G_CALLBACK(mouse_press), NULL);
     g_signal_connect (image, "button-release-event", G_CALLBACK(mouse_release), NULL);
@@ -288,7 +300,7 @@ void decolor_free(gpointer user_data)
     SDL_FreeSurface(img);
     SDL_FreeSurface(img2);
     //cairo_destroy (cr);
-    
+
     //printf("free tout ici");
     gtk_main_quit();
 }
@@ -315,7 +327,7 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
     GdkPixbuf *pixbuf;
 
     pixbuf = gdk_pixbuf_new_from_file("./GTK/tmpfile.bmp", NULL);
-    
+
 
     gdk_cairo_set_source_pixbuf(cr, pixbuf, 0, 0);
     cairo_paint(cr);
@@ -331,45 +343,45 @@ gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data)
 gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
 
-  if (widget == NULL && user_data != NULL)
-      return FALSE;
+    if (widget == NULL && user_data != NULL)
+        return FALSE;
 
-  switch (event->keyval)
-  {
-    case GDK_KEY_z:
-      if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
-      {
-        //printf("key pressed: %s\n", "ctrl + z");
-        on_previous(NULL, NULL);
-        image_resize();
-      }
-      break;
-    case GDK_KEY_y:
-      if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
-      {
-        //printf("key pressed: %s\n", "ctrl + y");
-        on_next(NULL, NULL);
-        image_resize();
-      }
-      break;
-    case GDK_KEY_v:
-      if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
-      {
-        //printf("key pressed: %s\n", "ctrl + v");
-        shared_stack_push(before, img);                                    
-        shared_stack_empty(after);
-        shared_stack_push(b2, img2);                                    
-        shared_stack_empty(a2);
+    switch (event->keyval)
+    {
+        case GDK_KEY_z:
+            if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
+            {
+                //printf("key pressed: %s\n", "ctrl + z");
+                on_previous(NULL, NULL);
+                image_resize();
+            }
+            break;
+        case GDK_KEY_y:
+            if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
+            {
+                //printf("key pressed: %s\n", "ctrl + y");
+                on_next(NULL, NULL);
+                image_resize();
+            }
+            break;
+        case GDK_KEY_v:
+            if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
+            {
+                //printf("key pressed: %s\n", "ctrl + v");
+                shared_stack_push(before, img);                                    
+                shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
 
-        past_selection(img, copy_crop_img, pos_x, pos_y);
-        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-      }
-      break;
-    default:
-      return FALSE;
-  }
+                past_selection(img, copy_crop_img, pos_x, pos_y);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+            }
+            break;
+        default:
+            return FALSE;
+    }
 
-  return FALSE;
+    return FALSE;
 }
 
 gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
@@ -440,7 +452,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_empty(a2);
 
                 pre_show = FALSE;
-                
+
                 // Block img is isn't free
                 if (pre_img != NULL){
                     SDL_FreeSurface(pre_img);
@@ -459,7 +471,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_empty(a2);
 
                 pre_show = FALSE;
-                
+
                 // Block img is isn't free
                 if (pre_img != NULL){
                     SDL_FreeSurface(pre_img);
@@ -478,7 +490,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 shared_stack_empty(a2);
 
                 pre_show = FALSE;
-                
+
                 // Block img is isn't free
                 if (pre_img != NULL){
                     SDL_FreeSurface(pre_img);
@@ -503,11 +515,11 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 }
                 if (copy_crop_img != NULL)
                     SDL_FreeSurface(copy_crop_img);
-                
+
                 copy_crop_img = copy_selection(img, start_x, start_y, end_x, end_y);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
-            
+
             case 16:// Change Case
                 // Select + Copy Call
                 pre_show = FALSE;
@@ -518,7 +530,7 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 }
                 if (copy_crop_img != NULL)
                     SDL_FreeSurface(copy_crop_img);
-                
+
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);
                 shared_stack_push(b2, img2);                                    
@@ -565,7 +577,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
-             case 2:
+            case 2:
                 // bucket call
                 shared_stack_push(before, img);
                 shared_stack_empty(after);
@@ -575,8 +587,31 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 filling_seal(img, start_x, start_y, sdl_color, ((int)scale_nb * 255) / 100);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
-            
-             case 17:
+                    
+            case 3: // Rubber call
+                shared_stack_push(before, img);
+                shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
+                drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3, 0);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+
+            case 4:
+                // point call image
+                shared_stack_push(before, img);
+                shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
+                point_image(img, img2, start_x, start_y, (int)scale_nb / 3, brush_value);   
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+
+
+            case 17:
                 shared_stack_push(before, img);                                    
                 shared_stack_empty(after);
                 shared_stack_push(b2, img2);                                    
@@ -585,7 +620,7 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 past_selection(img, copy_crop_img, pos_x, pos_y);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;   
-         }
+        }
     }
 
     return FALSE;
@@ -617,12 +652,12 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             }
             /*else
-            {
-                pre_show = TRUE;
-                pre_img = copy_image(img);
-                bresenham_circle(pre_img, pos_x, pos_y, pos_x + (int)(scale_nb / 4), pos_y + (int)(scale_nb / 4), grey, 1);
-                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            }*/
+              {
+              pre_show = TRUE;
+              pre_img = copy_image(img);
+              bresenham_circle(pre_img, pos_x, pos_y, pos_x + (int)(scale_nb / 4), pos_y + (int)(scale_nb / 4), grey, 1);
+              gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+              }*/
         }
         else
         {
@@ -638,7 +673,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 }
 
                 //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-                drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3, brush_value);
+                drawline(img, white, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3, 0);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             }
             else
@@ -655,7 +690,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                     }
 
                     //point(img, sdl_color, pos_x, pos_y, (int)scale_nb);
-                    drawline_image(img, img2, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3);
+                    drawline_image(img, img2, old_x, old_y, pos_x, pos_y, (int)scale_nb / 3, brush_value);
                     gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 }
                 else
@@ -711,7 +746,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                 }
             }
         }
-        
+
         if (!is_pressed)
             save_draw = TRUE;
     }
@@ -791,7 +826,7 @@ gboolean on_outils_show(gpointer user_data)
         gtk_widget_hide(GTK_WIDGET(Outils));
         outils_shown = 0;
     }
-    
+
     else
     {
         arrow = gtk_image_new_from_file("./GTK/Interface tools/Symbol/Hide.png");
@@ -799,7 +834,7 @@ gboolean on_outils_show(gpointer user_data)
         gtk_widget_show_all(GTK_WIDGET(Outils));
         outils_shown = 1;
     }
-    
+
     return FALSE;
 }
 
@@ -841,7 +876,7 @@ gboolean on_turn_2(gpointer user_data)
 
         img = rotate(img, 1);
         img2 = rotate(img2, 1);
-        
+
         if (img->h > oldh)
             oldh = img->h;
         if (img->w > oldw)
@@ -891,7 +926,7 @@ gboolean on_reverse_2(gpointer user_data)
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data)
 {
     if (user_data == NULL &&
-        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 10;
     }
@@ -915,18 +950,18 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
 
     // Create the widgets
     flags = GTK_DIALOG_DESTROY_WITH_PARENT; 
-    
+
     dialog = gtk_dialog_new_with_buttons("Redimension",
-                                        GTK_WINDOW(window),
-                                        flags,
-                                        "_Annuler",
-                                        GTK_RESPONSE_REJECT,
-                                        "_Valider",
-                                        GTK_RESPONSE_ACCEPT,
-                                        NULL);
+            GTK_WINDOW(window),
+            flags,
+            "_Annuler",
+            GTK_RESPONSE_REJECT,
+            "_Valider",
+            GTK_RESPONSE_ACCEPT,
+            NULL);
     gtk_widget_set_name(dialog, "pop");
     content_area = GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(dialog)));
-    
+
     //GtkFixed container
     fix = gtk_fixed_new();
     gtk_widget_set_size_request(fix, 400, 150);
@@ -1017,7 +1052,7 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     gtk_fixed_put(GTK_FIXED(fix), labw, 20, 97);
     gtk_fixed_put(GTK_FIXED(fix), pos, 290, 5);
     gtk_fixed_put(GTK_FIXED(fix), GTK_WIDGET(grid), 260, 25);
- 
+
 
     //Show
     gtk_widget_show_all(GTK_WIDGET(content_area));
@@ -1052,7 +1087,7 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
             {
                 break;
             }
-            
+
             shared_stack_push(before, img);
             shared_stack_empty(after);
             shared_stack_push(b2, img2);                                    
@@ -1077,7 +1112,7 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
 gboolean on_cpy_img(GtkRadioButton *self, gpointer user_data)
 {
     if (user_data == NULL &&
-        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 15;
     }
@@ -1087,7 +1122,7 @@ gboolean on_cpy_img(GtkRadioButton *self, gpointer user_data)
 gboolean on_cut_img(GtkRadioButton *self, gpointer user_data)
 {
     if (user_data == NULL &&
-        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 16;
     }
@@ -1097,7 +1132,7 @@ gboolean on_cut_img(GtkRadioButton *self, gpointer user_data)
 gboolean on_paste_img(GtkRadioButton *self, gpointer user_data)
 {
     if (user_data == NULL &&
-        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 17;
     }
@@ -1107,7 +1142,7 @@ gboolean on_paste_img(GtkRadioButton *self, gpointer user_data)
 gboolean on_brush(GtkRadioButton *self, gpointer user_data)
 {
     if (user_data == NULL &&
-        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
     {
         tool_value = 1;
     }
@@ -1117,72 +1152,72 @@ gboolean on_brush(GtkRadioButton *self, gpointer user_data)
 
 gboolean on_bucket(GtkRadioButton *self, gpointer user_data)
 {
-     if (user_data == NULL &&
-         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
-     {
-         tool_value = 2;
-     }
-     return FALSE;
+    if (user_data == NULL &&
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 2;
+    }
+    return FALSE;
 }
 
 gboolean on_eraser(GtkRadioButton *self, gpointer user_data)
 {
-     if (user_data == NULL &&
-         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
-     {
-         tool_value = 3;
-     }
-     return FALSE;
+    if (user_data == NULL &&
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 3;
+    }
+    return FALSE;
 }
 
 gboolean on_bigeraser(GtkRadioButton *self, gpointer user_data)
 {
-     if (user_data == NULL &&
-         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
-     {
-         tool_value = 4;
-     }
-     return FALSE;
+    if (user_data == NULL &&
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 4;
+    }
+    return FALSE;
 }
 
 gboolean on_segment(GtkRadioButton *self, gpointer user_data)
 {
-     if (user_data == NULL &&
-         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
-     {
-         tool_value = 5;
-     }
-     return FALSE;
+    if (user_data == NULL &&
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 5;
+    }
+    return FALSE;
 }
 
 gboolean on_square(GtkRadioButton *self, gpointer user_data)
 {
-     if (user_data == NULL &&
-         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
-     {
-         tool_value = 6;
-     }
-     return FALSE;
+    if (user_data == NULL &&
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 6;
+    }
+    return FALSE;
 }
 
 gboolean on_triangle(GtkRadioButton *self, gpointer user_data)
 {
-     if (user_data == NULL &&
-         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
-     {
-         tool_value = 7;
-     }
-     return FALSE;
+    if (user_data == NULL &&
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 7;
+    }
+    return FALSE;
 }
 
 gboolean on_circle(GtkRadioButton *self, gpointer user_data)
 {
-     if (user_data == NULL &&
-         gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
-     {
-         tool_value = 8;
-     }
-     return FALSE;
+    if (user_data == NULL &&
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 8;
+    }
+    return FALSE;
 }
 
 void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
@@ -1192,7 +1227,7 @@ void set_tools_group(GtkGrid* toolsgrid, GtkRadioButton* brush)
         for (int col = 1-row; col < 4; col++)
         {
             gtk_radio_button_join_group(GTK_RADIO_BUTTON(gtk_grid_get_child_at(toolsgrid,col,row)),
-            brush);
+                    brush);
         }
     }
 }
@@ -1232,6 +1267,20 @@ gboolean on_brush5(GtkRadioButton *self, gpointer user_data)
     return FALSE;
 }
 
+gboolean on_brush6(GtkRadioButton *self, gpointer user_data)
+{
+    if (!user_data && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+        brush_value = 5;
+    return FALSE;
+}
+
+gboolean on_brush7(GtkRadioButton *self, gpointer user_data)
+{
+    if (!user_data && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+        brush_value = 6;
+    return FALSE;
+}
+
 
 gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 {
@@ -1240,7 +1289,7 @@ gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 
     //Actual function :
     dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action, 
-    "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
+            "_Cancel", GTK_RESPONSE_CANCEL, "_Save", GTK_RESPONSE_ACCEPT, NULL);
 
     chooser = GTK_FILE_CHOOSER(dialog);
     gtk_file_chooser_set_current_name (chooser, "Saving Image");
@@ -1280,7 +1329,7 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
     shared_stack_push(b2, img2);                                    
     shared_stack_empty(a2);
 
-    
+
     if (img != NULL)
     {
         SDL_FreeSurface(img);
@@ -1294,7 +1343,7 @@ gboolean on_FileChoosing_file_set(GtkFileChooserButton *f, gpointer user_data)
 
     img = load_image(filename);
     img2 = load_image(filename);
-    
+
     gtk_widget_queue_draw_area(image,0,0,oldw,oldh);
     g_free(filename);
     image_resize();
@@ -1314,7 +1363,7 @@ gboolean on_Color_set(GtkColorChooser *self, gpointer user_data)
 
     if (user_data != NULL)
         return FALSE;
-    
+
     gtk_color_chooser_get_rgba(self,&color);
     //printf("R:%f, G:%f, B:%f\n", color.red, color.green, color.blue);
     sdl_color.r = (Uint8) (color.red * 255);
@@ -1333,7 +1382,7 @@ gboolean update_scale_val(GtkScale *self, gpointer user_data)
     //Actual function :
     scale_nb = gtk_range_get_value(&(self->range));
     //printf("Scale number : %i\n", scale_nb);
-    
+
     return FALSE;
 }
 
@@ -1346,13 +1395,13 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
 
 
     char* fil = gtk_combo_box_text_get_active_text(filtres);
-    
+
     if(!fil)
     {
         printf("Nothing\n");
         return FALSE;
     }
-    
+
     shared_stack_push(before, img);
     shared_stack_empty(after);
     shared_stack_push(b2, img2);                                    
@@ -1361,66 +1410,66 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
     switch(fil[0])
     {
         case 'N':
-        {
-            //printf("Noir et Blanc\n");
-	        grayscale(img);
-	        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            return FALSE; //Filtre noir et blanc
-        }
+            {
+                //printf("Noir et Blanc\n");
+                grayscale(img);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                return FALSE; //Filtre noir et blanc
+            }
 
         case 'I':
-        {
-            //printf("Inversion\n");
-	        negative(img);
-            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            return FALSE; //Filtre d'inversion de couleur
-        }
+            {
+                //printf("Inversion\n");
+                negative(img);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                return FALSE; //Filtre d'inversion de couleur
+            }
 
         case 'C':
-        {
-            if(fil[7] == ' ')
             {
-                //printf("Couleur\n");
-                filter_color(img, sdl_color);
-                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-                return FALSE; 
+                if(fil[7] == ' ')
+                {
+                    //printf("Couleur\n");
+                    filter_color(img, sdl_color);
+                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                    return FALSE; 
+                }
+                else
+                {
+                    //printf("Contraste\n");
+                    contrast(img, 3);
+                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                    return FALSE; //Filtre de Contraste
+                }
             }
-            else
-            {
-                //printf("Contraste\n");
-		contrast(img, 3);
-		gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-		return FALSE; //Filtre de Contraste
-	    }
-        }
 
         case 'L':
-        {
-            brightness(img, (scale_nb * 2) - 100);
-            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            return FALSE; //Filtre de Luminosité
-        }
+            {
+                brightness(img, (scale_nb * 2) - 100);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                return FALSE; //Filtre de Luminosité
+            }
 
         case 'F':
-        {
-            blur(img, (scale_nb * 4) / 100 + 1);
-            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            return FALSE; //Flou gaussien
-        }
-        
+            {
+                blur(img, (scale_nb * 4) / 100 + 1);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                return FALSE; //Flou gaussien
+            }
+
         case 'D':
-        {
-            img = detection(img, (scale_nb * 4) / 100 + 1);
-            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            return FALSE; //Flou gaussien
-        } 
+            {
+                img = detection(img, (scale_nb * 4) / 100 + 1);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                return FALSE; //Flou gaussien
+            } 
 
 
         default :
-        {
-            printf("Nothing\n");
-            return FALSE; //Aucun filtre
-        }
+            {
+                printf("Nothing\n");
+                return FALSE; //Aucun filtre
+            }
     }
 
     free(fil);
@@ -1429,26 +1478,26 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
 
 static void load_css(const char path[])
 {
-  GtkCssProvider* provider;
-  GdkDisplay* display;
-  GdkScreen* screen;
+    GtkCssProvider* provider;
+    GdkDisplay* display;
+    GdkScreen* screen;
 
-  //const char* css_style_file = path;
-  GFile* css_fp = g_file_new_for_path(path);
-  GError* err = 0;
+    //const char* css_style_file = path;
+    GFile* css_fp = g_file_new_for_path(path);
+    GError* err = 0;
 
-  provider = gtk_css_provider_new();
-  display = gdk_display_get_default();
-  screen = gdk_display_get_default_screen(display);
+    provider = gtk_css_provider_new();
+    display = gdk_display_get_default();
+    screen = gdk_display_get_default_screen(display);
 
-  gtk_style_context_add_provider_for_screen(screen,
-    GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-  gtk_css_provider_load_from_file(provider, css_fp, &err);
+    gtk_style_context_add_provider_for_screen(screen,
+            GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    gtk_css_provider_load_from_file(provider, css_fp, &err);
 
-  if(err)
-    errx(EXIT_FAILURE, "Load css... failed");
+    if(err)
+        errx(EXIT_FAILURE, "Load css... failed");
 
-  g_object_unref(provider);
+    g_object_unref(provider);
 }
 
 gboolean theme_changed(void)
@@ -1459,31 +1508,31 @@ gboolean theme_changed(void)
     switch(th[2])
     {
         case 'a':
-        {
-            path = "CSS/light-theme.css";
-            break;
-        }
+            {
+                path = "CSS/light-theme.css";
+                break;
+            }
 
         case 'm':
-        {
-            path = "CSS/dark-theme.css";
-            break;
-        }
+            {
+                path = "CSS/dark-theme.css";
+                break;
+            }
 
         case 'u':
-        {
-            path = path_perso_theme;
-            break;
-        }
+            {
+                path = path_perso_theme;
+                break;
+            }
 
         default :
-        {
-            if(th[12] == 'c')
-                path = "CSS/light-hc-theme.css";
+            {
+                if(th[12] == 'c')
+                    path = "CSS/light-hc-theme.css";
 
-            else
-                path = "CSS/dark-hc-theme.css";
-        }
+                else
+                    path = "CSS/dark-hc-theme.css";
+            }
     }
 
     load_css(path);
@@ -1508,7 +1557,7 @@ void CSS_rewrite()
 
     hex = ints_to_hexas((int) (255*col.blue));
     color[4] = hex[0]; color[5] = hex[1];
-    
+
     free(hex);
 
     if(light_or_dark>85)
@@ -1522,7 +1571,7 @@ void CSS_rewrite()
         CSS_rewrite_dark(color);
         path_perso_theme = "CSS/color-theme-dark.css\0";
     }
-    
+
     gtk_combo_box_set_active(GTK_COMBO_BOX(Theme), 4);
     load_css(path_perso_theme);
 }

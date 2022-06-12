@@ -280,11 +280,11 @@ void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon, int 
     else if (crayon == 1)
     {
         for(int i = SDL_max(0, cx - rayon); i < SDL_min(surface->w, cx + rayon); i++){
-                make_vertical(surface, SDL_max(0, cy - rayon), SDL_min(surface->h, cy + rayon), i, coul);
+            make_vertical(surface, SDL_max(0, cy - rayon), SDL_min(surface->h, cy + rayon), i, coul);
         }
     }
-    else
-    { 
+    else if (crayon == 4)
+    {
         SDL_Rect rec;
         Uint32 bg = SDL_MapRGB(surface->format, coul.r, coul.g, coul.b);
         rec.x = cx - rayon;
@@ -292,7 +292,7 @@ void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon, int 
         rec.w = rayon * 2;
         rec.h = 1;
         SDL_FillRect(surface, &rec, bg);
-        
+
         rec.x = cx;
         rec.y = cy - rayon;
         rec.w = 1;
@@ -301,6 +301,27 @@ void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon, int 
         draw(surface, coul, (cx - rayon / 1.4) , (cy - rayon / 1.4), (cx + rayon / 1.4), (cy + rayon / 1.4));
         draw(surface, coul, (cx + rayon / 1.4) , (cy - rayon / 1.4), (cx - rayon / 1.4), (cy + rayon / 1.4));
 
+    }
+    else if (crayon == 5)
+    {
+        SDL_Rect rec;
+        Uint32 bg = SDL_MapRGB(surface->format, coul.r, coul.g, coul.b);
+        rec.x = cx - rayon;
+        rec.y = cy;
+        rec.w = rayon * 2;
+        rec.h = 1;
+        SDL_FillRect(surface, &rec, bg);
+
+    }
+    else
+    {
+        SDL_Rect rec;
+        Uint32 bg = SDL_MapRGB(surface->format, coul.r, coul.g, coul.b);
+        rec.x = cx;
+        rec.y = cy - rayon;
+        rec.w = 1;
+        rec.h = rayon * 2;
+        SDL_FillRect(surface, &rec, bg);
     }
 }
 
@@ -365,50 +386,6 @@ void drawline(SDL_Surface* img, SDL_Color color, int x1, int y1, int x2, int y2,
 }
 
 
-
-/*
-   void line(SDL_Surface* surface, SDL_Color color, int x1, int y1, int x2, int y2, int size){
-   int a;
-   if(x2 - x1 > y2 - y1){
-   int i = x1;
-   if(x2 - x1 == 0)
-   a = 0;
-   else
-   a = (y2 - y1) / (x2 - x1);
-   int b = y1 - a * x1;
-   printf("%i\n",size);
-   while(i < x2){
-   point(surface, color, i, a * i + b, size);
-//put_pixel(surface, i, a * i + b, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-i++;
-}
-}
-else{
-int i = y1;
-if(y2 - y1 == 0)
-a = 0;
-else
-a = (x2 - x1) / (y2 - y1);
-int b = x1 - a * y1;
-printf("%i\n",size);
-while(i < y2){
-point(surface, color, i, a * i + b, size);
-//put_pixel(surface, a * i + b, i, SDL_MapRGB(surface->format, color.r, color.g, color.b));
-i++;
-}
-}
-}*/
-
-//This function create a surface and put a line between each event of left click
-// -> 'color' the color of the brush
-/*void brush(SDL_Color color){
-  SDL_Surface* surface;
-  int loop = 1;
-
-  while(loop){
-
-  }
-  }*/
 
 //This function returns a new surface which is the surface cropped
 // -> 'surface' the pointer on SDL_Surface
@@ -576,49 +553,255 @@ SDL_Surface* reversion(SDL_Surface* surface, int horizontal, int vertical){
     return reverse;
 }
 
-//Fonctions supplémentaires que l'on supprimera sûrement
 
-void point_image(SDL_Surface* surface, SDL_Surface* img, int x, int y, int size)
+void draw_img(SDL_Surface* surface, SDL_Surface* img, int x1, int y1, int x2, int y2)
 {
-    if (surface == NULL)
-        return;
-    if (x < 0 || y < 0 || x >= surface->w || y >= surface->h)
-        return;
-
-    int i = x-size;
-    int j = y;
-    int nb = 0;
+    int x,y;
+    int Dx,Dy;
+    int xincr,yincr;
+    int erreur;
+    int i;
     Uint8 r,g,b;
     Uint32 pixel;
-    while(i < x){
-        while(j < y+nb){
-            if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
-                pixel = get_pixel(img, i,j);
-                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-                put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
+
+    Dx = abs(x2-x1);
+    Dy = abs(y2-y1);
+    if(x1<x2)
+        xincr = 1;
+    else
+        xincr = -1;
+    if(y1<y2)
+        yincr = 1;
+    else
+        yincr = -1;
+
+    x = x1;
+    y = y1;
+    if(Dx>Dy)
+    {
+        erreur = Dx/2;
+        for(i=0;i<Dx;i++)
+        {
+            x += xincr;
+            erreur += Dy;
+            if(erreur>Dx)
+            {
+                erreur -= Dx;
+                y += yincr;
             }
-            j++;
+            if (0 <= x && x + 1 < img->w && 0 <= y && y < img->h)
+            {
+                pixel = get_pixel(img, x, y);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, x, y, SDL_MapRGB(surface->format, r, g, b));
+
+                pixel = get_pixel(img, x + 1, y);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, x + 1, y, SDL_MapRGB(surface->format, r, g, b));
+            }
         }
-        i++;
-        nb++;
-        j = y - nb;
     }
-    while(i <= x+size){
-        while(j < y+nb){
-            if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
-                pixel = get_pixel(img, i,j);
-                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-                put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
+    else
+    {
+        erreur = Dy/2;
+        for(i=0;i<Dy;i++)
+        {
+            y += yincr;
+            erreur += Dx;
+            if(erreur>Dy)
+            {
+                erreur -= Dy;
+                x += xincr;
             }
-            j++;
+            if (0 <= x && x + 1 < img->w && 0 <= y && y < img->h)
+            {
+                pixel = get_pixel(img, x, y);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, x, y, SDL_MapRGB(surface->format, r, g, b));
+
+                pixel = get_pixel(img, x + 1, y);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, x + 1, y, SDL_MapRGB(surface->format, r, g, b));
+
+            }
         }
-        i++;
-        nb --;
-        j = y - nb;
+    }
+    if (0 <= x1 && x1 + 1 < img->w && 0 <= y1 && y1 < img->h)
+    {
+        pixel = get_pixel(img, x1, y1);
+        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+        put_pixel(surface, x1, y1, SDL_MapRGB(surface->format, r, g, b));
+
+        pixel = get_pixel(img, x1 + 1, y1);
+        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+        put_pixel(surface, x1 + 1, y1, SDL_MapRGB(surface->format, r, g, b));
+    }
+    if (0 <= x2 && x2 + 1 < img->w && 0 <= y2 && y2 < img->h)
+    {
+        pixel = get_pixel(img, x2, y2);
+        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+        put_pixel(surface, x2, y2, SDL_MapRGB(surface->format, r, g, b));
+
+        pixel = get_pixel(img, x2 + 1, y2);
+        SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+        put_pixel(surface, x2 + 1, y2, SDL_MapRGB(surface->format, r, g, b));
+    }
+
+}
+
+
+
+void ligneHorizontale_img(SDL_Surface* surface, int x, int y, int w, SDL_Surface* img)
+{
+    if (0 <= y && y < surface->h)
+    {
+        Uint32 pixel;
+        Uint8 r, g, b;
+        for (int i = x; i < x + w; i++)
+        {
+            if (0 <= i && i < surface->w)
+            {
+                pixel = get_pixel(img, i, y);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, i, y, SDL_MapRGB(surface->format, r, g, b));
+            }
+        }
     }
 }
 
-void drawline_image(SDL_Surface* img, SDL_Surface* img2,  int x1, int y1, int x2, int y2, int size)
+void ligneVertical_img(SDL_Surface* surface, int x, int y, int w, SDL_Surface* img)
+{
+    if (0 <= x && x < surface->w)
+    {
+        Uint32 pixel;
+        Uint8 r, g, b;
+        for (int i = y; i < y + w; i++)
+        {
+            if (0 <= i && i < surface->h)
+            {
+                pixel = get_pixel(img, x, i);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, x, i, SDL_MapRGB(surface->format, r, g, b));
+            }
+        }
+    }
+}
+
+
+
+//Fonctions supplémentaires que l'on supprimera sûrement
+void point_image(SDL_Surface* surface, SDL_Surface* img, int x, int y, int size, int crayon)
+{
+    if (surface == NULL)
+        return;
+
+    if (crayon == 0)
+    {
+        int d, y1, x1;
+
+        d = 3 - (2 * size);
+        x1 = 0;
+        y1 = size;
+
+        while (y1 >= x1) {
+            ligneHorizontale_img(surface, x - x1, y - y1, 2 * x1 + 1, img);
+            ligneHorizontale_img(surface, x - x1, y + y1, 2 * x1 + 1, img);
+            ligneHorizontale_img(surface, x - y1, y - x1, 2 * y1 + 1, img);
+            ligneHorizontale_img(surface, x - y1, y + x1, 2 * y1 + 1, img);
+
+            if (d < 0)
+                d = d + (4 * x1) + 6;
+            else {
+                d = d + 4 * (x1 - y1) + 10;
+                y1--;
+            }
+
+            x1++;
+        }
+
+    }
+    else if (crayon == 1)
+    {
+        Uint8 r,g,b;
+        Uint32 pixel;
+
+        int borne1_x = SDL_max(0, x - size);
+        int borne2_x = SDL_min(img->w, x + size);
+        int borne1_y = SDL_max(0, y - size);
+        int borne2_y = SDL_min(img->h, y + size);
+
+
+        for(int i = borne1_x; i < borne2_x; i++)
+        {
+            for(int j = borne1_y; j < borne2_y; j++)
+            {
+                pixel = get_pixel(img, i, j);
+                SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
+            }
+        }
+
+
+    }
+    else if (crayon == 2)
+    {
+        int i = x-size;
+        int j = y;
+        int nb = 0;
+        Uint8 r,g,b;
+        Uint32 pixel;
+        while(i < x){
+            while(j < y+nb){
+                if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
+                    pixel = get_pixel(img, i,j);
+                    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                    put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
+                }
+                j++;
+            }
+            i++;
+            nb++;
+            j = y - nb;
+        }
+        while(i <= x+size){
+            while(j < y+nb){
+                if (i >= 0 && j >= 0 && i < surface->w && j < surface->h){
+                    pixel = get_pixel(img, i,j);
+                    SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+                    put_pixel(surface, i, j, SDL_MapRGB(surface->format, r, g, b));
+                }
+                j++;
+            }
+            i++;
+            nb --;
+            j = y - nb;
+        }
+
+    }
+
+    else if (crayon == 3)
+    {
+        draw_img(surface, img, x + size / 2, y - size, x - size / 2, y + size);
+    }
+
+    else if (crayon == 4)
+    {
+        ligneHorizontale_img(surface, x - size, y, 2 * size, img);
+        ligneVertical_img(surface, x, y - size, 2 * size, img);
+        draw_img(surface, img, (x - size / 1.4) , (y - size / 1.4), (x + size / 1.4), (y + size / 1.4));
+        draw_img(surface, img, (x + size / 1.4) , (y - size / 1.4), (x - size / 1.4), (y + size / 1.4));
+    }
+    else if (crayon == 5)
+    {
+        ligneHorizontale_img(surface, x - size, y, 2 * size, img);
+    }
+    else
+    {
+        ligneVertical_img(surface, x, y - size, 2 * size, img);
+    }
+}
+
+void drawline_image(SDL_Surface* img, SDL_Surface* img2,  int x1, int y1, int x2, int y2, int size, int crayon)
 {
     int x,y;
     int Dx,Dy;
@@ -651,7 +834,7 @@ void drawline_image(SDL_Surface* img, SDL_Surface* img2,  int x1, int y1, int x2
                 erreur -= Dx;
                 y += yincr;
             }
-            point_image(img, img2, x, y, size);
+            point_image(img, img2, x, y, size, crayon);
         }
     }
     else
@@ -666,11 +849,11 @@ void drawline_image(SDL_Surface* img, SDL_Surface* img2,  int x1, int y1, int x2
                 erreur -= Dy;
                 x += xincr;
             }
-            point_image(img, img2, x, y, size);
+            point_image(img, img2, x, y, size, crayon);
         }
     }
-    point_image(img, img2, x1, y1, size);
-    point_image(img, img2, x2, y2, size);
+    point_image(img, img2, x1, y1, size, crayon);
+    point_image(img, img2, x2, y2, size, crayon);
 }
 
 
@@ -957,14 +1140,14 @@ void past_selection(SDL_Surface* img, SDL_Surface* surface, int x, int y)
     Uint8 r, g, b;
     Uint32 pixel;
     /*
-    for(int i = x; i < img->w && i < x + surface->w; i++){
-        for(int j = y; j < img->h && j < y + surface->h; j++){
-            pixel = get_pixel(surface, i - x, j - y);
-            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-            pixel = SDL_MapRGB(surface->format, r, g, b);
-            put_pixel(img, i, j, pixel);
-        }
-    }*/
+       for(int i = x; i < img->w && i < x + surface->w; i++){
+       for(int j = y; j < img->h && j < y + surface->h; j++){
+       pixel = get_pixel(surface, i - x, j - y);
+       SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+       pixel = SDL_MapRGB(surface->format, r, g, b);
+       put_pixel(img, i, j, pixel);
+       }
+       }*/
     int start_x = 0;
     int start_y = 0;
     if (x < surface->w / 2)
@@ -978,7 +1161,7 @@ void past_selection(SDL_Surface* img, SDL_Surface* surface, int x, int y)
     int borne1_y = SDL_max(0, y - surface->h / 2);
     int borne2_y = SDL_min(img->h, y + surface->h / 2);
 
-    
+
     for(int i = borne1_x; i < borne2_x; i++)
     {
         for(int j = borne1_y; j < borne2_y; j++)
@@ -1005,9 +1188,9 @@ void erase_selection(SDL_Surface* surface, int x, int y, int width, int height){
     if (width < 0)
         width = 0;
     if (width >= surface->w)
-        width = surface->w - 1;
+        width = surface->w;
     if (height >= surface->h)
-        height = surface->h - 1;
+        height = surface->h;
     if (height < 0)
         height = 0;
 
