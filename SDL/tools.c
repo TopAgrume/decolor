@@ -850,7 +850,7 @@ void past_selection(SDL_Surface* img, SDL_Surface* surface, int x, int y)
 
     Uint8 r, g, b;
     Uint32 pixel;
-
+    /*
     for(int i = x; i < img->w && i < x + surface->w; i++){
         for(int j = y; j < img->h && j < y + surface->h; j++){
             pixel = get_pixel(surface, i - x, j - y);
@@ -858,7 +858,32 @@ void past_selection(SDL_Surface* img, SDL_Surface* surface, int x, int y)
             pixel = SDL_MapRGB(surface->format, r, g, b);
             put_pixel(img, i, j, pixel);
         }
-    }  
+    }*/
+    int start_x = 0;
+    int start_y = 0;
+    if (x < surface->w / 2)
+        start_x = surface->w / 2 - x;
+    if (y < surface->h / 2)
+        start_y = surface->h / 2 - y;
+
+
+    int borne1_x = SDL_max(0, x - surface->w / 2);
+    int borne2_x = SDL_min(img->w, x + surface->w / 2);
+    int borne1_y = SDL_max(0, y - surface->h / 2);
+    int borne2_y = SDL_min(img->h, y + surface->h / 2);
+
+    
+    for(int i = borne1_x; i < borne2_x; i++)
+    {
+        for(int j = borne1_y; j < borne2_y; j++)
+        {
+            pixel = get_pixel(surface, start_x + i - borne1_x, start_y + j - borne1_y);
+            SDL_GetRGB(pixel, surface->format, &r, &g, &b);
+            pixel = SDL_MapRGB(surface->format, r, g, b);
+            put_pixel(img, i, j, pixel);
+        }
+    }
+
 }
 
 void erase_selection(SDL_Surface* surface, int x, int y, int width, int height){
