@@ -77,6 +77,9 @@ GtkRadioButton* brush2;
 GtkRadioButton* brush3;
 GtkRadioButton* brush4;
 GtkRadioButton* brush5;
+GtkFixed* Outils;
+GtkButton* outils_show;
+int outils_shown = 1;
 
 
 //functions
@@ -124,7 +127,7 @@ gboolean on_brush2(GtkRadioButton *self, gpointer user_data);
 gboolean on_brush3(GtkRadioButton *self, gpointer user_data);
 gboolean on_brush4(GtkRadioButton *self, gpointer user_data);
 gboolean on_brush5(GtkRadioButton *self, gpointer user_data);
-
+gboolean on_outils_show(gpointer user_data);
 
 
 int create_window_decolor(int argc, char *argv[])
@@ -199,6 +202,8 @@ int create_window_decolor(int argc, char *argv[])
     brush3 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush3"));
     brush4 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush4"));
     brush5 = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Brush5"));
+    Outils = GTK_FIXED(gtk_builder_get_object(Builder, "Outils"));
+    outils_show = GTK_BUTTON(gtk_builder_get_object(Builder, "Outils Show"));
 
 
 
@@ -240,6 +245,7 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(brush3, "toggled", G_CALLBACK(on_brush3), NULL);
     g_signal_connect(brush4, "toggled", G_CALLBACK(on_brush4), NULL);
     g_signal_connect(brush5, "toggled", G_CALLBACK(on_brush5), NULL);
+    g_signal_connect(outils_show, "clicked", G_CALLBACK(on_outils_show), NULL);
     
     //replace NULL by the stack containing the modifications.
 
@@ -772,6 +778,31 @@ gboolean on_next(GtkButton* self, gpointer user_data)
     return FALSE;
 }
 
+gboolean on_outils_show(gpointer user_data)
+{
+    if(!user_data)
+        return FALSE;
+
+    GtkWidget *arrow;
+    if(outils_shown == 1)
+    {
+        arrow = gtk_image_new_from_file("./GTK/Interface tools/Symbol/Show.png");
+        gtk_button_set_image(outils_show, GTK_WIDGET(arrow));
+        gtk_widget_hide(GTK_WIDGET(Outils));
+        outils_shown = 0;
+    }
+    
+    else
+    {
+        arrow = gtk_image_new_from_file("./GTK/Interface tools/Symbol/Hide.png");
+        gtk_button_set_image(outils_show, GTK_WIDGET(arrow));
+        gtk_widget_show_all(GTK_WIDGET(Outils));
+        outils_shown = 1;
+    }
+    
+    return FALSE;
+}
+
 gboolean on_turn_1(gpointer user_data)
 {
     if (user_data != NULL)
@@ -874,7 +905,9 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
 
     int newh, neww, position;
 
-    GtkWidget *dialog, *h_entry, *w_entry, *fix, *labh, *labw, *pos;
+    GtkWidget *dialog, *h_entry, *w_entry, *fix, *labh, *labw, *pos,
+              *imgNO, *imgN, *imgNE, *imgO, *imgC, *imgE,
+              *imgSO, *imgS, *imgSE;
     GtkBox *content_area;
     GtkDialogFlags flags;
     GtkGrid* grid;
@@ -901,6 +934,17 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     //Add Fixed in content_area box
     gtk_box_pack_start(content_area, fix, TRUE, TRUE, 0);
 
+    //Init GtkImage
+    imgNO = gtk_image_new_from_file("./GTK/Interface tools/Symbol/NO.png");
+    imgN  = gtk_image_new_from_file("./GTK/Interface tools/Symbol/N.png");
+    imgNE = gtk_image_new_from_file("./GTK/Interface tools/Symbol/NE.png");
+    imgO  = gtk_image_new_from_file("./GTK/Interface tools/Symbol/O.png");
+    imgC  = gtk_image_new_from_file("./GTK/Interface tools/Symbol/Centre.png");
+    imgE  = gtk_image_new_from_file("./GTK/Interface tools/Symbol/E.png");
+    imgSO = gtk_image_new_from_file("./GTK/Interface tools/Symbol/SO.png");
+    imgS  = gtk_image_new_from_file("./GTK/Interface tools/Symbol/S.png");
+    imgSE = gtk_image_new_from_file("./GTK/Interface tools/Symbol/SE.png");
+
     //GtkRadioButton
     C = GTK_RADIO_BUTTON(gtk_radio_button_new(NULL));
     NO = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
@@ -912,6 +956,17 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     S  = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
     SE = GTK_RADIO_BUTTON(gtk_radio_button_new_from_widget(C));
 
+    //Images into buttons
+    gtk_button_set_image(GTK_BUTTON(NO), imgNO);
+    gtk_button_set_image(GTK_BUTTON(N),  imgN);
+    gtk_button_set_image(GTK_BUTTON(NE), imgNE);
+    gtk_button_set_image(GTK_BUTTON(O),  imgO);
+    gtk_button_set_image(GTK_BUTTON(C),  imgC);
+    gtk_button_set_image(GTK_BUTTON(E),  imgE);
+    gtk_button_set_image(GTK_BUTTON(SO), imgSO);
+    gtk_button_set_image(GTK_BUTTON(S),  imgS);
+    gtk_button_set_image(GTK_BUTTON(SE), imgSE);
+
     //GtkGrid
     grid = GTK_GRID(gtk_grid_new());
     gtk_grid_insert_column(grid, 0);
@@ -920,8 +975,8 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     gtk_grid_insert_row(grid, 0);
     gtk_grid_insert_row(grid, 0);
     gtk_grid_insert_row(grid, 0);
-    gtk_grid_set_row_spacing(grid, 20);
-    gtk_grid_set_column_spacing(grid, 20);
+    gtk_grid_set_row_spacing(grid, 5);
+    gtk_grid_set_column_spacing(grid, 5);
 
     //Adding buttons
     gtk_grid_attach(grid, GTK_WIDGET(NO), 0, 0, 1, 1);
@@ -933,6 +988,15 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     gtk_grid_attach(grid, GTK_WIDGET(SO), 0, 2, 1, 1);
     gtk_grid_attach(grid, GTK_WIDGET(S),  1, 2, 1, 1);
     gtk_grid_attach(grid, GTK_WIDGET(SE), 2, 2, 1, 1);
+    g_object_set(NO, "draw-indicator", FALSE, NULL);
+    g_object_set(N , "draw-indicator", FALSE, NULL);
+    g_object_set(NE, "draw-indicator", FALSE, NULL);
+    g_object_set(O , "draw-indicator", FALSE, NULL);
+    g_object_set(C , "draw-indicator", FALSE, NULL);
+    g_object_set(E , "draw-indicator", FALSE, NULL);
+    g_object_set(SO, "draw-indicator", FALSE, NULL);
+    g_object_set(S , "draw-indicator", FALSE, NULL);
+    g_object_set(SE, "draw-indicator", FALSE, NULL);
 
 
     //Init Entries and Labels
@@ -952,7 +1016,7 @@ gboolean on_Resize(GtkButton *self, gpointer user_data)
     gtk_fixed_put(GTK_FIXED(fix), labh, 20, 37);
     gtk_fixed_put(GTK_FIXED(fix), labw, 20, 97);
     gtk_fixed_put(GTK_FIXED(fix), pos, 290, 5);
-    gtk_fixed_put(GTK_FIXED(fix), GTK_WIDGET(grid), 270, 35);
+    gtk_fixed_put(GTK_FIXED(fix), GTK_WIDGET(grid), 260, 25);
  
 
     //Show

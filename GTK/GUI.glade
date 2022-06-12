@@ -9,6 +9,7 @@
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Pinceaux</property>
     <property name="resizable">False</property>
+    <property name="window_position">center</property>
     <property name="default_width">100</property>
     <property name="default_height">200</property>
     <property name="destroy_with_parent">True</property>
@@ -17,6 +18,7 @@
     <property name="skip_pager_hint">True</property>
     <property name="urgency_hint">True</property>
     <property name="deletable">False</property>
+    <property name="gravity">east</property>
     <child type="titlebar">
       <placeholder/>
     </child>
@@ -38,13 +40,14 @@
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkGrid">
-                    <property name="width_request">100</property>
+                    <property name="width_request">130</property>
                     <property name="height_request">150</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="row_homogeneous">True</property>
                     <child>
                       <object class="GtkRadioButton" id="Brush4">
+                        <property name="width_request">130</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
@@ -59,10 +62,7 @@
                                 <property name="name">int</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Losange</property>
-                                <attributes>
-                                  <attribute name="font-desc" value="Sans 7"/>
-                                </attributes>
+                                <property name="label" translatable="yes">Manuscrit</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -76,6 +76,8 @@
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
                                 <property name="stock">gtk-missing-image</property>
                               </object>
                               <packing>
@@ -110,9 +112,6 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Losange</property>
-                                <attributes>
-                                  <attribute name="font-desc" value="Sans 7"/>
-                                </attributes>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -122,11 +121,13 @@
                             </child>
                             <child>
                               <object class="GtkImage">
-                                <property name="width_request">40</property>
+                                <property name="width_request">50</property>
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="margin_left">4</property>
+                                <property name="halign">end</property>
+                                <property name="valign">end</property>
+                                <property name="hexpand">True</property>
                                 <property name="pixbuf">Interface tools/Symbol/Losange.png</property>
                               </object>
                               <packing>
@@ -159,10 +160,7 @@
                                 <property name="name">int</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">Losange</property>
-                                <attributes>
-                                  <attribute name="font-desc" value="Sans 7"/>
-                                </attributes>
+                                <property name="label" translatable="yes">Etoile</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -176,6 +174,8 @@
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
                                 <property name="stock">gtk-missing-image</property>
                               </object>
                               <packing>
@@ -227,6 +227,9 @@
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="valign">end</property>
+                                <property name="hexpand">True</property>
                                 <property name="pixbuf">Interface tools/Symbol/Rond.png</property>
                               </object>
                               <packing>
@@ -278,6 +281,9 @@
                                 <property name="height_request">50</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="valign">end</property>
+                                <property name="hexpand">True</property>
                                 <property name="pixbuf">Interface tools/Symbol/Carre.png</property>
                               </object>
                               <packing>
@@ -294,6 +300,102 @@
                         <property name="top_attach">1</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkRadioButton" id="Brush6">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">False</property>
+                        <property name="group">Brush1</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="name">int</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Trait ---</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="width_request">50</property>
+                                <property name="height_request">50</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="stock">gtk-missing-image</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">5</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="Brush7">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">False</property>
+                        <property name="group">Brush1</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="name">int</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Trait  |</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="width_request">50</property>
+                                <property name="height_request">50</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="halign">end</property>
+                                <property name="hexpand">True</property>
+                                <property name="stock">gtk-missing-image</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">6</property>
+                      </packing>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -308,6 +410,11 @@
     <property name="value">10</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">Interface tools/Symbol/Hide.png</property>
   </object>
   <object class="GtkImage" id="image10">
     <property name="visible">True</property>
@@ -370,15 +477,66 @@
         <property name="orientation">vertical</property>
         <property name="spacing">1</property>
         <child>
-          <object class="GtkFixed">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <child>
+              <object class="GtkGrid">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="column_spacing">30</property>
+                <child>
+                  <object class="GtkButton" id="previous">
+                    <property name="name">int</property>
+                    <property name="width_request">60</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Retour arrière</property>
+                    <property name="margin_left">20</property>
+                    <property name="image">image9</property>
+                    <property name="relief">none</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="next">
+                    <property name="name">int</property>
+                    <property name="width_request">60</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">Retour avant</property>
+                    <property name="margin_right">20</property>
+                    <property name="image">image10</property>
+                    <property name="relief">none</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkBox" id="Menu color theme">
                 <property name="width_request">330</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
+                <property name="valign">end</property>
+                <property name="hexpand">True</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="name">int</property>
@@ -437,64 +595,9 @@
                 </child>
               </object>
               <packing>
-                <property name="x">1150</property>
-                <property name="y">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkGrid">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkButton" id="previous">
-                    <property name="name">int</property>
-                    <property name="width_request">60</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="focus_on_click">False</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">Retour arrière</property>
-                    <property name="image">image9</property>
-                    <property name="relief">none</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="next">
-                    <property name="name">int</property>
-                    <property name="width_request">60</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="focus_on_click">False</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">Retour avant</property>
-                    <property name="image">image10</property>
-                    <property name="relief">none</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="x">30</property>
-                <property name="y">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparator" id="Separteur Haut">
-                <property name="width_request">1473</property>
-                <property name="height_request">2</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="x">5</property>
-                <property name="y">40</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
@@ -505,13 +608,26 @@
           </packing>
         </child>
         <child>
+          <object class="GtkSeparator" id="Separteur Haut">
+            <property name="height_request">2</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkBox">
             <property name="height_request">850</property>
             <property name="visible">True</property>
             <property name="app_paintable">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkFixed">
+              <object class="GtkFixed" id="Outils">
                 <property name="width_request">180</property>
                 <property name="height_request">850</property>
                 <property name="visible">True</property>
@@ -1136,19 +1252,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkSeparator" id="Separteur Côté">
-                    <property name="width_request">2</property>
-                    <property name="height_request">848</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="orientation">vertical</property>
-                  </object>
-                  <packing>
-                    <property name="x">185</property>
-                    <property name="y">5</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkSeparator">
                     <property name="width_request">170</property>
                     <property name="height_request">2</property>
@@ -1168,6 +1271,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkButton" id="Outils Show">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">start</property>
+                <property name="margin_right">5</property>
+                <property name="image">image1</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkDrawingArea" id="image">
                 <property name="width_request">1280</property>
                 <property name="height_request">850</property>
@@ -1179,7 +1297,7 @@
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
