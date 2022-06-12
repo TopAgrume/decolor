@@ -25,6 +25,8 @@ GtkRadioButton* square;
 GtkRadioButton* triangle;
 GtkRadioButton* circle;
 GtkRadioButton* cpy_img;
+GtkRadioButton* cut_img;
+GtkRadioButton* paste_img;
 GtkButton* reverse1;
 GtkButton* reverse2;
 GtkButton* turn1;
@@ -66,7 +68,6 @@ gboolean save_draw = TRUE;
 GtkComboBoxText* Theme;
 GtkColorChooser* ThemeColor;
 char* path_perso_theme = "CSS/color-theme-light.css";
-int erase_bool = 0;
 int tool_value = 1;
 int brush_value = 0;
 gboolean pre_show = FALSE;
@@ -100,8 +101,6 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data);
 gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data);
 //GtkWidget* gtk_image_new_from_sdl_surface (SDL_Surface *surface);
 gboolean draw_callback(GtkWidget* widget, cairo_t *cr, gpointer data);
-gboolean on_Text(GtkRadioButton *self, gpointer user_data);
-gboolean on_Select(GtkRadioButton *self, gpointer user_data);
 gboolean on_Crop(GtkRadioButton *self, gpointer user_data);
 void decolor_free(gpointer user_data);
 gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data);
@@ -116,6 +115,9 @@ gboolean on_turn_2(gpointer user_data);
 gboolean on_reverse_1(gpointer user_data);
 gboolean on_reverse_2(gpointer user_data);
 gboolean on_cpy_img(GtkRadioButton *self, gpointer user_data);
+gboolean on_cut_img(GtkRadioButton *self, gpointer user_data);
+gboolean on_paste_img(GtkRadioButton *self, gpointer user_data);
+
 
 gboolean on_brush1(GtkRadioButton *self, gpointer user_data);
 gboolean on_brush2(GtkRadioButton *self, gpointer user_data);
@@ -173,7 +175,10 @@ int create_window_decolor(int argc, char *argv[])
     square = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "square"));
     triangle = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "triangle"));
     circle = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "circle"));
-    cpy_img = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "cpy_img"));
+    cpy_img = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Ctrl c"));
+    cut_img = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Ctrl x"));
+    paste_img = GTK_RADIO_BUTTON(gtk_builder_get_object(Builder, "Ctrl v"));
+
 
     //set_tools_group(toolsgrid, brush);
     scale = GTK_SCALE(gtk_builder_get_object(Builder, "Scale")); 
@@ -226,6 +231,9 @@ int create_window_decolor(int argc, char *argv[])
     g_signal_connect(turn1, "clicked", G_CALLBACK(on_turn_1), NULL);
     g_signal_connect(turn2, "clicked", G_CALLBACK(on_turn_2), NULL);
     g_signal_connect(cpy_img, "toggled", G_CALLBACK(on_cpy_img), NULL);
+    g_signal_connect(cut_img, "toggled", G_CALLBACK(on_cut_img), NULL);
+    g_signal_connect(paste_img, "toggled", G_CALLBACK(on_paste_img), NULL);
+
 
     g_signal_connect(brush1, "toggled", G_CALLBACK(on_brush1), NULL);
     g_signal_connect(brush2, "toggled", G_CALLBACK(on_brush2), NULL);
@@ -341,26 +349,13 @@ gboolean on_key_press (GtkWidget *widget, GdkEventKey *event, gpointer user_data
     case GDK_KEY_v:
       if (event->type == GDK_KEY_PRESS && GDK_CONTROL_MASK)
       {
-        printf("key pressed: %s\n", "ctrl + v");
+        //printf("key pressed: %s\n", "ctrl + v");
         shared_stack_push(before, img);                                    
         shared_stack_empty(after);
         shared_stack_push(b2, img2);                                    
         shared_stack_empty(a2);
 
         past_selection(img, copy_crop_img, pos_x, pos_y);
-        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-      }
-      break;
-    case GDK_KEY_BackSpace:
-      if (event->type == GDK_KEY_PRESS && tool_value == 15 && erase_bool)
-      {
-        shared_stack_push(before, img);                                    
-        shared_stack_empty(after);
-        shared_stack_push(b2, img2);                                    
-        shared_stack_empty(a2);
-        erase_bool = 0;
-        
-        erase_selection(img, start_x, start_y, end_x, end_y);
         gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
       }
       break;
@@ -495,7 +490,6 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
             case 15:// Change Case
                 // Select + Copy Call
                 pre_show = FALSE;
-                erase_bool = 1;
                 // Block img is isn't free
                 if (pre_img != NULL){
                     SDL_FreeSurface(pre_img);
@@ -505,6 +499,27 @@ gboolean mouse_release(GtkWidget* self, GdkEvent* event, gpointer user_data)
                     SDL_FreeSurface(copy_crop_img);
                 
                 copy_crop_img = copy_selection(img, start_x, start_y, end_x, end_y);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;
+            
+            case 16:// Change Case
+                // Select + Copy Call
+                pre_show = FALSE;
+                // Block img is isn't free
+                if (pre_img != NULL){
+                    SDL_FreeSurface(pre_img);
+                    pre_img = NULL;
+                }
+                if (copy_crop_img != NULL)
+                    SDL_FreeSurface(copy_crop_img);
+                
+                shared_stack_push(before, img);                                    
+                shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+                copy_crop_img = copy_selection(img, start_x, start_y, end_x, end_y);
+                erase_selection(img, start_x, start_y, end_x, end_y);
+
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
 
@@ -554,7 +569,16 @@ gboolean mouse_press(GtkWidget* self, GdkEvent* event, gpointer user_data)
                 filling_seal(img, start_x, start_y, sdl_color, ((int)scale_nb * 255) / 100);   
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 break;
-                
+            
+             case 17:
+                shared_stack_push(before, img);                                    
+                shared_stack_empty(after);
+                shared_stack_push(b2, img2);                                    
+                shared_stack_empty(a2);
+
+                past_selection(img, copy_crop_img, pos_x, pos_y);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                break;   
          }
     }
 
@@ -666,7 +690,7 @@ gboolean mouse_moved(GtkWidget *widget,GdkEvent *event, gpointer user_data)
                                 }
                                 else
                                 {
-                                    if ((tool_value == 10 || tool_value == 15) && is_pressed)
+                                    if ((tool_value == 10 || tool_value == 15 || tool_value == 16) && is_pressed)
                                     {
                                         pre_show = TRUE;
                                         pre_img = copy_image(img); 
@@ -939,6 +963,26 @@ gboolean on_cpy_img(GtkRadioButton *self, gpointer user_data)
     return FALSE;
 }
 
+gboolean on_cut_img(GtkRadioButton *self, gpointer user_data)
+{
+    if (user_data == NULL &&
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 16;
+    }
+    return FALSE;
+}
+
+gboolean on_paste_img(GtkRadioButton *self, gpointer user_data)
+{
+    if (user_data == NULL &&
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self)) == TRUE)
+    {
+        tool_value = 17;
+    }
+    return FALSE;
+}
+
 gboolean on_brush(GtkRadioButton *self, gpointer user_data)
 {
     if (user_data == NULL &&
@@ -1187,17 +1231,17 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
         printf("Nothing\n");
         return FALSE;
     }
+    
+    shared_stack_push(before, img);
+    shared_stack_empty(after);
+    shared_stack_push(b2, img2);                                    
+    shared_stack_empty(a2);
 
     switch(fil[0])
     {
         case 'N':
         {
             //printf("Noir et Blanc\n");
-	        shared_stack_push(before, img);
-            shared_stack_empty(after);
-            shared_stack_push(b2, img2);                                    
-            shared_stack_empty(a2);
-
 	        grayscale(img);
 	        gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre noir et blanc
@@ -1206,72 +1250,76 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
         case 'I':
         {
             //printf("Inversion\n");
-	        shared_stack_push(before, img);
-            shared_stack_empty(after);
-            shared_stack_push(b2, img2);                                    
-            shared_stack_empty(a2);
-
-            negative(img);
+	        negative(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre d'inversion de couleur
         }
 
         case 'C':
         {
-            //printf("Contraste\n");
-	        shared_stack_push(before, img);
-            shared_stack_empty(after);
-            shared_stack_push(b2, img2);                                    
-            shared_stack_empty(a2);
+            if(fil[7] == ' ')
+            {
+                //printf("Couleur\n");
+                color_filter(img, 1, 0, 0, 0);
+                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                return FALSE; 
+            }
+            else
+            {
+                if (fil[7] == 's')
+                {
+                    int threshold = 0; //255 - (scale_nb * 255) / 100;
+                    // change
+                    if (sdl_color.r < sdl_color.g)
+                    {
+                        if (sdl_color.g < sdl_color.b)
+                            color_filter(img, 0, 0, 1, threshold);
+                        else
+                            color_filter(img, 0, 1, 0, threshold);
+                    }
+                    else
+                    {
+                        if (sdl_color.r < sdl_color.b)
+                            color_filter(img, 0, 0, 1, threshold);
+                        else
+                            color_filter(img, 1, 0, 0, threshold);
 
-            contrast(img, (scale_nb * 3) / 100);
-            grayscale(img);
-            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-            return FALSE; //Filtre de Contraste
+                    }
+
+                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                    return FALSE;
+                }
+                else
+                {
+                    //printf("Contraste\n");
+	                contrast(img, 3);
+                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+                    return FALSE; //Filtre de Contraste
+                }
+            }
         }
 
         case 'L':
         {
-            //printf("Luminosité\n");
-	        shared_stack_push(before, img);
-            shared_stack_empty(after);
-            shared_stack_push(b2, img2);                                    
-            shared_stack_empty(a2);
-
             brightness(img, (scale_nb * 2) - 100);
-            grayscale(img);
             gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
             return FALSE; //Filtre de Luminosité
         }
 
-        case 'S':
+        case 'F':
         {
-            if(fil[3] == 'p') // 'é'= two chars
-            {
-                //printf("Sépia\n");
-		        shared_stack_push(before, img);
-                shared_stack_empty(after);
-                shared_stack_push(b2, img2);                                    
-                shared_stack_empty(a2);
-
-                color_filter(img, 1, 0, 0, 0);
-                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-                return FALSE; //Filtre Sépia
-            }
-
-            else
-            {
-                //printf("Saturation\n");
-		        shared_stack_push(before, img);
-                shared_stack_empty(after);
-                shared_stack_push(b2, img2);                                    
-                shared_stack_empty(a2);
-
-                color_filter(img, 1, 0, 0, 255);
-                gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-                return FALSE; //Filtre Saturation
-            }
+            blur(img, (scale_nb * 4) / 100 + 1);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+            return FALSE; //Flou gaussien
+        }
+        
+        case 'D':
+        {
+            img = detection(img, (scale_nb * 4) / 100 + 1);
+            gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+            return FALSE; //Flou gaussien
         } 
+
 
         default :
         {

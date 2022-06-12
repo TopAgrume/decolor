@@ -998,17 +998,19 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Séléction du filtre</property>
-                        <property name="active">7</property>
+                        <property name="active">9</property>
                         <property name="tearoff_title" translatable="yes">Oui</property>
                         <property name="active_id">0</property>
                         <items>
                           <item id="0" translatable="yes"> </item>
                           <item id="1" translatable="yes">Noir&amp;Blanc</item>
-                          <item id="2" translatable="yes">Sépia</item>
-                          <item id="3" translatable="yes">Inverser</item>
-                          <item id="4" translatable="yes">Contraste</item>
-                          <item id="5" translatable="yes">Luminosité</item>
-                          <item id="6" translatable="yes">Saturation</item>
+                          <item id="2" translatable="yes">Couleur séléction</item>
+                          <item id="3" translatable="yes">Couleurs primaires</item>
+                          <item id="4" translatable="yes">Inverser</item>
+                          <item id="5" translatable="yes">Contraste</item>
+                          <item id="6" translatable="yes">Luminosité</item>
+                          <item id="7" translatable="yes">Flou gaussien</item>
+                          <item id="8" translatable="yes">Détourage</item>
                         </items>
                       </object>
                       <packing>
