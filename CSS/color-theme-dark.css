@@ -1,9 +1,9 @@
-@define-color bg_color #A82A2A;
-@define-color fg_color #FF7878;
-@define-color dark_bg_color  #862121;
-@define-color dark_fg_color  #EA6060;
-@define-color bf_last_color #FF9C9C;
-@define-color text_color #FFFFFF;
+@define-color bg_color #360B0B;
+@define-color fg_color #962A2A;
+@define-color dark_bg_color  #2B0808;
+@define-color dark_fg_color  #6D3E3E;
+@define-color bf_last_color #C03F3F;
+@define-color text_color #DFDFDF;
 
 label#int, button
 {
@@ -47,7 +47,7 @@ combobox box.linked button.combo:active
 
 button.file:checked, button.color:checked,
 button.radio:checked, button.toggle:checked,
-combobox box.linked button.combo:checked
+combobox box.linked button.combo:checked, separator
 {
     background: @bf_last_color;
     border-color: @text_color;

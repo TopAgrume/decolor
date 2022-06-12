@@ -40,7 +40,7 @@ combobox box.linked button.combo:active
 
 button.file:checked, button.color:checked,
 button.radio:checked, button.toggle:checked,
-combobox box.linked button.combo:checked
+combobox box.linked button.combo:checked, separator
 {
     background: #606060;
     border-color: #c0c0c0;
