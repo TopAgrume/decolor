@@ -153,15 +153,16 @@ void blur(SDL_Surface* surface, int n){
 }
 
 void filter_color(SDL_Surface* surface, SDL_Color color){
-    Uint8 r, g, b;
+    Uint8 r, g, b, gris;
     Uint32 pixel;
     for(int i = 0; i < surface->w; i++){
         for(int j = 0; j < surface->h; j++){
             pixel = get_pixel(surface, i, j);
             SDL_GetRGB(pixel, surface->format, &r, &g, &b);
-	    r = (color.r + r) / 2;
-	    g = (color.g + g) / 2;
-	    b = (color.b + b) / 2;
+	    gris = 0.3*r + 0.59*g + 0.11*b;
+            r = color.r * gris / 255;
+            g = color.g * gris / 255;
+            b = color.b * gris / 255;
             pixel = SDL_MapRGB(surface->format, r, g, b);
             put_pixel(surface, i, j, pixel);
         }

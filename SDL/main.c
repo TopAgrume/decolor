@@ -91,8 +91,8 @@ int main(int argc , char* argv[])
   
     SDL_Color color;
     color.r = 255;
-    color.g = 0;
-    color.b = 0;
+    color.g = 127;
+    color.b = 39;
     filter_color(image_surface, color);
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
