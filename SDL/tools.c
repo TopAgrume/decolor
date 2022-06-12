@@ -744,7 +744,7 @@ SDL_Surface* resize_image(SDL_Surface* surface, int x, int y, int position)
                         pixel = get_pixel(surface, i, j);
                         SDL_GetRGB(pixel, surface->format, &r, &g, &b);
                         pixel = SDL_MapRGB(surface->format, r, g, b);
-                        put_pixel(img, i, img->h + (j - surface->h), pixel);
+                        put_pixel(img, img->w + (i - surface->w), img->h + (j - surface->h), pixel);
                     }
                 }
                 break;
