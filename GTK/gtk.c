@@ -1381,43 +1381,17 @@ gboolean on_apply_clicked(GtkButton *self, gpointer user_data)
             if(fil[7] == ' ')
             {
                 //printf("Couleur\n");
-                color_filter(img, 1, 0, 0, 0);
+                filter_color(img, sdl_color);
                 gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
                 return FALSE; 
             }
             else
             {
-                if (fil[7] == 's')
-                {
-                    int threshold = 0; //255 - (scale_nb * 255) / 100;
-                    // change
-                    if (sdl_color.r < sdl_color.g)
-                    {
-                        if (sdl_color.g < sdl_color.b)
-                            color_filter(img, 0, 0, 1, threshold);
-                        else
-                            color_filter(img, 0, 1, 0, threshold);
-                    }
-                    else
-                    {
-                        if (sdl_color.r < sdl_color.b)
-                            color_filter(img, 0, 0, 1, threshold);
-                        else
-                            color_filter(img, 1, 0, 0, threshold);
-
-                    }
-
-                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-                    return FALSE;
-                }
-                else
-                {
-                    //printf("Contraste\n");
-	                contrast(img, 3);
-                    gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
-                    return FALSE; //Filtre de Contraste
-                }
-            }
+                //printf("Contraste\n");
+		contrast(img, 3);
+		gtk_widget_queue_draw_area(image,0,0,img->w,img->h);
+		return FALSE; //Filtre de Contraste
+	    }
         }
 
         case 'L':

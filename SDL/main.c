@@ -89,7 +89,11 @@ int main(int argc , char* argv[])
 
     //reverse = reversion(image_surface, 1, 1);
   
-    blur(image_surface);
+    SDL_Color color;
+    color.r = 255;
+    color.g = 0;
+    color.b = 0;
+    filter_color(image_surface, color);
     screen_surface = display_image(image_surface);
     wait_for_keypressed();
 

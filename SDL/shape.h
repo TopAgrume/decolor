@@ -12,7 +12,7 @@
 
 void make_fill_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color);
 void make_horizontal(SDL_Surface* img, int x1, int x2, int y, SDL_Color new_color);
-void make_vetical(SDL_Surface* img, int y1, int y2, int x, SDL_Color new_color);
+void make_vertical(SDL_Surface* img, int y1, int y2, int x, SDL_Color new_color);
 void make_empty_square(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size);
 void make_empty_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size, int crayon);
 void make_fill_triangle(SDL_Surface* img, int x1, int y1, int x2, int y2, SDL_Color new_color, int size, int brush_value);

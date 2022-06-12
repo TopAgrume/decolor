@@ -279,14 +279,9 @@ void point(SDL_Surface* surface, SDL_Color coul, int cx, int cy, int rayon, int 
     }
     else if (crayon == 1)
     {
-        SDL_Rect rec;
-        Uint32 bg = SDL_MapRGB(surface->format, coul.r, coul.g, coul.b);
-        rec.x = cx;
-        rec.y = cy - rayon;
-        rec.w = 1;
-        rec.h = rayon * 2;
-    
-        SDL_FillRect(surface, &rec, bg);
+        for(int i = SDL_max(0, cx - rayon); i < SDL_min(surface->w, cx + rayon); i++){
+                make_vertical(surface, SDL_max(0, cy - rayon), SDL_min(surface->h, cy + rayon), i, coul);
+        }
     }
     else
     { 
