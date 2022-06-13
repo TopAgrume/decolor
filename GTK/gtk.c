@@ -1298,6 +1298,9 @@ gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
 {
     //Unused parameters :
     user_data = user_data;
+    f = f;
+    
+    char *strr;
 
     //Actual function :
     dialog = gtk_file_chooser_dialog_new("Save File", GTK_WINDOW(window), action, 
@@ -1312,10 +1315,12 @@ gboolean on_SaveButton_clicked(GtkButton *f ,gpointer user_data)
         char *filename;
 
         filename = gtk_file_chooser_get_filename (chooser);
-        printf("%s", gtk_button_get_label(f));
+        strr = malloc(strlen(filename)+6);
+        sprintf(strr, "%s.bmp", filename);
         if (img != NULL)
-            SDL_SaveBMP(img, filename);
+            SDL_SaveBMP(img, strr);
         g_free (filename);
+        free(strr);
     }
 
     gtk_widget_destroy (dialog);
