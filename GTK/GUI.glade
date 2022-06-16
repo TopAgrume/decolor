@@ -969,7 +969,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Sceau</property>
+                        <property name="tooltip_text" translatable="yes">Seau</property>
                         <property name="draw_indicator">False</property>
                         <property name="group">radiobutton1</property>
                         <child>
