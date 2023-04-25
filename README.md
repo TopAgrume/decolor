@@ -6,12 +6,6 @@ How to use Decolor ?
 - Then type ./decolor.
 - An interface will now appear and allow you to modify and create some images.
 
-
-
-
-
-
-
 You can type 'make clean' to clean every trash file and compiled file
 
 Our Website
