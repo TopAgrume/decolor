@@ -2,7 +2,7 @@ Decolor
 ===================================
 How to use Decolor ?
 
-- Use the command make without any argument.
+- Use the command make without any arguments.
 - Then type ./decolor.
 - An interface will now appear and allow you to modify and create some images.
 
