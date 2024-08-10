@@ -15,3 +15,7 @@ You can type `make clean` to clean every trash file and compiled file
 Visit the Decolor [website](https://topagrume.github.io/decolor_web/accueil.html) to find the download link and access all related documentation, including the production specifications and the project report.
 
 ![Decolor website](./assets/website.png)
+
+# Time Lapse Preview
+
+https://github.com/user-attachments/assets/414ca883-be89-4be0-9a51-ac422345ff5b
